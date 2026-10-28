@@ -1,0 +1,138 @@
+{
+  "slug": "brief-dlya-razrabotki-saita",
+  "title": "Что подготовить перед заказом сайта: бриф для владельца бизнеса",
+  "description": "Какие решения принять до оценки разработки: цель сайта, путь клиента, контент, языки, заявки и критерии приёмки. Практический бриф для бизнеса Узбекистана и СНГ.",
+  "category": "Планирование",
+  "service": "websites",
+  "author": "Burxonov Shohrux",
+  "answer": "Перед заказом сайта подготовьте описание целевого клиента, одного главного действия на сайте, необходимых страниц, контента, языков и процесса обработки заявок. Отдельно запишите ограничения по срокам и бюджету. Этого достаточно для первого предметного разговора: технические детали можно уточнить вместе с разработчиком.",
+  "content": [
+    {
+      "heading": "Начните с результата, который можно проверить",
+      "body": "Фраза «нужен современный сайт» описывает впечатление, но не объясняет задачу. Вместо неё запишите: кто придёт на сайт, что он должен понять и какое действие сделать. Для компании услуг таким действием может быть заявка на оценку. Для поставщика оборудования — запрос предложения по выбранной модели. Для сервиса с регулярными клиентами — запись на свободное время.\n\nЭто примеры возможных сценариев, а не результаты реальных проектов. Выберите один главный сценарий для первой версии. Дополнительные действия можно оставить, но они не должны мешать основному. Критерий проверки сформулируйте заранее: посетитель с телефона находит нужную услугу, понимает следующий шаг и отправляет заявку, которая сохраняется и попадает ответственному человеку. Количество будущих заявок зависит также от спроса, предложения и продвижения."
+    },
+    {
+      "heading": "Опишите клиента и его путь до обращения",
+      "body": "В брифе полезнее описать несколько реальных вопросов покупателя, чем перечислить десятки желаемых блоков. Что человек уже знает о вашей услуге? С чем сравнивает? Какая информация нужна, чтобы связаться? Что обычно уточняет менеджер в первом разговоре?\n\nДля бизнеса в Узбекистане отдельно выясните, на каких языках общаются ваши клиенты и команда. Русская и узбекская версии требуют подготовленного содержания и ответственного за обновления. Не добавляйте язык только ради отметки в меню: неполная версия создаёт лишние тупики. Если вы работаете с другими странами СНГ, запишите географию обслуживания и условия связи. Это входные данные для структуры сайта, а не повод создавать десятки одинаковых страниц городов."
+    },
+    {
+      "heading": "Соберите содержание и назначьте ответственных",
+      "body": "До оценки подготовьте список услуг или товаров, актуальные контакты, фотографии, логотип, описания и материалы, которые разрешено публиковать. Для каждого пункта отметьте состояние: готов, нужно обновить, нужно создать. Укажите человека, который проверяет факты и согласует итоговый текст.\n\nЕсли портфолио нельзя показывать открыто, не заменяйте его вымышленными кейсами. Обсудите допустимый формат: обезличенное описание вашей роли, фрагмент с разрешения клиента или демонстрационный интерфейс с явной подписью. Отсутствие готового контента не мешает начать обсуждение, но влияет на план. Иначе страница может быть технически готова, а запуск остановится на фотографиях, описаниях или переводе."
+    },
+    {
+      "heading": "Разделите обязательные функции и пожелания",
+      "body": "Составьте два списка. Первый — без чего клиент не сможет завершить основной сценарий. Второй — улучшения, которые можно добавить после запуска. Для сайта услуг в первый список могут попасть понятные страницы направлений, контакты, рабочая форма и получение обращения. Личный кабинет, сложная анимация и интерактивный калькулятор нужны не каждому проекту.\n\nДля каждой интеграции напишите, какие данные передаются, куда и кто их использует. «Интеграция с CRM» слишком неопределённа: нужно уточнить название системы, состав полей, создание или обновление записи и поведение при ошибке. Если нужные доступы ещё не получены, отметьте это в брифе. Проверка интеграции до окончательной оценки помогает обнаружить ограничения, которые по макету не видны."
+    },
+    {
+      "heading": "Продумайте обработку заявки после отправки",
+      "body": "Форма — часть процесса продаж. Заранее определите, кто увидит обращение, где оно сохранится, как быстро вы планируете отвечать и что делать, если уведомление не пришло. Удобно иметь основной журнал обращений и отдельный канал уведомления: доставка сообщения может задержаться, а само обращение не должно потеряться.\n\nПоля формы выбирайте по информации, необходимой для первого ответа. Не просите у клиента подробности, которыми пока никто не воспользуется. Сразу обсудите текст согласия, доступ сотрудников и срок хранения с учётом фактической работы бизнеса. Здесь нет универсального юридического шаблона: условия нужно подготовить для конкретного владельца сайта и используемых сервисов. Тестировать форму следует на вымышленных данных."
+    },
+    {
+      "heading": "Заложите поиск и доступность в требования",
+      "body": "В руководстве Google для начинающих описаны понятная структура сайта, содержательные заголовки и доступность содержимого для поисковых систем. Это стоит учитывать до запуска, вместе со структурой услуг и журнала. Установка метатегов сама по себе не гарантирует позиции или обращения. Страница должна отвечать на вопрос посетителя и помогать выбрать следующий шаг.\n\nW3C рекомендует включать работу над доступностью в план проекта и распределять ответственность. На практике при обсуждении сайта стоит сразу назвать требования к читаемости, понятным подписям полей и управлению с клавиатуры. Проверка только внешнего вида на одном экране не показывает, сможет ли человек заполнить форму в других условиях. В брифе запишите, кто проводит эти проверки и какие результаты будут основанием для приёмки."
+    },
+    {
+      "heading": "Зафиксируйте условия запуска и поддержки",
+      "body": "Укажите желаемую дату запуска и причину ограничения: открытие направления, рекламная кампания или сезонная активность. Отдельно обозначьте доступный ориентир бюджета и валюту. Если сумма пока неизвестна, попросите оценить несколько вариантов объёма. Без одинакового списка работ сравнение предложений только по итоговой цене легко вводит в заблуждение.\n\nСогласуйте владельца домена и хостинга, передачу доступов, резервные копии, порядок исправления ошибок и дальнейших изменений. Приёмка должна проверять согласованные сценарии, а не только совпадение с картинкой. Готовый краткий бриф можно построить из семи пунктов: цель, клиент, страницы, контент, функции, обработка заявок и условия запуска. С ним разработчик сможет задать уточняющие вопросы и предложить состав первой версии."
+    }
+  ],
+  "faq": [
+    {
+      "question": "Нужно ли писать техническое задание самостоятельно?",
+      "answer": "Для первого разговора достаточно описать бизнес-задачу, клиента и необходимые действия. Детальные технические требования разумно сформировать после уточнения сценариев и ограничений."
+    },
+    {
+      "question": "Можно ли начинать без готовых текстов и фотографий?",
+      "answer": "Да, если в плане явно указано, кто их подготовит и к какому сроку. Оценка должна учитывать создание и согласование содержания, если они входят в работу."
+    },
+    {
+      "question": "Нужны ли сразу русский и узбекский языки?",
+      "answer": "Это зависит от вашей аудитории и готовности поддерживать оба набора материалов. Сначала выясните, на каких языках клиентам удобно выбирать услугу и оставлять обращение."
+    },
+    {
+      "question": "Бриф гарантирует точную стоимость и срок?",
+      "answer": "Нет. Он уменьшает неопределённость. Интеграции, состояние содержания и требования могут потребовать дополнительного исследования до окончательной оценки."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Google Search Central — руководство по SEO для начинающих",
+      "url": "https://developers.google.com/search/docs/fundamentals/seo-starter-guide"
+    },
+    {
+      "title": "W3C WAI — планирование доступности",
+      "url": "https://www.w3.org/WAI/planning/"
+    }
+  ],
+  "generation": {
+    "assisted": true,
+    "model": "editorial-draft",
+    "createdAt": "2026-10-26T00:00:00.000Z"
+  },
+  "translations": {
+    "uz": {
+      "title": "Sayt buyurtma qilishdan oldin nima tayyorlash kerak: biznes egasi uchun brif",
+      "description": "Dasturlashni baholashdan oldin aniqlanadigan masalalar: sayt maqsadi, mijoz yo‘li, kontent, tillar, murojaatlar va qabul qilish mezonlari. O‘zbekiston va MDH bizneslari uchun amaliy brif.",
+      "category": "Rejalashtirish",
+      "answer": "Sayt buyurtma qilishdan oldin maqsadli mijozni, saytdagi bitta asosiy harakatni, kerakli sahifalar, kontent, tillar va murojaatlarga ishlov berish jarayonini tasvirlang. Muddat va budjet cheklovlarini alohida yozing. Birinchi mazmunli suhbat uchun shu yetarli: texnik tafsilotlarni dasturchi bilan birga aniqlash mumkin.",
+      "content": [
+        {
+          "heading": "Tekshirish mumkin bo‘lgan natijadan boshlang",
+          "body": "«Zamonaviy sayt kerak» degan gap taassurotni ifodalaydi, lekin vazifani tushuntirmaydi. Uning o‘rniga saytga kim kelishi, nimani tushunishi va qanday harakat qilishi kerakligini yozing. Xizmat ko‘rsatuvchi kompaniya uchun bu baholash so‘rovi bo‘lishi mumkin. Uskuna yetkazib beruvchi uchun — tanlangan model bo‘yicha taklif so‘rash. Doimiy mijozlari bor xizmat uchun — bo‘sh vaqtga yozilish.\n\nBular haqiqiy loyihalar natijalari emas, mumkin bo‘lgan ssenariylarga misollar. Birinchi versiya uchun bitta asosiy ssenariyni tanlang. Qo‘shimcha harakatlarni qoldirish mumkin, ammo ular asosiy yo‘lga xalaqit bermasligi kerak. Tekshirish mezonini oldindan belgilang: telefondan kirgan foydalanuvchi kerakli xizmatni topadi, keyingi qadamni tushunadi va mas’ul kishiga yetib boradigan, bazada saqlanadigan murojaat yuboradi. Kelajakdagi murojaatlar soni talab, taklif va targ‘ibotga ham bog‘liq."
+        },
+        {
+          "heading": "Mijozni va uning murojaatgacha bo‘lgan yo‘lini tasvirlang",
+          "body": "Brifda o‘nlab bloklarni sanashdan ko‘ra, xaridorning bir nechta haqiqiy savolini yozish foydaliroq. U xizmatingiz haqida allaqachon nimani biladi? Qaysi variantlar bilan solishtiradi? Bog‘lanish uchun unga qanday ma’lumot kerak? Menejer birinchi suhbatda odatda nimani aniqlaydi?\n\nO‘zbekistondagi biznes uchun mijozlar va jamoa qaysi tillarda muloqot qilishini alohida aniqlang. Ruscha va o‘zbekcha versiyalar tayyor kontentni va yangilash uchun mas’ul kishini talab qiladi. Tilni faqat menyuda ko‘rsatish uchun qo‘shmang: to‘liq bo‘lmagan versiya foydalanuvchiga qo‘shimcha to‘siq yaratadi. MDHning boshqa mamlakatlari bilan ishlasangiz, xizmat ko‘rsatish hududi va aloqa shartlarini yozing. Bular sayt tuzilmasi uchun boshlang‘ich ma’lumot, bir xil mazmundagi o‘nlab shahar sahifalarini yaratish uchun sabab emas."
+        },
+        {
+          "heading": "Kontentni yig‘ing va mas’ullarni belgilang",
+          "body": "Baholashdan oldin xizmatlar yoki mahsulotlar ro‘yxati, amaldagi kontaktlar, fotosuratlar, logotip, tavsiflar va nashr qilishga ruxsat berilgan materiallarni tayyorlang. Har biri uchun holatni belgilang: tayyor, yangilash kerak yoki yaratish kerak. Faktlarni tekshiradigan va yakuniy matnni tasdiqlaydigan kishini ko‘rsating.\n\nPortfolioni ochiq ko‘rsatish mumkin bo‘lmasa, uni o‘ylab topilgan loyihalar bilan almashtirmang. Ruxsat etilgan formatni muhokama qiling: ishtirokingizning anonim tavsifi, mijoz ruxsat bergan parcha yoki namuna ekani aniq yozilgan interfeys. Kontentning hali tayyor emasligi suhbatni boshlashga to‘sqinlik qilmaydi, ammo rejaga ta’sir qiladi. Aks holda sayt texnik jihatdan tayyor bo‘lsa ham, fotosuratlar, tavsiflar yoki tarjima sababli ishga tushirish to‘xtab qolishi mumkin."
+        },
+        {
+          "heading": "Zarur funksiyalarni istaklardan ajrating",
+          "body": "Ikkita ro‘yxat tuzing. Birinchisi — mijoz asosiy ssenariyni yakunlashi uchun shart bo‘lgan imkoniyatlar. Ikkinchisi — ishga tushirgandan keyin qo‘shish mumkin bo‘lgan yaxshilanishlar. Xizmatlar sayti uchun birinchi ro‘yxatga tushunarli yo‘nalish sahifalari, kontaktlar, ishlaydigan shakl va murojaatni qabul qilish kirishi mumkin. Shaxsiy kabinet, murakkab animatsiya va interaktiv kalkulyator har bir loyihaga ham kerak emas.\n\nHar bir integratsiya uchun qanday ma’lumot, qayerga uzatilishi va undan kim foydalanishini yozing. «CRM bilan integratsiya» juda mavhum: tizim nomi, maydonlar tarkibi, yozuvni yaratish yoki yangilash va xatoda nima bo‘lishini aniqlash kerak. Kerakli kirish huquqlari hali olinmagan bo‘lsa, buni brifda belgilang. Yakuniy baholashdan oldin integratsiyani tekshirish maketdan bilinmaydigan cheklovlarni aniqlashga yordam beradi."
+        },
+        {
+          "heading": "Murojaat yuborilgandan keyingi jarayonni o‘ylab chiqing",
+          "body": "Shakl — savdo jarayonining bir qismi. Murojaatni kim ko‘rishi, u qayerda saqlanishi, qanchalik tez javob berishni rejalashtirishingiz va bildirishnoma kelmasa nima qilishni oldindan belgilang. Asosiy murojaatlar jurnali va alohida bildirishnoma kanaliga ega bo‘lish qulay: xabar kechikishi mumkin, ammo murojaatning o‘zi yo‘qolmasligi kerak.\n\nShakl maydonlarini birinchi javob uchun zarur ma’lumotga qarab tanlang. Hozircha hech kim ishlatmaydigan tafsilotlarni so‘ramang. Rozilik matni, xodimlarning kirish huquqlari va saqlash muddatini biznesning amaldagi ish tartibiga mos ravishda muhokama qiling. Buning uchun universal yuridik qolip yo‘q: shartlarni aniq sayt egasi va ishlatiladigan xizmatlar uchun tayyorlash kerak. Shaklni sinov ma’lumotlari bilan tekshiring."
+        },
+        {
+          "heading": "Qidiruv va foydalanish imkoniyatlarini talablarga kiriting",
+          "body": "Google boshlovchilar uchun qo‘llanmasida saytning tushunarli tuzilmasi, mazmunli sarlavhalar va kontentning qidiruv tizimlari uchun ochiqligi yoritilgan. Bularni xizmatlar va blog tuzilmasi bilan birga, ishga tushirishdan oldin hisobga olish ma’qul. Metateglarni qo‘shishning o‘zi qidiruvdagi o‘rinlar yoki murojaatlarni kafolatlamaydi. Sahifa foydalanuvchi savoliga javob berishi va keyingi qadamni tanlashga yordam berishi kerak.\n\nW3C vebdan turli imkoniyatdagi odamlar foydalana olishini loyiha rejasiga kiritish va mas’uliyatni taqsimlashni tavsiya qiladi. Saytni muhokama qilishda matnning o‘qilishi, shakl maydonlarining tushunarli nomlari va klaviatura bilan boshqarish talablarini oldindan belgilash foydali. Faqat bitta ekrandagi ko‘rinishni tekshirish boshqa sharoitlarda shaklni to‘ldirish mumkinligini ko‘rsatmaydi. Bu tekshiruvlarni kim bajarishi va qaysi natijalar qabul qilish uchun asos bo‘lishini brifga yozing."
+        },
+        {
+          "heading": "Ishga tushirish va qo‘llab-quvvatlash shartlarini belgilang",
+          "body": "Istalgan ishga tushirish sanasi va cheklov sababini yozing: yangi yo‘nalish ochilishi, reklama kampaniyasi yoki mavsumiy faollik. Taxminiy budjet va valyutani alohida ko‘rsating. Summa hali noma’lum bo‘lsa, turli ish hajmlarini baholashni so‘rang. Bir xil ishlar ro‘yxatisiz takliflarni faqat yakuniy narx bo‘yicha solishtirish noto‘g‘ri xulosaga olib kelishi mumkin.\n\nDomen va hosting egasini, kirish huquqlarini topshirishni, zaxira nusxalarni, xatolarni tuzatish va keyingi o‘zgarishlar tartibini kelishib oling. Qabul qilish faqat rasmga moslikni emas, kelishilgan ssenariylarni tekshirishi kerak. Qisqa brifni yetti banddan tuzish mumkin: maqsad, mijoz, sahifalar, kontent, funksiyalar, murojaatlarga ishlov berish va ishga tushirish shartlari. Shunda dasturchi aniqlashtiruvchi savollar berib, birinchi versiya tarkibini taklif qila oladi."
+        }
+      ],
+      "faq": [
+        {
+          "question": "Texnik topshiriqni o‘zim yozishim kerakmi?",
+          "answer": "Birinchi suhbat uchun biznes vazifasi, mijoz va zarur harakatlarni tasvirlash kifoya. Batafsil texnik talablarni ssenariylar va cheklovlar aniqlangandan keyin tayyorlash ma’qul."
+        },
+        {
+          "question": "Tayyor matn va fotosuratlarsiz boshlash mumkinmi?",
+          "answer": "Ha, agar rejada ularni kim va qachongacha tayyorlashi aniq ko‘rsatilsa. Kontentni yaratish va kelishish ishga kirsa, baholashda ham hisobga olinishi kerak."
+        },
+        {
+          "question": "Darhol ruscha va o‘zbekcha versiya kerakmi?",
+          "answer": "Bu auditoriyangiz va ikkala tildagi materiallarni yangilab borishga tayyorligingizga bog‘liq. Avval mijozlarga xizmat tanlash va murojaat qoldirish qaysi tilda qulayligini aniqlang."
+        },
+        {
+          "question": "Brif aniq narx va muddatni kafolatlaydimi?",
+          "answer": "Yo‘q. U noaniqlikni kamaytiradi. Integratsiyalar, kontentning tayyorligi va talablar yakuniy baholashdan oldin qo‘shimcha o‘rganishni talab qilishi mumkin."
+        }
+      ],
+      "sources": [
+        {
+          "title": "Google Search Central — boshlovchilar uchun SEO qo‘llanmasi",
+          "url": "https://developers.google.com/search/docs/fundamentals/seo-starter-guide"
+        },
+        {
+          "title": "W3C WAI — vebdan foydalanish imkoniyatlarini rejalashtirish",
+          "url": "https://www.w3.org/WAI/planning/"
+        }
+      ]
+    }
+  }
+}

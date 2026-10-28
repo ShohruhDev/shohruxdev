@@ -1,0 +1,26 @@
+# Template for a single Linux VPS; paths/user must exist before installation.
+[Unit]
+Description=Web Mobile Nuxt and editorial worker
+After=network.target
+
+[Service]
+Type=simple
+User=web-mobile
+Group=web-mobile
+WorkingDirectory=/srv/web-mobile
+EnvironmentFile=/etc/web-mobile.env
+Environment=NODE_ENV=production
+Environment=HOST=127.0.0.1
+Environment=PORT=3000
+ExecStart=/usr/bin/node /srv/web-mobile/.output/server/index.mjs
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/web-mobile
+
+[Install]
+WantedBy=multi-user.target
