@@ -3,7 +3,7 @@ export function usePageSeo(title:string|(()=>string),description:string|(()=>str
  const config=useRuntimeConfig();const route=useRoute();const {t,locale,localPath}=useLanguage()
  const url=()=>new URL(route.path,config.public.siteUrl).href
  const titleText=()=>t(toValue(title)),descriptionText=()=>t(toValue(description))
- useSeoMeta({title:()=>`${titleText()} — Web / Mobile`,description:descriptionText,ogTitle:titleText,ogDescription:descriptionText,ogType:'website',ogUrl:url,ogLocale:()=>locale.value==='uz'?'uz_UZ':'ru_RU',ogImage:new URL('/images/hero-product.png',config.public.siteUrl).href,twitterCard:'summary_large_image',robots:()=>!config.public.indexable||toValue(noindex)?'noindex, nofollow':'index, follow'})
+ useSeoMeta({title:()=>titleText().length>45?titleText():`${titleText()} — shohruxdev`,description:descriptionText,ogTitle:titleText,ogDescription:descriptionText,ogType:'website',ogUrl:url,ogLocale:()=>locale.value==='uz'?'uz_UZ':'ru_RU',ogImage:new URL('/images/og-default.jpg',config.public.siteUrl).href,ogImageWidth:1200,ogImageHeight:630,ogImageAlt:()=>t('Интерфейс веб-сервиса и мобильного приложения'),ogSiteName:'shohruxdev',twitterCard:'summary_large_image',robots:()=>!config.public.indexable||toValue(noindex)?'noindex, nofollow':'index, follow'})
  useHead(()=>{
   const available=toValue(availableLocales);const home=new URL(localPath('/'),config.public.siteUrl).href
   const breadcrumbs={'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:t('Главная'),item:home},...(route.path===localPath('/')?[]:[{'@type':'ListItem',position:2,name:titleText(),item:url()}])]}

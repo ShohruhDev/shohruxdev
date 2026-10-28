@@ -2,7 +2,14 @@
 const {t,localPath,locale}=useLanguage()
 
 const config=useRuntimeConfig();const menuOpen=ref(false);const route=useRoute()
-useHead(()=>({htmlAttrs:{lang:locale.value}}))
+useHead(()=>{
+ const site=config.public.siteUrl,home=new URL(localPath('/'),site).href
+ const schema={'@context':'https://schema.org','@graph':[
+  {'@type':'ProfessionalService','@id':site+'/#org',name:'shohruxdev',url:site+'/',logo:site+'/brand/logo-512.jpg',image:site+'/images/og-default.jpg',description:t('Разработка сайтов, веб-сервисов и мобильных приложений для бизнеса в Узбекистане и СНГ.'),founder:{'@id':site+'/#person'},address:{'@type':'PostalAddress',addressLocality:'Tashkent',addressCountry:'UZ'},areaServed:[{'@type':'Country',name:'Uzbekistan'},{'@type':'Place',name:'CIS'}],knowsLanguage:['ru','uz'],contactPoint:{'@type':'ContactPoint',contactType:'sales',url:new URL(localPath('/contact'),site).href,availableLanguage:['ru','uz']}},
+  {'@type':'Person','@id':site+'/#person',name:'Burxonov Shohrux',jobTitle:t('Разработчик сайтов и мобильных приложений'),url:site+'/',worksFor:{'@id':site+'/#org'}},
+  {'@type':'WebSite','@id':site+'/#website',name:'shohruxdev',url:home,inLanguage:locale.value,publisher:{'@id':site+'/#org'}}]}
+ return {htmlAttrs:{lang:locale.value},script:[{key:'site-schema',type:'application/ld+json',innerHTML:JSON.stringify(schema).replace(/</g,'\\u003c')}]}
+})
 watch(()=>route.fullPath,()=>menuOpen.value=false)
 </script>
 <template>

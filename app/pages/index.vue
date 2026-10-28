@@ -5,7 +5,7 @@ const {t,localPath,locale}=useLanguage();const {enabled}=useMotion()
 const u=(r:string,z:string)=>locale.value==='uz'?z:r
 const services=computed(()=>locale.value==='uz'?servicesUz:servicesRu)
 const active=ref(0);const hero=ref<HTMLElement>();const sculpture=ref<HTMLElement>();let frame=0
-usePageSeo('Разработка сайтов и мобильных приложений','Сайты, веб-сервисы и мобильные приложения для бизнеса в Узбекистане и СНГ. Прямое общение с разработчиком, от задачи до запуска.')
+usePageSeo('Разработка сайтов и приложений в Ташкенте','Сайты, веб-сервисы и мобильные приложения для бизнеса в Узбекистане и СНГ. Прямое общение с разработчиком, от задачи до запуска.')
 const {data:posts}=await useFetch<any[]>('/api/posts',{query:{lang:locale}})
 function drift(){cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{if(!hero.value)return;const r=hero.value.getBoundingClientRect();const p=enabled.value?Math.max(0,Math.min(1,-r.top/r.height)):0;hero.value.style.setProperty('--drift',`${p*100}px`);hero.value.style.setProperty('--turn',`${p*12}deg`)})}
 function pointer(e:PointerEvent){if(!enabled.value||e.pointerType!=='mouse'||!sculpture.value)return;const r=sculpture.value.getBoundingClientRect();sculpture.value.style.setProperty('--px',`${(e.clientX-r.left-r.width/2)*.035}px`);sculpture.value.style.setProperty('--py',`${(e.clientY-r.top-r.height/2)*.035}px`)}
@@ -15,7 +15,7 @@ onMounted(()=>{window.addEventListener('scroll',drift,{passive:true});drift()});
 <template><div class="art-home">
  <section class="art-hero" ref="hero"><div class="wrap">
   <div class="art-stage"><div class="art-copy" data-reveal><h1>{{u('САЙТЫ.','SAYTLAR.')}}<br>{{u('СЕРВИСЫ.','XIZMATLAR.')}}<br>{{u('ПРИЛОЖЕНИЯ.','ILOVALAR.')}}</h1><p>{{u('Для вашего бизнеса и людей, которые им пользуются. От первого наброска до готового продукта.','Biznesingiz va undan foydalanuvchilar uchun. Dastlabki eskizdan tayyor mahsulotgacha.')}}</p><NuxtLink class="art-button button" :to="localPath('/contact')"><span>{{u('Обсудить задачу','Vazifani muhokama qilish')}}</span><span class="art-button-arrow"><AppIcon :size="24" /></span></NuxtLink></div>
-   <div class="art-object" ref="sculpture" @pointermove="pointer" @pointerleave="reset"><div class="object-drift"><img class="cursor-sculpture" src="/images/cursor-sculpture.png" :alt="u('Объёмная скульптура курсора с хромированной лентой','Xrom tasma bilan hajmli kursor haykali')" width="1254" height="1254" fetchpriority="high"></div></div>
+   <div class="art-object" ref="sculpture" @pointermove="pointer" @pointerleave="reset"><div class="object-drift"><picture><source type="image/avif" srcset="/images/cursor-sculpture-640.avif 640w, /images/cursor-sculpture-1160.avif 1160w" sizes="(max-width:760px) 105vw, 580px"><img class="cursor-sculpture" src="/images/cursor-sculpture-1160.webp" srcset="/images/cursor-sculpture-640.webp 640w, /images/cursor-sculpture-1160.webp 1160w" sizes="(max-width:760px) 105vw, 580px" :alt="u('Объёмная скульптура курсора с хромированной лентой','Xrom tasma bilan hajmli kursor haykali')" width="1254" height="1254" fetchpriority="high"></picture></div></div>
   </div>
   <div class="art-hero-bottom"><a href="#services">{{u('Посмотреть услуги','Xizmatlarni ko‘rish')}} <span>↓</span></a></div>
  </div></section>
