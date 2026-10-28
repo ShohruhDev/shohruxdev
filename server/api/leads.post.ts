@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto'
 import { validateLead } from '../lib/core.mjs'
+import { notifyLead } from '../lib/notify.mjs'
 export default defineEventHandler(async event=>{
   const origin=getHeader(event,'origin')
   if(origin && origin!==getRequestURL(event).origin)throw createError({statusCode:403,statusMessage:'Недопустимый источник запроса'})
@@ -12,6 +13,7 @@ export default defineEventHandler(async event=>{
   let data
   try{data=validateLead(JSON.parse(raw))}catch(e){throw createError({statusCode:400,statusMessage:e instanceof Error?e.message:'Проверьте поля формы'})}
   const id=storage().saveLead(data)
+  await notifyLead(data,id)
   setResponseStatus(event,201)
   return {ok:true,id}
 })
