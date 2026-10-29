@@ -10,7 +10,7 @@ const env={...process.env,CONTENT_DB:file,PORT:String(port),HOST:'127.0.0.1'};
 const child=spawn(process.execPath,['.output/server/index.mjs'],{env,stdio:['ignore','pipe','pipe']});
 try{
  await new Promise((res,rej)=>{const timer=setTimeout(()=>rej(Error('Server did not start')),15000);child.stdout.on('data',b=>{if(b.toString().includes('Listening')){clearTimeout(timer);res()}});child.on('exit',c=>{clearTimeout(timer);rej(Error(`Server exited ${c}`))})});
- for(const path of ['/','/services','/services/websites','/services/web-apps','/services/mobile-apps','/process','/journal','/contact','/privacy','/journal/site-or-app']){
+ for(const path of ['/','/services','/services/websites','/services/web-apps','/services/mobile-apps','/process','/calculator','/journal','/contact','/privacy','/journal/site-or-app']){
    const r=await fetch(base+path);assert.equal(r.status,200,path);const html=await r.text();assert.match(html,/<h1/);assert.match(html,/noindex/);assert.match(html,/rel="canonical"/);
  }
  for(const path of ['/services/missing','/journal/private-draft','/missing-page'])assert.equal((await fetch(base+path)).status,404,path);
