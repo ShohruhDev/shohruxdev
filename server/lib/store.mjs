@@ -18,6 +18,7 @@ export function openStore(path) {
     ...editorialStore(db,log),
     close:()=>db.close(),
     saveLead(p){const id=randomUUID();db.prepare('INSERT INTO leads VALUES(?,?,?)').run(id,new Date().toISOString(),JSON.stringify(p));return id;},
+    deleteLead(id){if(typeof id!=='string'||!db.prepare('DELETE FROM leads WHERE id=?').run(id).changes)throw new Error('Заявка не найдена.');log('lead-deleted',id);},
     leads(){return db.prepare('SELECT * FROM leads ORDER BY created_at DESC').all().map(r=>({id:r.id,createdAt:r.created_at,...JSON.parse(r.payload)}));},
     allowRequest(key,now=Date.now()){
       db.exec('BEGIN IMMEDIATE');

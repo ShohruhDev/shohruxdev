@@ -13,6 +13,7 @@ export default defineEventHandler(async event=>{
    if(typeof b.revision!=='string')throw Error('Откройте актуальную версию статьи.');db.schedulePost(b.slug,b.time,b.checks,b.revision)
   }
   else if(b.action==='unpublish')db.unpublish(b.slug)
+  else if(b.action==='delete-lead')db.deleteLead(b.id)
   else if(b.action==='publish-due')return {ok:true,published:db.publishDue()}
   else if(b.action==='generate'){
    if(!generationConfig().ready)throw Error('ИИ не подключён. Настройте ключ, модель и лимит на сервере.')

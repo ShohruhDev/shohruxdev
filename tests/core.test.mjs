@@ -49,3 +49,12 @@ test('limits repeated submissions and opens a new window after an hour',()=>{
  const dir=mkdtempSync(join(tmpdir(),'web-mobile-rate-'));const db=openStore(join(dir,'test.sqlite'));
  try {for(let i=0;i<5;i++)assert.equal(db.allowRequest('client',10000000),true);assert.equal(db.allowRequest('client',10000000),false);assert.equal(db.allowRequest('another',10000000),true);assert.equal(db.allowRequest('client',13600001),true);}finally{db.close();rmSync(dir,{recursive:true,force:true});}
 });
+test('deletes only the requested lead', () => {
+  const dir=mkdtempSync(join(tmpdir(),'web-mobile-')); const db=openStore(join(dir,'test.sqlite'));
+  try {
+    const keep=db.saveLead(validateLead(valid)), drop=db.saveLead(validateLead({...valid,name:'Тест'}));
+    db.deleteLead(drop);
+    assert.deepEqual(db.leads().map(l=>l.id),[keep]);
+    assert.throws(()=>db.deleteLead(drop),/не найдена/); assert.throws(()=>db.deleteLead(undefined));
+  } finally { db.close(); rmSync(dir,{recursive:true,force:true}); }
+});

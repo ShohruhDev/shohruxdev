@@ -32,6 +32,7 @@ try{
  const publicArticle=await(await fetch(base+'/journal/admin-test')).text();assert.match(publicArticle,/Burxonov Shohrux/);assert.match(publicArticle,/КОРОТКИЙ ОТВЕТ/);assert.match(publicArticle,/Первый вопрос/);assert.match(publicArticle,/datePublished/);
  const lead=await post('/api/leads',{name:'Тест канала',contact:'qa@example.com',message:'Тестовая заявка из поиска ИИ',service:'web',budget:'',consent:true,attribution:{source:'chatgpt.com',landing:'/journal/admin-test?private=1',referrer:'https://chatgpt.com/c/private'}});assert.equal(lead.status,201);
  state=await(await fetch(base+'/api/admin/state',{headers:{Cookie:cookie}})).json();assert.equal(state.leads[0].attribution.channel,'ai');assert.equal(state.leads[0].attribution.landing,'/journal/admin-test');
+ const leadId=(await lead.json()).id;assert.equal((await post('/api/admin/action',{action:'delete-lead',id:leadId},'https://evil.example')).status,403);assert.equal((await post('/api/admin/action',{action:'delete-lead',id:leadId})).status,200);assert.equal((await post('/api/admin/action',{action:'delete-lead',id:leadId})).status,400);state=await(await fetch(base+'/api/admin/state',{headers:{Cookie:cookie}})).json();assert.equal(state.leads.some(l=>l.id===leadId),false);
  assert.equal((await post('/api/admin/action',{action:'generate'})).status,400);
  assert.match(await(await fetch(base+'/feed.xml')).text(),/<rss/);
  const page=await fetch(base+'/admin');assert.match(page.headers.get('x-robots-tag'),/noindex/);assert.match(page.headers.get('cache-control'),/no-store/);
