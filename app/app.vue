@@ -25,6 +25,6 @@ watch(()=>route.fullPath,()=>menuOpen.value=false)
   </header>
   <MotionControl v-if="route.path!=='/admin'" />
   <main id="main"><NuxtPage :page-key="pageRoute => pageRoute.path" /></main>
-  <footer class="footer wrap"><div><BrandLogo /><p>{{t("Независимая разработка.")}}<br>{{t("Узбекистан и СНГ.")}}</p></div><div class="footer-links"><NuxtLink :to="localPath('/services')">{{t("Услуги")}}</NuxtLink><NuxtLink :to="localPath('/journal')">{{t("Журнал")}}</NuxtLink><NuxtLink :to="localPath('/contact')">{{t("Обсудить проект")}}</NuxtLink><NuxtLink :to="localPath('/privacy')">{{t("Обработка данных")}}</NuxtLink><NuxtLink v-if="!config.public.indexable" :to="localPath('/admin')">{{t("Редакция")}}</NuxtLink></div><div class="footer-note">{{t("Веб. Мобильные приложения.")}}<br>{{t("Внимание к деталям.")}}</div></footer>
+  <footer class="footer wrap"><div><BrandLogo /><p>{{t("Независимая разработка.")}}<br>{{t("Узбекистан и СНГ.")}}</p></div><div class="footer-links"><NuxtLink :to="localPath('/services')">{{t("Услуги")}}</NuxtLink><NuxtLink :to="localPath('/journal')">{{t("Журнал")}}</NuxtLink><NuxtLink :to="localPath('/contact')">{{t("Обсудить проект")}}</NuxtLink><TelegramLink place="footer" label="Telegram" /><NuxtLink :to="localPath('/privacy')">{{t("Обработка данных")}}</NuxtLink><NuxtLink v-if="!config.public.indexable" :to="localPath('/admin')">{{t("Редакция")}}</NuxtLink></div><div class="footer-note">{{t("Веб. Мобильные приложения.")}}<br>{{t("Внимание к деталям.")}}</div></footer>
  </div>
 </template>
