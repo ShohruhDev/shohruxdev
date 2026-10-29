@@ -18,7 +18,7 @@ try{
  let state=await(await fetch(base+'/api/admin/state',{headers:{Cookie:cookie}})).json();assert.equal(state.posts.length,0);assert.equal(JSON.stringify(state).includes(env.ADMIN_SESSION_SECRET),false);
  assert.equal((await post('/api/admin/action',{action:'seed'},'https://evil.example')).status,403);
  assert.equal((await post('/api/admin/action',{action:'seed'})).status,200);assert.equal((await post('/api/admin/action',{action:'seed'})).status,200);
- state=await(await fetch(base+'/api/admin/state',{headers:{Cookie:cookie}})).json();assert.equal(state.topics.length,12);
+ state=await(await fetch(base+'/api/admin/state',{headers:{Cookie:cookie}})).json();assert.equal(state.topics.length,24);
  const revision=async()=>{const data=await(await fetch(base+'/api/admin/state',{headers:{Cookie:cookie}})).json();return data.posts.find(p=>p.slug==='admin-test').revision};
  const draft={slug:'admin-test',title:'Проверка полного цикла статьи',description:'Материал для теста',category:'Планирование',service:'websites',author:'Burxonov Shohrux',answer:'Начните с задач заказчика и условий запуска. '.repeat(4),content:Array.from({length:4},(_,i)=>({heading:`Раздел ${i}`,body:'Уточните сценарии клиента и проверяемые требования. '.repeat(25)})),faq:[{question:'Первый вопрос?',answer:'Первый ответ.'},{question:'Второй вопрос?',answer:'Второй ответ.'}],sources:[{title:'Google',url:'https://developers.google.com/search/docs/fundamentals/seo-starter-guide'}]};
  assert.equal((await post('/api/admin/action',{action:'create',post:draft})).status,200);

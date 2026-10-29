@@ -1,6 +1,8 @@
 import {generationConfig,runGeneration} from '../lib/pipeline.mjs'
+import {seedTopics} from '../lib/topics.mjs'
 export default defineNitroPlugin(nitro=>{
  if(!generationConfig().enabled)return
+ try{seedTopics(storage())}catch{console.error('Editorial topic seeding failed.')}
  let running=false
  async function tick(){
   if(running)return;running=true
