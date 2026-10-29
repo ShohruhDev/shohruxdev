@@ -24,6 +24,10 @@ export const urgency={price:1.3,time:0.7};
 const copyPages={landing:3,catalog:7,shop:7};
 const half=v=>Math.round(v*2)/2;
 
+/**
+ * @param {{type?: string, pages?: number, design?: string, langs?: number, extras?: string[], urgent?: boolean}} [input]
+ * @returns {{type: string, service: string, extraPages: number, options: string[], price: [number, number], weeks: [number, number]}}
+ */
 export function estimate({type='corporate',pages=7,design='custom',langs=1,extras=[],urgent=false}={}){
  const t=projectTypes.find(p=>p.id===type)||projectTypes[1]
  const d=designs[design]||designs.custom,l=languages[langs]||languages[1]

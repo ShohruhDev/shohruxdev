@@ -32,3 +32,22 @@ html[data-motion=off] .object-drift,html[data-motion=off] .cursor-sculpture{tran
 
 /* Section overlines removed; keep the content spacing intentional. */
 .art-about .manifesto{margin-top:0}.art-services .art-service-list{margin-top:0}.art-journal>.art-kicker{justify-content:flex-end}.sequence-top{justify-content:flex-end}
+
+.article-body>section>p{white-space:pre-line}
+
+/* Design review: quieter controls, readable editorial cards, safe narrow layouts. */
+.app-public .home-calc{padding-top:72px}.app-public .home-calc-title{margin:0 0 44px;align-items:center}.home-calc-title h2{font-size:clamp(42px,6vw,82px)}.home-calc-title p{max-width:350px;line-height:1.75}
+.app-public .journal-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 56px}
+.app-public .journal-card{display:flex;flex-direction:column;min-width:0;border-top:1px solid #b9c1b0;padding:26px 0 36px;transition:border-color .2s}
+.app-public .journal-card .article-meta{margin:0 0 18px;font-size:12px;line-height:1.6;gap:16px}.journal-card .article-meta>span:last-child{flex-shrink:0}
+.app-public .journal-card h3{font-size:clamp(23px,2.3vw,32px);font-weight:600;line-height:1.35;max-width:620px}
+.app-public .journal-card>p{font-size:15px;line-height:1.75;margin:18px 0 24px;max-width:600px}
+.journal-card-link{display:flex;align-items:center;gap:12px;margin-top:auto;font-size:13px;font-weight:600}.journal-card-link svg{transition:transform .2s}.journal-card:hover .journal-card-link svg{transform:translate(3px,-3px)}
+.app-public .filters{gap:8px 24px;padding-bottom:0}.app-public .filters button{border:0;border-bottom:2px solid transparent;border-radius:0;padding:12px 0;background:transparent;color:var(--muted);font-size:13px;min-height:44px}.app-public .filters button.active{border-color:var(--text);background:transparent;color:var(--text);font-weight:700}
+.app-public .page-intro h1,.app-public .contact-intro h1{margin-top:0}.app-public .journal-list .result-count{margin:24px 0}
+.app-public .contact-layout{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}.contact-intro,.form-panel{min-width:0}
+.app-public .contact-intro h1{font-size:clamp(32px,4vw,56px);line-height:1.18;overflow-wrap:anywhere}
+.app-public .form-panel input:not([type=checkbox]),.app-public .form-panel textarea,.app-public .form-panel select{font-size:16px}
+.cta-actions{display:flex;flex-direction:column;align-items:flex-start;gap:22px;flex-shrink:0}.app-public .text-link:hover{color:#406735}
+@media(min-width:761px) and (max-width:1000px){.app-public .header .brand-logo-type{display:none}.app-public .desktop-nav{gap:16px}.app-public .header{gap:14px}}
+@media(max-width:760px){.app-public .home-calc{padding-top:48px}.app-public .home-calc-title{margin-bottom:28px}.home-calc-title h2{font-size:clamp(34px,10.4vw,64px)}.home-calc-title p{font-size:15px}.app-public .journal-grid{grid-template-columns:1fr;gap:0}.app-public .journal-card{padding:24px 0 30px}.app-public .journal-card>p{font-size:14px}.app-public .filters{gap:0 20px}.app-public .filters button{font-size:12px}.app-public .contact-layout{grid-template-columns:minmax(0,1fr)}.app-public .contact-intro h1{font-size:clamp(28px,8vw,38px)}.app-public .contact-intro .lede{font-size:16px}.cta-actions{margin-top:28px;gap:20px}.app-public .page-intro{padding-block:44px 36px}.app-public .page-intro h1{font-size:clamp(28px,7.5vw,36px);overflow-wrap:anywhere}.app-public .article>h1{overflow-wrap:anywhere}}

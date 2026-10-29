@@ -69,8 +69,8 @@
   "Как проходит работа": "Ish qanday kechadi",
   "От первого обсуждения до запуска: сценарии, оценка, дизайн, разработка, проверка и передача проекта.": "Birinchi suhbatdan ishga tushirishgacha: ssenariylar, baholash, dizayn, dasturlash, tekshirish va loyihani topshirish.",
   "НАЧНЁМ С ВАШЕЙ ЗАДАЧИ": "VAZIFANGIZDAN BOSHLAYMIZ",
-  "Что хотите": "Nima yaratmoqchisiz?",
-  "создать?": "Birga muhokama qilamiz.",
+  "Что хотите": "Nima",
+  "создать?": "yaratamiz?",
   "Расскажите о проекте своими словами. Даже если пока есть только идея.": "Loyihani o‘z so‘zlaringiz bilan tasvirlang. Hozircha faqat g‘oyangiz bo‘lsa ham.",
   "ЧТО ДАЛЬШЕ": "KEYINGI QADAMLAR",
   "Уточним задачу и ограничения.": "Vazifa va cheklovlarni aniqlaymiz.",
@@ -230,5 +230,6 @@
   "Страниц": "Sahifalar",
   "Языков": "Tillar",
   "Срочно": "Shoshilinch",
-  "Оценка": "Baho"
+  "Оценка": "Baho",
+  "Читать статью": "Maqolani o‘qish"
 }

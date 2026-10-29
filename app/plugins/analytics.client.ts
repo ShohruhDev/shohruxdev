@@ -7,11 +7,11 @@ export default defineNuxtPlugin(nuxtApp=>{
  if(c.gaId){w.dataLayer=w.dataLayer||[];w.gtag=function(){w.dataLayer.push(arguments)};w.gtag('js',new Date());w.gtag('config',c.gaId,{send_page_view:false});load(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(c.gaId)}`)}
  // SPA: просмотр отправляем вручную после каждой смены страницы, когда заголовок уже обновлён.
  let referer=document.referrer,last=''
- nuxtApp.hook('page:finish',()=>setTimeout(()=>{
+ nuxtApp.hook('page:finish',()=>{setTimeout(()=>{
   const path=router.currentRoute.value.fullPath;if(path.startsWith('/admin')||path===last)return;last=path
   const url=location.origin+path
   if(id)w.ym(id,'hit',url,{title:document.title,referer})
   if(c.gaId)w.gtag('event','page_view',{page_location:url,page_title:document.title})
   referer=url
- },0))
+ },0)})
 })
