@@ -9,7 +9,8 @@ const state=reactive({type:'corporate',pages:7,design:'custom',langs:2,extras:[]
 const result=computed(()=>estimate(state))
 const available=computed(()=>allOptions.filter(o=>o.types.includes(state.type)))
 const included=computed(()=>projectTypes.find(p=>p.id===state.type)?.includedPages)
-const num=(v:number)=>v.toLocaleString(locale.value==='uz'?'uz-UZ':'ru-RU',{maximumFractionDigits:1})
+// Keep decimal separators identical in server and browser ICU versions.
+const num=(v:number)=>String(Math.round(v*10)/10).replace('.',locale.value==='uz'?'.':',')
 const price=computed(()=>`${num(result.value.price[0])} – ${num(result.value.price[1])} ${t('млн сум')}`)
 const term=computed(()=>{const [a,b]=result.value.weeks;return b>8?`${num(Math.round(a/4.33*2)/2)} – ${num(Math.round(b/4.33*2)/2)} ${t('мес.')}`:`${a} – ${b} ${t('нед.')}`})
 const summary=computed(()=>[`${t('Расчёт калькулятора')}: ${t(typeLabel(state.type)[0])}`,...(included.value?[`${t('Страниц')}: ${state.pages}`]:[]),`${t('Дизайн')}: ${t(designLabels[state.design] || state.design)}`,`${t('Языков')}: ${state.langs}`,...result.value.options.map(o=>t(optionLabels[o] || o)),...(state.urgent?[t('Срочно')]:[]),`${t('Оценка')}: ${price.value}, ${term.value}`].join('; '))
