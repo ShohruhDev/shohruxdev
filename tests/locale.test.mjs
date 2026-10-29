@@ -28,3 +28,10 @@ test('Uzbek publication never inherits optional Russian body fields',()=>{
  const p={slug:'test',title:'Русский заголовок',answer:'Русский ответ',faq:[{question:'Вопрос',answer:'Ответ'}],readTime:'5 мин',author:'Author',translations:{uz:{title:'Sarlavha',description:'Tavsif',category:'Bo‘lim',content:[{heading:'H',body:'B'}],sources:[]}}};
  const uz=localizePost(p,'uz');assert.equal(uz.answer,undefined);assert.equal(uz.faq,undefined);assert.equal(uz.readTime,undefined);assert.equal(uz.author,'Author');
 });
+
+test('publication dates use readable RU/UZ months and the Tashkent calendar day',async()=>{
+ const {publicationDate}=await import('../shared/locale.mjs');
+ assert.equal(publicationDate('2026-10-28T20:00:00Z','uz'),'2026-yil 29-oktabr');
+ assert.equal(publicationDate('2026-10-28T18:00:00Z','ru'),'28 октября 2026 г.');
+ assert.equal(publicationDate('2026-12-31T20:00:00Z','uz'),'2027-yil 1-yanvar');
+});

@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import {publicationDate} from '#shared/locale.mjs'
 const {t,localPath,locale}=useLanguage()
 
 const route=useRoute();const config=useRuntimeConfig()
 const {data:posts}=await useFetch<any[]>('/api/posts',{query:{lang:locale}});const p=computed(()=>posts.value?.find(p=>p.slug===route.params.slug))
 if(!p.value)throw createError({statusCode:404,statusMessage:'Материал не найден'})
 const related=computed(()=>(posts.value||[]).filter(x=>x.slug!==p.value?.slug&&x.service===p.value?.service).slice(0,3))
-const date=(v:string)=>new Intl.DateTimeFormat(locale.value,{dateStyle:'long',timeZone:'Asia/Tashkent'}).format(new Date(v))
+const date=(v:string)=>publicationDate(v,locale.value)
 usePageSeo(()=>p.value?.title||'',()=>p.value?.description||'',()=>!!p.value?.demo,()=>p.value?.availableLocales||['ru'])
 useSeoMeta({ogType:'article'})
 useHead(()=>{

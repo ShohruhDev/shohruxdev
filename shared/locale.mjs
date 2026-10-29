@@ -11,3 +11,13 @@ export function localizePost(post,locale){
  const {title,description,category,content,answer,faq,readTime,sources,...metadata}=base;
  return {...(locale==='uz'?{...metadata,...translations.uz}:base),locale,availableLocales:translations?.uz?['ru','uz']:['ru']};
 }
+
+// Explicit month names avoid missing Uzbek ICU data in some browsers.
+export function publicationDate(value,locale){
+ const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Tashkent',year:'numeric',month:'numeric',day:'numeric'}).formatToParts(new Date(value));
+ const part=type=>parts.find(p=>p.type===type)?.value;
+ const year=part('year'),day=Number(part('day')),month=Number(part('month'))-1;
+ const ru=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+ const uz=['yanvar','fevral','mart','aprel','may','iyun','iyul','avgust','sentabr','oktabr','noyabr','dekabr'];
+ return locale==='uz'?`${year}-yil ${day}-${uz[month]}`:`${day} ${ru[month]} ${year} г.`;
+}
