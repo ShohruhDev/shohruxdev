@@ -27,4 +27,5 @@ export const nicheTopics=[
  ['website-law-firm','Сайт для юриста или юридической компании','Направления практики, экспертиза автора, статьи как источник клиентов, конфиденциальность обращений, заявка на консультацию.','websites'],
  ['mobile-app-beauty-or-clinic','Мобильное приложение для салона или клиники: когда оно действительно нужно','Сравнить приложение, сайт с онлайн-записью и Telegram-бота: частота визитов, напоминания, бонусы, стоимость поддержки без цифр.','mobile-apps']
 ].map(([slug,title,brief,service])=>({slug,title,brief,service}));
-export function seedTopics(db){const state=db.editorialState();const slugs=new Set([...state.topics,...state.posts].map(p=>p.slug));for(const t of [...starterTopics,...nicheTopics])if(!slugs.has(t.slug))db.addTopic(t)}
+// New queues focus on business niches. Preserve existing topics and editorial decisions.
+export function seedTopics(db){const state=db.editorialState();const slugs=new Set([...state.topics,...state.posts].map(p=>p.slug));for(const t of nicheTopics)if(!slugs.has(t.slug))db.addTopic(t)}
