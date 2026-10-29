@@ -1,3 +1,4 @@
+// Счётчики и Telegram задаются при запуске: NUXT_PUBLIC_METRIKA_ID, NUXT_PUBLIC_GA_ID, NUXT_PUBLIC_TELEGRAM.
 const siteUrl=process.env.SITE_URL || 'http://127.0.0.1:3000'
 const indexable=process.env.SITE_INDEXABLE==='true'
 if(indexable && (!siteUrl.startsWith('https://') || /localhost|127\.0\.0\.1|example\./.test(siteUrl))) throw new Error('Indexable site requires a real HTTPS SITE_URL')
