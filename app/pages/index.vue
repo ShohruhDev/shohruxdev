@@ -1,27 +1,242 @@
 <script setup lang="ts">
-import {services as servicesRu} from '~/data/services'
-import {servicesUz} from '~/data/services.uz'
-const {t,localPath,locale}=useLanguage();const {enabled}=useMotion()
-const u=(r:string,z:string)=>locale.value==='uz'?z:r
-const services=computed(()=>locale.value==='uz'?servicesUz:servicesRu)
-const active=ref(0);const hero=ref<HTMLElement>();const sculpture=ref<HTMLElement>();let frame=0
-usePageSeo('Разработка сайтов и приложений в Ташкенте','Сайты, веб-сервисы и мобильные приложения для бизнеса в Узбекистане и СНГ. Прямое общение с разработчиком, от задачи до запуска.')
-const {data:posts}=await useFetch<any[]>('/api/posts',{query:{lang:locale}})
-function drift(){cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{if(!hero.value)return;const r=hero.value.getBoundingClientRect();const p=enabled.value?Math.max(0,Math.min(1,-r.top/r.height)):0;hero.value.style.setProperty('--drift',`${p*100}px`);hero.value.style.setProperty('--turn',`${p*12}deg`)})}
-function pointer(e:PointerEvent){if(!enabled.value||e.pointerType!=='mouse'||!sculpture.value)return;const r=sculpture.value.getBoundingClientRect();sculpture.value.style.setProperty('--px',`${(e.clientX-r.left-r.width/2)*.035}px`);sculpture.value.style.setProperty('--py',`${(e.clientY-r.top-r.height/2)*.035}px`)}
-function reset(){sculpture.value?.style.setProperty('--px','0px');sculpture.value?.style.setProperty('--py','0px')}
-onMounted(()=>{window.addEventListener('scroll',drift,{passive:true});drift()});watch(enabled,()=>{reset();drift()});onBeforeUnmount(()=>{window.removeEventListener('scroll',drift);cancelAnimationFrame(frame)})
+import { services as servicesRu } from '~/data/services';
+import { servicesUz } from '~/data/services.uz';
+const { t, localPath, locale } = useLanguage();
+const { enabled } = useMotion();
+const u = (r: string, z: string) => (locale.value === 'uz' ? z : r);
+const services = computed(() => (locale.value === 'uz' ? servicesUz : servicesRu));
+const active = ref(0);
+const hero = ref<HTMLElement>();
+const sculpture = ref<HTMLElement>();
+let frame = 0;
+usePageSeo(
+  'Разработка сайтов и приложений в Ташкенте',
+  'Сайты, веб-сервисы и мобильные приложения для бизнеса в Узбекистане и СНГ. Прямое общение с разработчиком, от задачи до запуска.'
+);
+const { data: posts } = await useFetch<any[]>('/api/posts', { query: { lang: locale } });
+function drift() {
+  cancelAnimationFrame(frame);
+  frame = requestAnimationFrame(() => {
+    if (!hero.value) return;
+    const r = hero.value.getBoundingClientRect();
+    const p = enabled.value ? Math.max(0, Math.min(1, -r.top / r.height)) : 0;
+    hero.value.style.setProperty('--drift', `${p * 100}px`);
+    hero.value.style.setProperty('--turn', `${p * 12}deg`);
+  });
+}
+function pointer(e: PointerEvent) {
+  if (!enabled.value || e.pointerType !== 'mouse' || !sculpture.value) return;
+  const r = sculpture.value.getBoundingClientRect();
+  sculpture.value.style.setProperty('--px', `${(e.clientX - r.left - r.width / 2) * 0.035}px`);
+  sculpture.value.style.setProperty('--py', `${(e.clientY - r.top - r.height / 2) * 0.035}px`);
+}
+function reset() {
+  sculpture.value?.style.setProperty('--px', '0px');
+  sculpture.value?.style.setProperty('--py', '0px');
+}
+onMounted(() => {
+  window.addEventListener('scroll', drift, { passive: true });
+  drift();
+});
+watch(enabled, () => {
+  reset();
+  drift();
+});
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', drift);
+  cancelAnimationFrame(frame);
+});
 </script>
-<template><div class="art-home">
- <section class="art-hero" ref="hero"><div class="wrap">
-  <div class="art-stage"><div class="art-copy" data-reveal><h1>{{u('САЙТЫ.','SAYTLAR.')}}<br>{{u('СЕРВИСЫ.','XIZMATLAR.')}}<br>{{u('ПРИЛОЖЕНИЯ.','ILOVALAR.')}}</h1><p>{{u('Для вашего бизнеса и людей, которые им пользуются. От первого наброска до готового продукта.','Biznesingiz va undan foydalanuvchilar uchun. Dastlabki eskizdan tayyor mahsulotgacha.')}}</p><NuxtLink class="art-button button" :to="localPath('/contact')"><span>{{u('Обсудить задачу','Vazifani muhokama qilish')}}</span><span class="art-button-arrow"><AppIcon :size="24" /></span></NuxtLink></div>
-   <div class="art-object" ref="sculpture" @pointermove="pointer" @pointerleave="reset"><div class="object-drift"><picture><source type="image/avif" srcset="/images/cursor-sculpture-640.avif 640w, /images/cursor-sculpture-1160.avif 1160w" sizes="(max-width:760px) 105vw, 580px"><img class="cursor-sculpture" src="/images/cursor-sculpture-1160.webp" srcset="/images/cursor-sculpture-640.webp 640w, /images/cursor-sculpture-1160.webp 1160w" sizes="(max-width:760px) 105vw, 580px" :alt="u('Объёмная скульптура курсора с хромированной лентой','Xrom tasma bilan hajmli kursor haykali')" width="1254" height="1254" fetchpriority="high"></picture></div></div>
+<template>
+  <div class="art-home">
+    <section class="art-hero" ref="hero">
+      <div class="wrap">
+        <div class="art-stage">
+          <div class="art-copy" data-reveal>
+            <h1>
+              {{ u('САЙТЫ.', 'SAYTLAR.') }}<br />{{ u('СЕРВИСЫ.', 'XIZMATLAR.') }}<br />{{
+                u('ПРИЛОЖЕНИЯ.', 'ILOVALAR.')
+              }}
+            </h1>
+            <p>
+              {{
+                u(
+                  'Для вашего бизнеса и людей, которые им пользуются. От первого наброска до готового продукта.',
+                  'Biznesingiz va undan foydalanuvchilar uchun. Dastlabki eskizdan tayyor mahsulotgacha.'
+                )
+              }}
+            </p>
+            <NuxtLink class="art-button button" :to="localPath('/contact')"
+              ><span>{{ u('Обсудить задачу', 'Vazifani muhokama qilish') }}</span
+              ><span class="art-button-arrow"><AppIcon :size="24" /></span
+            ></NuxtLink>
+          </div>
+          <div class="art-object" ref="sculpture" @pointermove="pointer" @pointerleave="reset">
+            <div class="object-drift">
+              <picture
+                ><source
+                  type="image/avif"
+                  srcset="
+                    /images/cursor-sculpture-640.avif   640w,
+                    /images/cursor-sculpture-1160.avif 1160w
+                  "
+                  sizes="(max-width:760px) 105vw, 580px" />
+                <img
+                  class="cursor-sculpture"
+                  src="/images/cursor-sculpture-1160.webp"
+                  srcset="
+                    /images/cursor-sculpture-640.webp   640w,
+                    /images/cursor-sculpture-1160.webp 1160w
+                  "
+                  sizes="(max-width:760px) 105vw, 580px"
+                  :alt="
+                    u(
+                      'Объёмная скульптура курсора с хромированной лентой',
+                      'Xrom tasma bilan hajmli kursor haykali'
+                    )
+                  "
+                  width="1254"
+                  height="1254"
+                  fetchpriority="high"
+              /></picture>
+            </div>
+          </div>
+        </div>
+        <div class="art-hero-bottom">
+          <a href="#calculator"
+            >{{ u('Рассчитать стоимость', 'Narxni hisoblash') }} <span>↓</span></a
+          ><a href="#services"
+            >{{ u('Посмотреть услуги', 'Xizmatlarni ko‘rish') }} <span>↓</span></a
+          >
+        </div>
+      </div>
+    </section>
+    <section id="calculator" class="home-calc">
+      <div class="wrap">
+        <div class="journal-title home-calc-title">
+          <h2>
+            {{ u('СКОЛЬКО', 'LOYIHA') }}<br /><span>{{ u('СТОИТ?', 'NARXI?') }}</span>
+          </h2>
+          <p>
+            {{
+              u(
+                'Выберите тип проекта и функции — сразу увидите ориентировочную цену и срок. Без звонков и ожидания.',
+                'Loyiha turi va funksiyalarni tanlang — taxminiy narx va muddatni darhol ko‘rasiz. Qo‘ng‘iroq va kutishsiz.'
+              )
+            }}
+          </p>
+        </div>
+      </div>
+      <CostCalculator />
+    </section>
+    <section id="about" class="art-about wrap">
+      <div class="manifesto" data-reveal>
+        <span>{{ u('ВАШ БИЗНЕС', 'BIZNESINGIZ') }}</span><span class="manifesto-middle"
+          >{{ u('НЕ КАК ВСЕ.', 'O‘ZIGA XOS.') }} <i aria-hidden="true">↗</i></span
+        ><span>{{ u('САЙТ — ТОЖЕ.', 'SAYTINGIZ HAM.') }}</span>
+      </div>
+      <div class="about-bottom">
+        <span class="about-asterisk" aria-hidden="true">✳</span>
+        <p>
+          {{
+            u(
+              'Хороший сайт начинается с понимания: кому нужен ваш продукт, что он меняет и почему его выберут. Из этих ответов складываются структура, дизайн и удобный путь клиента.',
+              'Yaxshi sayt tushunishdan boshlanadi: mahsulotingiz kimga kerak, nimani o‘zgartiradi va nega uni tanlashadi? Shu javoblardan tuzilma, dizayn va mijoz uchun qulay yo‘l shakllanadi.'
+            )
+          }}
+        </p>
+        <NuxtLink class="text-link" :to="localPath('/process')"
+          >{{ u('Познакомиться с процессом', 'Jarayon bilan tanishish') }} <AppIcon
+        /></NuxtLink>
+      </div>
+    </section>
+    <section class="art-services" id="services">
+      <div class="wrap">
+        <div class="art-service-list">
+          <article
+            v-for="(service, i) in services"
+            :key="service.slug"
+            class="art-service"
+            :class="{ expanded: active === i }"
+          >
+            <h2>
+              <button
+                :aria-expanded="active === i"
+                :aria-controls="`service-panel-${i}`"
+                @click="active = active === i ? -1 : i"
+              >
+                <span class="service-counter">0{{ i + 1 }}</span
+                ><span>{{ service.title }}</span
+                ><span class="service-toggle">{{ active === i ? '−' : '+' }}</span>
+              </button>
+            </h2>
+            <div :id="`service-panel-${i}`" class="service-drawer" v-show="active === i">
+              <div class="service-poster" :class="`service-poster-${i}`" aria-hidden="true">
+                <span>{{ ['WEB', 'SYSTEM', 'MOBILE'][i] }}</span>
+                <div>{{ ['↗', '{ }', '↕'][i] }}</div>
+              </div>
+              <div class="service-drawer-content">
+                <p>{{ service.intro }}</p>
+                <NuxtLink :to="localPath(`/services/${service.slug}`)" class="text-link"
+                  >{{ u('Подробнее о разработке', 'Dasturlash haqida batafsil') }} <AppIcon
+                /></NuxtLink>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+    <CreationSequence />
+    <section class="art-journal wrap">
+      <div class="art-kicker">
+        <NuxtLink :to="localPath('/journal')"
+          >{{ u('ВСЕ МАТЕРИАЛЫ', 'BARCHA MAQOLALAR') }} ↗</NuxtLink
+        >
+      </div>
+      <div class="journal-title" data-reveal>
+        <h2>
+          {{ u('МЫСЛИ', 'OCHIQ') }}<br /><span>{{ u('ВСЛУХ.', 'FIKRLAR.') }}</span>
+        </h2>
+        <p>
+          {{
+            u(
+              'О том, что за красивым экраном: решения, технологии, сроки и деньги. Без лишних терминов.',
+              'Chiroyli ekran ortidagi yechimlar, texnologiyalar, muddatlar va xarajatlar haqida. Ortiqcha atamalarsiz.'
+            )
+          }}
+        </p>
+        <span class="journal-doodle" aria-hidden="true">↴</span>
+      </div>
+      <div class="editorial-list">
+        <NuxtLink
+          v-for="(post, i) in (posts || []).slice(0, 3)"
+          :key="post.slug"
+          :to="localPath(`/journal/${post.slug}`)"
+          class="editorial-entry"
+          data-reveal
+          ><span class="editorial-number">0{{ i + 1 }}</span>
+          <div>
+            <span class="editorial-category">{{ post.category }} / {{ post.readTime }}</span>
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.description }}</p>
+          </div>
+          <span class="editorial-arrow"><AppIcon :size="36" /></span
+        ></NuxtLink>
+      </div>
+    </section>
+    <section class="art-contact">
+      <div class="wrap">
+        <NuxtLink :to="localPath('/contact')" class="art-contact-link"
+          ><span>{{ u('ЕСТЬ', 'G‘OYA') }}<br />{{ u('ИДЕЯ?', 'BORMI?') }}</span
+          ><span class="contact-orb"><AppIcon :size="110" /></span
+        ></NuxtLink>
+        <div class="art-contact-bottom">
+          <p>{{ u('Расскажите. Вместе найдём ей форму.', 'Ayting. Birga unga shakl topamiz.') }}</p>
+          <NuxtLink :to="localPath('/contact')" class="text-link"
+            >{{ t('Обсудить проект') }} <AppIcon
+          /></NuxtLink>
+        </div>
+      </div>
+    </section>
   </div>
-  <div class="art-hero-bottom"><a href="#calculator">{{u('Рассчитать стоимость','Narxni hisoblash')}} <span>↓</span></a><a href="#services">{{u('Посмотреть услуги','Xizmatlarni ko‘rish')}} <span>↓</span></a></div>
- </div></section>
- <section id="calculator" class="home-calc"><div class="wrap"><div class="journal-title home-calc-title"><h2>{{u('СКОЛЬКО','LOYIHA')}}<br><span>{{u('СТОИТ?','NARXI?')}}</span></h2><p>{{u('Выберите тип проекта и функции — сразу увидите ориентировочную цену и срок. Без звонков и ожидания.','Loyiha turi va funksiyalarni tanlang — taxminiy narx va muddatni darhol ko‘rasiz. Qo‘ng‘iroq va kutishsiz.')}}</p></div></div><CostCalculator /></section><section id="about" class="art-about wrap"><div class="manifesto" data-reveal><span>{{u('ВАШ БИЗНЕС','BIZNESINGIZ')}}</span><span class="manifesto-middle">{{u('НЕ КАК ВСЕ.','O‘ZIGA XOS.')}} <i aria-hidden="true">↗</i></span><span>{{u('САЙТ — ТОЖЕ.','SAYTINGIZ HAM.')}}</span></div><div class="about-bottom"><span class="about-asterisk" aria-hidden="true">✳</span><p>{{u('Хороший сайт начинается с понимания: кому нужен ваш продукт, что он меняет и почему его выберут. Из этих ответов складываются структура, дизайн и удобный путь клиента.','Yaxshi sayt tushunishdan boshlanadi: mahsulotingiz kimga kerak, nimani o‘zgartiradi va nega uni tanlashadi? Shu javoblardan tuzilma, dizayn va mijoz uchun qulay yo‘l shakllanadi.')}}</p><NuxtLink class="text-link" :to="localPath('/process')">{{u('Познакомиться с процессом','Jarayon bilan tanishish')}} <AppIcon /></NuxtLink></div></section>
- <section class="art-services" id="services"><div class="wrap"><div class="art-service-list"><article v-for="(service,i) in services" :key="service.slug" class="art-service" :class="{expanded:active===i}"><h2><button :aria-expanded="active===i" :aria-controls="`service-panel-${i}`" @click="active=active===i?-1:i"><span class="service-counter">0{{i+1}}</span><span>{{service.title}}</span><span class="service-toggle">{{active===i?'−':'+'}}</span></button></h2><div :id="`service-panel-${i}`" class="service-drawer" v-show="active===i"><div class="service-poster" :class="`service-poster-${i}`" aria-hidden="true"><span>{{['WEB','SYSTEM','MOBILE'][i]}}</span><div>{{['↗','{ }','↕'][i]}}</div></div><div class="service-drawer-content"><p>{{service.intro}}</p><NuxtLink :to="localPath(`/services/${service.slug}`)" class="text-link">{{u('Подробнее о разработке','Dasturlash haqida batafsil')}} <AppIcon /></NuxtLink></div></div></article></div></div></section>
- <CreationSequence />
- <section class="art-journal wrap"><div class="art-kicker"><NuxtLink :to="localPath('/journal')">{{u('ВСЕ МАТЕРИАЛЫ','BARCHA MAQOLALAR')}} ↗</NuxtLink></div><div class="journal-title" data-reveal><h2>{{u('МЫСЛИ','OCHIQ')}}<br><span>{{u('ВСЛУХ.','FIKRLAR.')}}</span></h2><p>{{u('О том, что за красивым экраном: решения, технологии, сроки и деньги. Без лишних терминов.','Chiroyli ekran ortidagi yechimlar, texnologiyalar, muddatlar va xarajatlar haqida. Ortiqcha atamalarsiz.')}}</p><span class="journal-doodle" aria-hidden="true">↴</span></div><div class="editorial-list"><NuxtLink v-for="(post,i) in (posts||[]).slice(0,3)" :key="post.slug" :to="localPath(`/journal/${post.slug}`)" class="editorial-entry" data-reveal><span class="editorial-number">0{{i+1}}</span><div><span class="editorial-category">{{post.category}} / {{post.readTime}}</span><h3>{{post.title}}</h3><p>{{post.description}}</p></div><span class="editorial-arrow"><AppIcon :size="36" /></span></NuxtLink></div></section>
- <section class="art-contact"><div class="wrap"><NuxtLink :to="localPath('/contact')" class="art-contact-link"><span>{{u('ЕСТЬ','G‘OYA')}}<br>{{u('ИДЕЯ?','BORMI?')}}</span><span class="contact-orb"><AppIcon :size="110" /></span></NuxtLink><div class="art-contact-bottom"><p>{{u('Расскажите. Вместе найдём ей форму.','Ayting. Birga unga shakl topamiz.')}}</p><NuxtLink :to="localPath('/contact')" class="text-link">{{t('Обсудить проект')}} <AppIcon /></NuxtLink></div></div></section>
-</div></template>
+</template>
