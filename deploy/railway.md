@@ -2,9 +2,15 @@
 
 Проект: web-mobile-studio. Сервис: web. Окружение: production.
 Панель: https://railway.com/project/b298e9f2-0706-4c95-90f0-e8482fd073f6
-Адрес: https://web-production-0506cb.up.railway.app
+Адреса: https://shohruxdev.uz (основной до переезда), https://web-production-0506cb.up.railway.app
 
-Размещение из каталога `outputs/site` через `railway up --service web --detach`. GitHub пока не подключён; исходники загружаются через CLI. Dockerfile собирает Nuxt на Node 24 и запускает отдельный runtime-образ. `railway.json` задаёт проверку `/` и одну реплику.
+## Деплой
+
+Сервис подключён к GitHub-репозиторию `ShohruhDev/shohruxdev`, ветка `master`. Каждый push или слияние PR в `master` запускает GitHub Actions (`.github/workflows/ci.yml`: форматирование, unit, typecheck, сборка, интеграционные тесты). Railway ждёт результата (Wait for CI, `checkSuites=true`) и выкладывает коммит только при зелёных проверках. Если проверки упали, на сайте остаётся предыдущая версия.
+
+Ручной деплой без GitHub (только в крайнем случае): `railway up --service web --detach` из папки проекта. Повторить последний деплой: `railway service redeploy --service web`.
+
+Dockerfile собирает Nuxt на Node 24 и запускает отдельный runtime-образ. `railway.json` задаёт проверку `/` и одну реплику.
 
 Railway CLI 5.57.9 сообщает, что Config as Code поддерживается до 1 декабря 2026. Перед этой датой перенести настройки в актуальную Infrastructure as Code командой `railway config migrate`, затем проверить plan/apply; миграцию не применять вслепую к тому и переменным.
 
