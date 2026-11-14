@@ -9,3 +9,4 @@ docs
 deploy
 *.md
 shared/uz.json
+.claude

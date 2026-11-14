@@ -38,9 +38,9 @@ export const servicesUz = [
   },
   {
     slug: 'web-apps',
-    seoTitle: 'Veb-xizmat va shaxsiy kabinet yaratish',
+    seoTitle: 'Toshkentda veb-xizmat va shaxsiy kabinet yaratish',
     seoDescription:
-      'Buyurtma asosida veb-ilovalar: shaxsiy kabinetlar, band qilish xizmatlari va ichki tizimlar. Interfeys, API, ma’lumotlar bazasi va integratsiyalar.',
+      'Toshkent va O‘zbekiston bizneslari uchun buyurtma asosida veb-ilovalar: shaxsiy kabinetlar, band qilish xizmatlari va ichki tizimlar. Interfeys, API, ma’lumotlar bazasi va integratsiyalar.',
     code: 'apps',
     number: '02',
     title: 'Veb-xizmatlar',
@@ -76,9 +76,9 @@ export const servicesUz = [
   },
   {
     slug: 'mobile-apps',
-    seoTitle: 'Mobil ilova yaratish O‘zbekistonda',
+    seoTitle: 'Toshkentda mobil ilova yaratish',
     seoDescription:
-      'O‘zbekiston bizneslari uchun mobil ilovalar: takroriy buyurtmalar, onlayn yozilish va xodimlar ishi. Dizayn, dasturlash va nashrga tayyorlash.',
+      'Toshkent va O‘zbekiston bizneslari uchun mobil ilovalar: takroriy buyurtmalar, onlayn yozilish va xodimlar ishi. Dizayn, dasturlash va nashrga tayyorlash.',
     code: 'mobile',
     number: '03',
     title: 'Mobil ilovalar',
