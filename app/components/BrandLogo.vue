@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { brandName } from '#shared/brand.mjs';
 const { locale, localPath } = useLanguage();
 </script>
 
@@ -6,18 +7,18 @@ const { locale, localPath } = useLanguage();
   <NuxtLink
     :to="localPath('/')"
     class="brand-logo"
-    :aria-label="locale === 'uz' ? 'Burxonov Shohrux — bosh sahifa' : 'Burxonov Shohrux — главная'"
+    :aria-label="`${brandName} — ${locale === 'uz' ? 'bosh sahifa' : 'главная'}`"
   >
     <img
       class="brand-logo-mark"
-      src="/brand/bs-mark.webp"
+      src="/brand/rt-mark.webp"
       alt=""
       width="52"
       height="52"
       decoding="async"
     />
     <span class="brand-logo-type" aria-hidden="true"
-      ><strong>BURXONOV<br />SHOHRUX</strong><span>WEB / MOBILE</span></span
+      ><strong>RAZRABOTKA<br />TASHKENT</strong></span
     >
   </NuxtLink>
 </template>

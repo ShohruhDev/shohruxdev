@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { brandAlternateName, brandName } from '#shared/brand.mjs';
 const { t, localPath, locale } = useLanguage();
 
 const config = useRuntimeConfig();
@@ -13,9 +14,10 @@ useHead(() => {
       {
         '@type': 'ProfessionalService',
         '@id': site + '/#org',
-        name: 'shohruxdev',
+        name: brandName,
+        alternateName: brandAlternateName,
         url: site + '/',
-        logo: site + '/brand/logo-512.jpg',
+        logo: site + '/brand/rt-logo-512.jpg',
         image: site + '/images/og-default.jpg',
         description: t(
           'Разработка сайтов, веб-сервисов и мобильных приложений для бизнеса в Узбекистане и СНГ.'
@@ -45,7 +47,8 @@ useHead(() => {
       {
         '@type': 'WebSite',
         '@id': site + '/#website',
-        name: 'shohruxdev',
+        name: brandName,
+        alternateName: brandAlternateName,
         url: home,
         inLanguage: locale.value,
         publisher: { '@id': site + '/#org' }

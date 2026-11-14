@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { publicationDate } from '#shared/locale.mjs';
+import { brandName } from '#shared/brand.mjs';
 const { t, localPath, locale } = useLanguage();
 
 const route = useRoute();
@@ -51,7 +52,7 @@ useHead(() => {
       {
         rel: 'alternate',
         type: 'application/rss+xml',
-        title: t('shohruxdev — журнал'),
+        title: `${brandName} — ${t('журнал')}`,
         href: localPath('/feed.xml')
       }
     ]

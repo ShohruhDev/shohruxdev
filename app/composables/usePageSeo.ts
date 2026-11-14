@@ -1,4 +1,5 @@
 import { localePath } from '#shared/locale.mjs';
+import { brandName } from '#shared/brand.mjs';
 export function usePageSeo(
   title: string | (() => string),
   description: string | (() => string),
@@ -12,7 +13,7 @@ export function usePageSeo(
   const titleText = () => t(toValue(title)),
     descriptionText = () => t(toValue(description));
   useSeoMeta({
-    title: () => (titleText().length > 45 ? titleText() : `${titleText()} — shohruxdev`),
+    title: () => (titleText().length > 40 ? titleText() : `${titleText()} — ${brandName}`),
     description: descriptionText,
     ogTitle: titleText,
     ogDescription: descriptionText,
@@ -23,7 +24,7 @@ export function usePageSeo(
     ogImageWidth: 1200,
     ogImageHeight: 630,
     ogImageAlt: () => t('Интерфейс веб-сервиса и мобильного приложения'),
-    ogSiteName: 'shohruxdev',
+    ogSiteName: brandName,
     twitterCard: 'summary_large_image',
     robots: () =>
       !config.public.indexable || toValue(noindex) ? 'noindex, nofollow' : 'index, follow'

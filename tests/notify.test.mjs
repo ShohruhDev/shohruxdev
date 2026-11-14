@@ -11,7 +11,7 @@ const lead = {
   attribution: { channel: 'search', referrer: 'google.com', landing: '/services/websites' }
 };
 test('formats lead with escaped HTML and source', () => {
-  const m = leadMessage(lead, 'id-1', 'https://shohruxdev.uz');
+  const m = leadMessage(lead, 'id-1', 'https://razrabotkatashkent.uz');
   assert.match(m, /Ali &lt;b&gt;/);
   assert.match(m, /Сайт/);
   assert.match(m, /search · google\.com/);

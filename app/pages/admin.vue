@@ -205,7 +205,7 @@ async function addTopic() {
   <section class="editorial wrap">
     <div class="editorial-heading">
       <div>
-        <span class="eyebrow">WEB / MOBILE · ДЛЯ АВТОРА</span>
+        <span class="eyebrow">RAZRABOTKA TASHKENT · ДЛЯ АВТОРА</span>
         <h1>Редакция</h1>
         <p>Из полезного ответа — в разговор о проекте.</p>
       </div>
