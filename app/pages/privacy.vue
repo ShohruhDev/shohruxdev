@@ -9,7 +9,6 @@ usePageSeo(
 </script>
 <template>
   <section class="page-intro wrap narrow">
-    <span class="eyebrow">{{ t('ИНФОРМАЦИЯ') }}</span>
     <h1>{{ t('Обработка данных') }}</h1>
     <div class="article-body">
       <h2>{{ t('Кто обрабатывает данные') }}</h2>

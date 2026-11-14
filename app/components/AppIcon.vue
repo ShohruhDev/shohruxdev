@@ -7,7 +7,9 @@ import {
   PhList,
   PhX,
   PhCheck,
-  PhPlus
+  PhPlus,
+  PhPhone,
+  PhTelegramLogo
 } from '@phosphor-icons/vue';
 const props = withDefaults(defineProps<{ name?: string; size?: number }>(), {
   name: 'arrow',
@@ -21,7 +23,9 @@ const icons: Record<string, any> = {
   menu: PhList,
   close: PhX,
   check: PhCheck,
-  plus: PhPlus
+  plus: PhPlus,
+  phone: PhPhone,
+  telegram: PhTelegramLogo
 };
 </script>
 <template>

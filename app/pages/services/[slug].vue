@@ -80,7 +80,7 @@ useHead(() => {
     <section class="page-intro wrap">
       <NuxtLink class="back-link" :to="localPath('/services')"
         ><AppIcon name="left" :size="18" /> {{ t('Все услуги') }}</NuxtLink
-      ><span class="eyebrow">{{ s.eyebrow }}</span>
+      >
       <h1>{{ s.headline }}</h1>
       <p class="lede">
         <strong>{{ s.tagline }}</strong> {{ s.intro }}
@@ -91,14 +91,12 @@ useHead(() => {
     </section>
     <section class="detail-grid wrap">
       <div>
-        <span class="eyebrow">{{ t('КОГДА НУЖНО') }}</span>
         <h2>{{ s.forTitle }}</h2>
         <ul class="clean-list">
           <li v-for="item in s.for" :key="item"><AppIcon name="check" :size="20" />{{ item }}</li>
         </ul>
       </div>
       <div>
-        <span class="eyebrow">{{ t('РЕЗУЛЬТАТ РАБОТЫ') }}</span>
         <h2>{{ s.deliverTitle }}</h2>
         <ul class="clean-list">
           <li v-for="item in s.deliver" :key="item">
@@ -108,7 +106,6 @@ useHead(() => {
       </div>
     </section>
     <section class="estimate-block wrap">
-      <span class="eyebrow">{{ t('СТОИМОСТЬ И СРОКИ') }}</span>
       <h2>{{ t('Стоимость') }} — {{ fromPrice }}</h2>
       <PriceTable :service="s.code" />
       <p class="estimate-note">
@@ -128,7 +125,6 @@ useHead(() => {
       </div>
     </section>
     <section v-if="related.length" class="related-cases wrap">
-      <span class="eyebrow">{{ t('КЕЙСЫ') }}</span>
       <h2>{{ t('Проекты по направлению') }}</h2>
       <CaseCards :items="related" />
     </section>

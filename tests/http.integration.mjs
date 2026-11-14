@@ -60,7 +60,7 @@ try {
   const home = await (await fetch(base)).text();
   assert.match(
     home,
-    /<h1[^>]*><span class="h1-kicker">Разработка сайтов и мобильных приложений в Ташкенте<\/span><span class="h1-poster">САЙТЫ\./
+    /<h1[^>]*>Разработка сайтов и мобильных приложений\s*<span class="accent-text">для бизнеса в Ташкенте<\/span>/
   );
   assert.match(home, /Мобильные приложения/);
   assert.match(await (await fetch(base + '/robots.txt')).text(), /Disallow: \//);

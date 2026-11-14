@@ -12,7 +12,6 @@ usePageSeo(
 <template>
   <div>
     <section class="page-intro wrap">
-      <span class="eyebrow">{{ t('КЕЙСЫ') }}</span>
       <h1>{{ t('Проекты') }}<br />{{ t('и результаты') }}</h1>
       <p class="lede">
         {{ t('Задача клиента, что сделано, на чём и что изменилось после запуска.') }}

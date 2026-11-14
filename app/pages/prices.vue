@@ -58,7 +58,6 @@ useHead(() => {
 <template>
   <div>
     <section class="page-intro wrap">
-      <span class="eyebrow">{{ t('ЦЕНЫ И СРОКИ') }}</span>
       <h1>{{ t('Цены на разработку') }}<br />{{ t('сайтов и приложений') }}</h1>
       <p class="lede">
         {{
@@ -72,13 +71,11 @@ useHead(() => {
       /></NuxtLink>
     </section>
     <section class="prices-block wrap">
-      <span class="eyebrow">{{ t('БАЗОВАЯ СТОИМОСТЬ') }}</span>
       <h2>{{ t('Что сколько стоит') }}</h2>
       <PriceTable />
     </section>
     <section class="detail-grid wrap">
       <div>
-        <span class="eyebrow">{{ t('ДОПОЛНИТЕЛЬНО') }}</span>
         <h2>{{ t('Функции и интеграции') }}</h2>
         <ul class="clean-list">
           <li v-for="o in options" :key="o.id" class="price-line">
@@ -90,7 +87,6 @@ useHead(() => {
         </ul>
       </div>
       <div>
-        <span class="eyebrow">{{ t('ЧТО МЕНЯЕТ ЦЕНУ') }}</span>
         <h2>{{ t('Множители и надбавки') }}</h2>
         <ul class="clean-list">
           <li v-for="f in factors" :key="f[0]" class="price-line">
@@ -100,7 +96,6 @@ useHead(() => {
       </div>
     </section>
     <section class="estimate-block wrap">
-      <span class="eyebrow">{{ t('ОТДЕЛЬНО ОТ РАЗРАБОТКИ') }}</span>
       <h2>{{ t('Дополнительные расходы') }}</h2>
       <p>
         {{

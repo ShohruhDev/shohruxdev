@@ -9,16 +9,9 @@ const { locale, localPath } = useLanguage();
     class="brand-logo"
     :aria-label="`${brandName} — ${locale === 'uz' ? 'bosh sahifa' : 'главная'}`"
   >
-    <img
-      class="brand-logo-mark"
-      src="/brand/rt-mark.webp"
-      alt=""
-      width="52"
-      height="52"
-      decoding="async"
-    />
+    <BrandMark class="brand-logo-mark" :size="40" />
     <span class="brand-logo-type" aria-hidden="true"
-      ><strong>RAZRABOTKA<br />TASHKENT</strong></span
+      ><strong>Razrabotka</strong><span>Tashkent</span></span
     >
   </NuxtLink>
 </template>

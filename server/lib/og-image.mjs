@@ -5,7 +5,11 @@ import { createHash } from 'node:crypto';
 
 export const OG_WIDTH = 1200;
 export const OG_HEIGHT = 630;
-const C = { bg: '#f3f2eb', text: '#171a15', muted: '#60665a', mint: '#b6e9b0', orange: '#f45a36' };
+const C = { bg: '#ffffff', text: '#1f1f1f', muted: '#6b6b6b', soft: '#e6edff', orange: '#ff6b3d' };
+// Знак бренда (как public/brand/mark.svg), вставляется картинкой — satori поддерживает SVG data URI.
+const MARK = `data:image/svg+xml;base64,${Buffer.from(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3A6BFF"/><stop offset="1" stop-color="#1C44D6"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#g)"/><path d="M16 50.5V31C16 21 24 14.5 32 10 40 14.5 48 21 48 31V50.5" fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M25.5 23.5V45.6L30.6 40.9L34.4 48.7L38.2 47L34.6 39.4H41.4Z" fill="#fff"/><circle cx="48" cy="50.5" r="4.4" fill="#FF6B3D"/></svg>'
+).toString('base64')}`;
 const h = (type, style, children) => ({ type, props: { style, children } });
 
 export function titleSize(title) {
@@ -54,7 +58,7 @@ export function articleTree({ title, category, locale }, brand) {
         width: 420,
         height: 420,
         borderRadius: 420,
-        background: C.mint
+        background: C.soft
       }),
       h('div', {
         position: 'absolute',
@@ -66,7 +70,7 @@ export function articleTree({ title, category, locale }, brand) {
         background: C.orange
       }),
       h('div', { display: 'flex', alignItems: 'center', gap: 16 }, [
-        h('div', { width: 22, height: 22, background: C.text, borderRadius: 6 }),
+        { type: 'img', props: { src: MARK, width: 44, height: 44 } },
         h(
           'div',
           {
@@ -86,8 +90,8 @@ export function articleTree({ title, category, locale }, brand) {
             alignSelf: 'flex-start',
             padding: '8px 20px',
             borderRadius: 40,
-            background: C.text,
-            color: C.bg,
+            background: '#2457f5',
+            color: '#ffffff',
             fontSize: 24
           },
           [label, category ? ` · ${clip(category, 40)}` : ''].join('')

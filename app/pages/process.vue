@@ -10,7 +10,6 @@ usePageSeo(
 </script>
 <template>
   <section class="page-intro wrap">
-    <span class="eyebrow">{{ t('ПОДХОД') }}</span>
     <h1>{{ t('Как проходит разработка:') }}<br />{{ t('этапы, сроки, результат') }}</h1>
     <p class="lede">
       {{
@@ -28,7 +27,6 @@ usePageSeo(
     </div>
   </section>
   <section class="estimate-block wrap">
-    <span class="eyebrow">{{ t('НАЧАТЬ ПРОСТО') }}</span>
     <h2>{{ t('Техническое задание') }}<br />{{ t('не обязательно.') }}</h2>
     <p>
       {{

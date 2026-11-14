@@ -17,6 +17,8 @@ const user = computed(() =>
     rel="noopener"
     v-bind="$attrs"
     @click="goal('telegram_click', 'contact_telegram', { place: props.place })"
-    >{{ props.label === '@' ? '@' + user : props.label || t('Написать в Telegram') }}</a
+    ><slot>{{
+      props.label === '@' ? '@' + user : props.label || t('Написать в Telegram')
+    }}</slot></a
   >
 </template>

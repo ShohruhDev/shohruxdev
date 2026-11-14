@@ -222,16 +222,16 @@ input[type='radio'] {
   height: 17px;
   flex-shrink: 0;
   margin: 2px 0 0;
-  accent-color: var(--text);
+  accent-color: var(--accent, var(--text));
 }
 .calc-card.active,
 .calc-pills label.active {
-  border-color: var(--text);
-  background: #e5ecd9;
+  border-color: var(--accent);
+  background: var(--accent-soft, #e5ecd9);
 }
 .calc-card:hover,
 .calc-pills label:hover {
-  border-color: #63765a;
+  border-color: var(--accent, #63765a);
 }
 .calc-card:has(:focus-visible),
 .calc-pills label:has(:focus-visible) {
@@ -264,7 +264,7 @@ input[type='radio'] {
 .calc-range input {
   flex: 1;
   min-width: 0;
-  accent-color: var(--text);
+  accent-color: var(--accent, var(--text));
   min-height: 32px;
 }
 .calc-range output {
@@ -298,7 +298,7 @@ input[type='radio'] {
   height: 18px;
   flex-shrink: 0;
   margin: 0;
-  accent-color: var(--text);
+  accent-color: var(--accent, var(--text));
 }
 .calc-result {
   position: sticky;
@@ -308,9 +308,9 @@ input[type='radio'] {
   align-items: stretch;
   gap: 20px;
   padding: 32px;
-  border-radius: 4px;
+  border-radius: var(--radius, 4px);
   background: var(--mint, #b6e9b0);
-  color: #172315;
+  color: var(--text, #172315);
   scroll-margin-top: 150px;
 }
 .calc-result-title {
@@ -325,21 +325,21 @@ input[type='radio'] {
   font-weight: 700;
   letter-spacing: -0.045em;
   line-height: 1.2;
-  color: #172315;
+  color: var(--text, #172315);
   font-variant-numeric: tabular-nums;
   text-wrap: balance;
 }
 .calc-term {
   font-size: 15px;
   font-weight: 600;
-  color: #34472a;
+  color: var(--muted, #34472a);
   margin-top: -8px;
 }
 .calc-disclaimer,
 .calc-extra p {
   font-size: 14px;
   line-height: 1.7;
-  color: #34472a;
+  color: var(--muted, #34472a);
 }
 .calc-result .button {
   white-space: normal;
@@ -354,7 +354,7 @@ input[type='radio'] {
   align-self: center;
 }
 .calc-extra {
-  border-top: 1px solid #6d956466;
+  border-top: 1px solid var(--line, #6d956466);
   padding-top: 20px;
   margin-top: 4px;
 }
