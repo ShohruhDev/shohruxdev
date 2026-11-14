@@ -7,6 +7,9 @@ export const authorName = 'Burxonov Shohrux';
 export const company = {
   legalName: { ru: 'ООО «LEADVEX AI»', uz: '«LEADVEX AI» MChJ', en: '"LEADVEX AI" LLC' },
   inn: '313300268',
+  // Совпадает с карточками Google, Яндекс Бизнеса и 2GIS (NAP).
+  phone: '+998905155565',
+  phoneDisplay: '+998 90 515 55 65',
   address: {
     ru: 'г. Ташкент, Алмазарский район, МФЙ «Тараккиёт», ул. Корасарой, 335',
     uz: 'Toshkent shahri, Olmazor tumani, Taraqqiyot MFY, Qorasaroy ko‘chasi, 335-uy'
