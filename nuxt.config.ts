@@ -25,15 +25,14 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   // Файлы по насыщенности содержат unicode-range: браузер грузит только нужные наборы символов.
   css: [
-    '@fontsource/manrope/400.css',
-    '@fontsource/manrope/500.css',
-    '@fontsource/manrope/600.css',
-    '@fontsource/manrope/700.css',
+    '@fontsource/montserrat/400.css',
+    '@fontsource/montserrat/500.css',
+    '@fontsource/montserrat/600.css',
+    '@fontsource/montserrat/700.css',
     '~/assets/main.css',
     '~/assets/studio.css',
     '~/assets/art-direction.css',
-    '@fontsource/unbounded/700.css',
-    '@fontsource/unbounded/800.css'
+    '~/assets/corporate.css'
   ],
   runtimeConfig: {
     public: {
@@ -47,8 +46,9 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'ru' },
-      meta: [{ name: 'theme-color', content: '#111311' }],
+      meta: [{ name: 'theme-color', content: '#ffffff' }],
       link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/brand/mark.svg' },
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32.png' },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }
       ]

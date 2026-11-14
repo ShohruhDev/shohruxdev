@@ -9,6 +9,6 @@ const { goal } = useAnalytics();
     :href="`tel:${company.phone}`"
     v-bind="$attrs"
     @click="goal('phone_click', 'contact_phone', { place: props.place })"
-    >{{ company.phoneDisplay }}</a
+    ><slot>{{ company.phoneDisplay }}</slot></a
   >
 </template>

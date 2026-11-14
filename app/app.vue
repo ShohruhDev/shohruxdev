@@ -25,7 +25,7 @@ useHead(() => {
         name: brandName,
         alternateName: brandAlternateName,
         url: site + '/',
-        logo: site + '/brand/rt-logo-512.jpg',
+        logo: site + '/brand/logo-512.png',
         image: site + '/images/og-default.jpg',
         description: t(
           'Разработка сайтов, веб-сервисов и мобильных приложений для бизнеса в Узбекистане и СНГ.'
@@ -95,19 +95,28 @@ watch(
     <a class="skip" href="#main">{{ t('К содержанию') }}</a>
     <header class="header wrap">
       <BrandLogo />
-      <LanguageSwitch />
       <nav class="desktop-nav" :aria-label="t('Основная навигация')">
-        <NuxtLink :to="localPath('/services')">{{ t('Услуги') }}</NuxtLink><NuxtLink
-          :to="localPath('/process')"
-          >{{ t('Подход') }}</NuxtLink
-        ><NuxtLink :to="localPath('/calculator')">{{ t('Калькулятор') }}</NuxtLink
+        <NuxtLink :to="localPath('/') + '#projects'">{{ t('Проекты') }}</NuxtLink><NuxtLink
+          :to="localPath('/services')"
+          >{{ t('Услуги') }}</NuxtLink
         ><NuxtLink :to="localPath('/prices')">{{ t('Цены') }}</NuxtLink
         ><NuxtLink v-if="hasCases" :to="localPath('/cases')">{{ t('Кейсы') }}</NuxtLink
+        ><NuxtLink :to="localPath('/calculator')">{{ t('Калькулятор') }}</NuxtLink
+        ><NuxtLink :to="localPath('/process')">{{ t('Подход') }}</NuxtLink
         ><NuxtLink :to="localPath('/journal')">{{ t('Журнал') }}</NuxtLink>
       </nav>
-      <NuxtLink :to="localPath('/contact')" class="button button-small header-cta">{{
-        t('Обсудить проект')
-      }}</NuxtLink>
+      <div class="header-actions">
+        <PhoneLink place="header" class="icon-button" :aria-label="t('Позвонить')"
+          ><AppIcon name="phone" :size="20"
+        /></PhoneLink>
+        <TelegramLink place="header" class="icon-button" :aria-label="t('Написать в Telegram')"
+          ><AppIcon name="telegram" :size="20"
+        /></TelegramLink>
+        <NuxtLink :to="localPath('/contact')" class="button button-small header-cta">{{
+          t('Обсудить проект')
+        }}</NuxtLink>
+        <LanguageSwitch />
+      </div>
       <button
         class="menu-toggle"
         :aria-expanded="menuOpen"
@@ -124,17 +133,18 @@ watch(
         :aria-label="t('Мобильная навигация')"
         @keydown.esc="menuOpen = false"
       >
-        <NuxtLink :to="localPath('/services')">{{ t('Услуги') }}</NuxtLink><NuxtLink
-          :to="localPath('/process')"
-          >{{ t('Подход') }}</NuxtLink
-        ><NuxtLink :to="localPath('/calculator')">{{ t('Калькулятор') }}</NuxtLink
+        <NuxtLink :to="localPath('/') + '#projects'">{{ t('Проекты') }}</NuxtLink><NuxtLink
+          :to="localPath('/services')"
+          >{{ t('Услуги') }}</NuxtLink
         ><NuxtLink :to="localPath('/prices')">{{ t('Цены') }}</NuxtLink
         ><NuxtLink v-if="hasCases" :to="localPath('/cases')">{{ t('Кейсы') }}</NuxtLink
+        ><NuxtLink :to="localPath('/calculator')">{{ t('Калькулятор') }}</NuxtLink
+        ><NuxtLink :to="localPath('/process')">{{ t('Подход') }}</NuxtLink
         ><NuxtLink :to="localPath('/journal')">{{ t('Журнал') }}</NuxtLink
         ><NuxtLink :to="localPath('/contact')">{{ t('Обсудить проект') }}</NuxtLink>
+        <PhoneLink place="mobile-nav" class="mobile-nav-phone" />
       </nav>
     </header>
-    <MotionControl v-if="route.path !== '/admin'" />
     <main id="main"><NuxtPage :page-key="pageRoute => pageRoute.path" /></main>
     <footer class="footer wrap">
       <div>
@@ -147,9 +157,10 @@ watch(
         </p>
       </div>
       <div class="footer-links">
-        <NuxtLink :to="localPath('/services')">{{ t('Услуги') }}</NuxtLink><NuxtLink
-          :to="localPath('/calculator')"
-          >{{ t('Калькулятор') }}</NuxtLink
+        <NuxtLink :to="localPath('/') + '#projects'">{{ t('Проекты') }}</NuxtLink><NuxtLink
+          :to="localPath('/services')"
+          >{{ t('Услуги') }}</NuxtLink
+        ><NuxtLink :to="localPath('/calculator')">{{ t('Калькулятор') }}</NuxtLink
         ><NuxtLink :to="localPath('/prices')">{{ t('Цены') }}</NuxtLink
         ><NuxtLink v-if="hasCases" :to="localPath('/cases')">{{ t('Кейсы') }}</NuxtLink
         ><NuxtLink :to="localPath('/journal')">{{ t('Журнал') }}</NuxtLink

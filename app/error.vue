@@ -6,7 +6,7 @@ defineProps<{ error: any }>();
 <template>
   <NuxtLayout
     ><div class="error-page">
-      <span class="eyebrow">{{ error?.statusCode || 500 }}</span>
+      <span class="label-text">{{ error?.statusCode || 500 }}</span>
       <h1>
         {{
           error?.statusCode === 404 ? t('Страница не найдена') : t('Не получилось открыть страницу')

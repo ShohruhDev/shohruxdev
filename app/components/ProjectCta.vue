@@ -4,7 +4,6 @@ const { t, localPath, locale } = useLanguage();
 <template>
   <section class="cta-section wrap">
     <div>
-      <span class="eyebrow">{{ t('ЕСТЬ ЗАДАЧА?') }}</span>
       <h2>{{ t('Давайте начнём') }}<br />{{ t('с разговора.') }}</h2>
       <p>
         {{ t('Расскажите, что хотите создать или улучшить.') }}<br />{{

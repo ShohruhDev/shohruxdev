@@ -54,7 +54,7 @@ useHead(() => {
     <section class="page-intro wrap">
       <NuxtLink class="back-link" :to="localPath('/cases')"
         ><AppIcon name="left" :size="18" /> {{ t('Все кейсы') }}</NuxtLink
-      ><span class="eyebrow">{{ serviceTitle(c.service) }} · {{ c.year }}</span>
+      ><span class="case-meta-line">{{ serviceTitle(c.service) }} · {{ c.year }}</span>
       <h1>{{ c.title }}</h1>
       <p class="lede">{{ c.summary }}</p>
       <p class="case-client">{{ t('Клиент') }}: {{ c.client }}</p>
@@ -70,12 +70,10 @@ useHead(() => {
     </section>
     <section class="detail-grid wrap">
       <div>
-        <span class="eyebrow">{{ t('ЗАДАЧА') }}</span>
         <h2>{{ t('С чего начинали') }}</h2>
         <p class="case-text">{{ c.task }}</p>
       </div>
       <div>
-        <span class="eyebrow">{{ t('РЕШЕНИЕ') }}</span>
         <h2>{{ t('Что сделано') }}</h2>
         <ul class="clean-list">
           <li v-for="item in c.solution" :key="item">
@@ -85,7 +83,6 @@ useHead(() => {
       </div>
     </section>
     <section class="estimate-block wrap">
-      <span class="eyebrow">{{ t('РЕЗУЛЬТАТ') }}</span>
       <h2>{{ t('Что изменилось') }}</h2>
       <ul class="clean-list">
         <li v-for="item in c.results" :key="item"><AppIcon name="check" :size="20" />{{ item }}</li>

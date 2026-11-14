@@ -1,135 +1,215 @@
 <script setup lang="ts">
-import { services as servicesRu } from '~/data/services';
-import { servicesUz } from '~/data/services.uz';
-import { company } from '#shared/brand.mjs';
+import { services as servicesRu, steps as stepsRu } from '~/data/services';
+import { servicesUz, stepsUz } from '~/data/services.uz';
+import { projectTypes } from '#shared/pricing.mjs';
+import { fromMln, termText } from '~/data/pricing-labels';
 const { t, localPath, locale } = useLanguage();
-const { enabled } = useMotion();
 const u = (r: string, z: string) => (locale.value === 'uz' ? z : r);
 const services = computed(() => (locale.value === 'uz' ? servicesUz : servicesRu));
-const active = ref(0);
-const hero = ref<HTMLElement>();
-const sculpture = ref<HTMLElement>();
-let frame = 0;
+const steps = computed(() => (locale.value === 'uz' ? stepsUz : stepsRu));
+const { list: cases } = useCases();
+const heading = computed(() =>
+  locale.value === 'uz'
+    ? ['Toshkentda biznes uchun', 'sayt va mobil ilova yaratish']
+    : ['Разработка сайтов и мобильных приложений', 'для бизнеса в Ташкенте']
+);
 usePageSeo(
   'Разработка и создание сайтов и приложений в Ташкенте',
   'Разработка сайтов, веб-сервисов и мобильных приложений для бизнеса в Ташкенте и по всему Узбекистану. Прямое общение с разработчиком, от задачи до запуска.'
 );
 const { data: posts } = await useFetch<any[]>('/api/posts', { query: { lang: locale } });
-function drift() {
-  cancelAnimationFrame(frame);
-  frame = requestAnimationFrame(() => {
-    if (!hero.value) return;
-    const r = hero.value.getBoundingClientRect();
-    const p = enabled.value ? Math.max(0, Math.min(1, -r.top / r.height)) : 0;
-    hero.value.style.setProperty('--drift', `${p * 100}px`);
-    hero.value.style.setProperty('--turn', `${p * 12}deg`);
-  });
-}
-function pointer(e: PointerEvent) {
-  if (!enabled.value || e.pointerType !== 'mouse' || !sculpture.value) return;
-  const r = sculpture.value.getBoundingClientRect();
-  sculpture.value.style.setProperty('--px', `${(e.clientX - r.left - r.width / 2) * 0.035}px`);
-  sculpture.value.style.setProperty('--py', `${(e.clientY - r.top - r.height / 2) * 0.035}px`);
-}
-function reset() {
-  sculpture.value?.style.setProperty('--px', '0px');
-  sculpture.value?.style.setProperty('--py', '0px');
-}
-onMounted(() => {
-  window.addEventListener('scroll', drift, { passive: true });
-  drift();
-});
-watch(enabled, () => {
-  reset();
-  drift();
-});
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', drift);
-  cancelAnimationFrame(frame);
-});
+const landing = projectTypes.find(p => p.id === 'landing')!;
+const serviceFrom = (code: string) =>
+  fromMln(
+    Math.min(...projectTypes.filter(p => p.service === code).map(p => p.price[0] ?? 0)),
+    locale.value
+  );
 </script>
 <template>
-  <div class="art-home">
-    <section class="art-hero" ref="hero">
-      <div class="wrap">
-        <div class="art-stage">
-          <div class="art-copy" data-reveal>
-            <h1>
-              <span class="h1-kicker">{{
-                u(
-                  'Разработка сайтов и мобильных приложений в Ташкенте',
-                  'Toshkentda sayt va mobil ilova yaratish'
-                )
-              }}</span><span class="h1-poster"
-                >{{ u('САЙТЫ.', 'SAYTLAR.') }}<br />{{ u('СЕРВИСЫ.', 'XIZMATLAR.') }}<br />{{
-                  u('ПРИЛОЖЕНИЯ.', 'ILOVALAR.')
-                }}</span
-              >
-            </h1>
-            <p>
-              {{
-                u(
-                  'Для вашего бизнеса и людей, которые им пользуются. От первого наброска до готового продукта.',
-                  'Biznesingiz va undan foydalanuvchilar uchun. Dastlabki eskizdan tayyor mahsulotgacha.'
-                )
-              }}
-            </p>
-            <NuxtLink class="art-button button" :to="localPath('/contact')"
-              ><span>{{ u('Обсудить задачу', 'Vazifani muhokama qilish') }}</span
-              ><span class="art-button-arrow"><AppIcon :size="24" /></span
-            ></NuxtLink>
-          </div>
-          <div class="art-object" ref="sculpture" @pointermove="pointer" @pointerleave="reset">
-            <div class="object-drift">
-              <picture
-                ><source
-                  type="image/avif"
-                  srcset="
-                    /images/cursor-sculpture-640.avif   640w,
-                    /images/cursor-sculpture-1160.avif 1160w
-                  "
-                  sizes="(max-width:760px) 105vw, 580px" />
-                <img
-                  class="cursor-sculpture"
-                  src="/images/cursor-sculpture-1160.webp"
-                  srcset="
-                    /images/cursor-sculpture-640.webp   640w,
-                    /images/cursor-sculpture-1160.webp 1160w
-                  "
-                  sizes="(max-width:760px) 105vw, 580px"
-                  :alt="
-                    u(
-                      'Объёмная скульптура курсора с хромированной лентой',
-                      'Xrom tasma bilan hajmli kursor haykali'
-                    )
-                  "
-                  width="1254"
-                  height="1254"
-                  fetchpriority="high"
-              /></picture>
-            </div>
-          </div>
-        </div>
-        <div class="art-hero-bottom">
-          <a href="#calculator"
-            >{{ u('Рассчитать стоимость', 'Narxni hisoblash') }} <span>↓</span></a
-          ><a href="#services"
-            >{{ u('Посмотреть услуги', 'Xizmatlarni ko‘rish') }} <span>↓</span></a
-          >
+  <div class="home">
+    <section class="home-hero wrap">
+      <div class="home-hero-copy" data-reveal>
+        <h1>
+          {{ heading[0] }} <span class="accent-text">{{ heading[1] }}</span>
+        </h1>
+        <p class="lede">
+          {{
+            u(
+              'Сайты, веб-сервисы, Telegram-боты и приложения под ключ. Работаем по договору: цена фиксируется до старта, вы общаетесь напрямую с разработчиком.',
+              'Saytlar, veb-xizmatlar, Telegram-botlar va ilovalar. Shartnoma asosida ishlaymiz: narx ish boshlanishidan oldin belgilanadi, siz dasturchi bilan bevosita muloqot qilasiz.'
+            )
+          }}
+        </p>
+        <div class="home-hero-actions">
+          <NuxtLink class="button" :to="localPath('/contact')">{{ t('Обсудить проект') }}</NuxtLink>
+          <a class="button button-secondary" href="#calculator">{{
+            u('Рассчитать стоимость', 'Narxni hisoblash')
+          }}</a>
         </div>
       </div>
+      <div class="home-hero-art" aria-hidden="true">
+        <picture
+          ><source
+            type="image/avif"
+            srcset="
+              /images/cursor-sculpture-640.avif   640w,
+              /images/cursor-sculpture-1160.avif 1160w
+            "
+            sizes="(max-width:760px) 80vw, 520px" />
+          <img
+            src="/images/cursor-sculpture-1160.webp"
+            srcset="
+              /images/cursor-sculpture-640.webp   640w,
+              /images/cursor-sculpture-1160.webp 1160w
+            "
+            sizes="(max-width:760px) 80vw, 520px"
+            alt=""
+            width="1254"
+            height="1254"
+            fetchpriority="high"
+        /></picture>
+      </div>
     </section>
-    <section id="calculator" class="home-calc">
-      <div class="wrap">
-        <div class="journal-title home-calc-title">
-          <h2>
-            {{ u('СКОЛЬКО', 'LOYIHA') }}<br /><span>{{ u('СТОИТ?', 'NARXI?') }}</span>
-          </h2>
+
+    <section class="home-band">
+      <div class="wrap bento">
+        <article class="bento-card bento-main" data-reveal>
+          <h2>{{ u('Полный цикл разработки', 'To‘liq ishlab chiqish sikli') }}</h2>
           <p>
             {{
               u(
-                'Выберите тип проекта и функции — сразу увидите ориентировочную цену и срок. Без звонков и ожидания.',
-                'Loyiha turi va funksiyalarni tanlang — taxminiy narx va muddatni darhol ko‘rasiz. Qo‘ng‘iroq va kutishsiz.'
+                'От разбора задачи и дизайна до запуска и поддержки. Одна команда отвечает за результат целиком.',
+                'Vazifani tahlil qilish va dizayndan ishga tushirish va qo‘llab-quvvatlashgacha. Natija uchun bitta jamoa javob beradi.'
+              )
+            }}
+          </p>
+          <dl class="bento-stats">
+            <div>
+              <dt>{{ fromMln(landing.price[0], locale) }}</dt>
+              <dd>{{ u('стоимость лендинга', 'lending narxi') }}</dd>
+            </div>
+            <div>
+              <dt>{{ termText(landing.weeks, locale, t) }}</dt>
+              <dd>{{ u('срок лендинга', 'lending muddati') }}</dd>
+            </div>
+            <div>
+              <dt>RU + UZ</dt>
+              <dd>{{ u('сайты на двух языках', 'ikki tilli saytlar') }}</dd>
+            </div>
+          </dl>
+        </article>
+        <article class="bento-card" data-reveal>
+          <h3>{{ u('Работаем по договору', 'Shartnoma asosida') }}</h3>
+          <p>
+            {{
+              u(
+                'Сначала согласуем состав работ, затем фиксируем цену — до начала разработки.',
+                'Avval ishlar tarkibini kelishamiz, so‘ng narxni ish boshlanishidan oldin belgilaymiz.'
+              )
+            }}
+          </p>
+        </article>
+        <article class="bento-card" data-reveal>
+          <h3>{{ u('Прямое общение', 'Bevosita muloqot') }}</h3>
+          <p>
+            {{
+              u(
+                'С вами работает разработчик, без менеджеров-посредников.',
+                'Siz bilan vositachi menejerlarsiz dasturchi ishlaydi.'
+              )
+            }}
+          </p>
+        </article>
+        <article class="bento-card bento-accent" data-reveal>
+          <h3>{{ t('Ежедневно 9:00–20:00') }}</h3>
+          <p><PhoneLink place="home-bento" class="bento-phone" /></p>
+          <TelegramLink place="home-bento" class="bento-link" />
+        </article>
+        <article class="bento-card" data-reveal>
+          <h3>{{ u('Онлайн-калькулятор', 'Onlayn kalkulyator') }}</h3>
+          <p>
+            {{
+              u(
+                'Ориентировочная цена и срок за минуту — без звонков.',
+                'Taxminiy narx va muddat bir daqiqada — qo‘ng‘iroqsiz.'
+              )
+            }}
+          </p>
+          <a class="text-link" href="#calculator"
+            >{{ u('Рассчитать', 'Hisoblash') }} <AppIcon :size="18"
+          /></a>
+        </article>
+      </div>
+    </section>
+
+    <section id="projects" class="home-section wrap">
+      <div class="section-head">
+        <h2>{{ u('Проекты', 'Loyihalar') }}</h2>
+      </div>
+      <ProjectTiles />
+    </section>
+
+    <section id="services" class="home-section wrap">
+      <div class="section-head">
+        <h2>{{ t('Услуги') }}</h2>
+        <NuxtLink class="text-link" :to="localPath('/prices')"
+          >{{ t('Все цены') }} <AppIcon :size="18"
+        /></NuxtLink>
+      </div>
+      <div class="service-cards">
+        <NuxtLink
+          v-for="s in services"
+          :key="s.slug"
+          :to="localPath(`/services/${s.slug}`)"
+          class="service-card"
+          data-reveal
+        >
+          <span class="service-card-number">{{ s.number }}</span>
+          <h3>{{ s.title }}</h3>
+          <p>{{ s.short }}</p>
+          <span class="service-card-price">{{ serviceFrom(s.code) }}</span>
+          <span class="text-link">{{ u('Подробнее', 'Batafsil') }} <AppIcon :size="18" /></span>
+        </NuxtLink>
+      </div>
+    </section>
+
+    <section v-if="cases.length" class="home-section wrap">
+      <div class="section-head">
+        <h2>{{ t('Кейсы') }}</h2>
+        <NuxtLink class="text-link" :to="localPath('/cases')"
+          >{{ t('Все кейсы') }} <AppIcon :size="18"
+        /></NuxtLink>
+      </div>
+      <CaseCards :items="cases.slice(0, 3)" />
+    </section>
+
+    <section class="home-band">
+      <div class="wrap home-section">
+        <div class="section-head">
+          <h2>{{ u('Как мы работаем', 'Qanday ishlaymiz') }}</h2>
+          <NuxtLink class="text-link" :to="localPath('/process')"
+            >{{ u('Подробнее о процессе', 'Jarayon haqida batafsil') }} <AppIcon :size="18"
+          /></NuxtLink>
+        </div>
+        <ol class="step-cards">
+          <li v-for="step in steps" :key="step.n" class="step-card" data-reveal>
+            <span class="step-card-number">{{ step.n }}</span>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.body }}</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="calculator" class="home-section home-calc-section">
+      <div class="wrap section-head">
+        <div>
+          <h2>{{ u('Сколько стоит проект', 'Loyiha narxi qancha') }}</h2>
+          <p class="lede">
+            {{
+              u(
+                'Выберите тип проекта и функции — сразу увидите ориентировочную цену и срок.',
+                'Loyiha turi va funksiyalarni tanlang — taxminiy narx va muddatni darhol ko‘rasiz.'
               )
             }}
           </p>
@@ -137,114 +217,17 @@ onBeforeUnmount(() => {
       </div>
       <CostCalculator />
     </section>
-    <section id="about" class="art-about wrap">
-      <div class="manifesto" data-reveal>
-        <span>{{ u('РАБОТАЕМ', 'SHARTNOMA') }}</span><span class="manifesto-middle"
-          >{{ u('ПО ДОГОВОРУ.', 'ASOSIDA.') }} <i aria-hidden="true">↗</i></span
-        ><span>{{ u('ЦЕНА — ДО СТАРТА.', 'NARX — ISHDAN OLDIN.') }}</span>
-      </div>
-      <div class="about-bottom">
-        <span class="about-asterisk" aria-hidden="true">✳</span>
-        <p>
-          {{
-            u(
-              `Проекты ведёт ${company.legalName.ru}. Сначала разбираем задачу и согласуем состав работ, затем фиксируем цену в договоре — до начала разработки. Вы общаетесь напрямую с разработчиком.`,
-              `Loyihalarni ${company.legalName.uz} olib boradi. Avval vazifani tahlil qilamiz va ishlar tarkibini kelishamiz, so‘ng narxni shartnomada belgilaymiz — ish boshlanishidan oldin. Siz dasturchi bilan bevosita muloqot qilasiz.`
-            )
-          }}
-        </p>
-        <NuxtLink class="text-link" :to="localPath('/process')"
-          >{{ u('Познакомиться с процессом', 'Jarayon bilan tanishish') }} <AppIcon
+
+    <section v-if="posts?.length" class="home-section wrap">
+      <div class="section-head">
+        <h2>{{ t('Журнал') }}</h2>
+        <NuxtLink class="text-link" :to="localPath('/journal')"
+          >{{ u('Все материалы', 'Barcha maqolalar') }} <AppIcon :size="18"
         /></NuxtLink>
       </div>
+      <JournalCards :posts="posts.slice(0, 3)" />
     </section>
-    <section class="art-services" id="services">
-      <div class="wrap">
-        <div class="art-service-list">
-          <article
-            v-for="(service, i) in services"
-            :key="service.slug"
-            class="art-service"
-            :class="{ expanded: active === i }"
-          >
-            <h2>
-              <button
-                :aria-expanded="active === i"
-                :aria-controls="`service-panel-${i}`"
-                @click="active = active === i ? -1 : i"
-              >
-                <span class="service-counter">0{{ i + 1 }}</span
-                ><span>{{ service.title }}</span
-                ><span class="service-toggle">{{ active === i ? '−' : '+' }}</span>
-              </button>
-            </h2>
-            <div :id="`service-panel-${i}`" class="service-drawer" v-show="active === i">
-              <div class="service-poster" :class="`service-poster-${i}`" aria-hidden="true">
-                <span>{{ ['WEB', 'SYSTEM', 'MOBILE'][i] }}</span>
-                <div>{{ ['↗', '{ }', '↕'][i] }}</div>
-              </div>
-              <div class="service-drawer-content">
-                <p>{{ service.intro }}</p>
-                <NuxtLink :to="localPath(`/services/${service.slug}`)" class="text-link"
-                  >{{ u('Подробнее о разработке', 'Dasturlash haqida batafsil') }} <AppIcon
-                /></NuxtLink>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-    <CreationSequence />
-    <section class="art-journal wrap">
-      <div class="art-kicker">
-        <NuxtLink :to="localPath('/journal')"
-          >{{ u('ВСЕ МАТЕРИАЛЫ', 'BARCHA MAQOLALAR') }} ↗</NuxtLink
-        >
-      </div>
-      <div class="journal-title" data-reveal>
-        <h2>
-          {{ u('МЫСЛИ', 'OCHIQ') }}<br /><span>{{ u('ВСЛУХ.', 'FIKRLAR.') }}</span>
-        </h2>
-        <p>
-          {{
-            u(
-              'О том, что за красивым экраном: решения, технологии, сроки и деньги. Без лишних терминов.',
-              'Chiroyli ekran ortidagi yechimlar, texnologiyalar, muddatlar va xarajatlar haqida. Ortiqcha atamalarsiz.'
-            )
-          }}
-        </p>
-        <span class="journal-doodle" aria-hidden="true">↴</span>
-      </div>
-      <div class="editorial-list">
-        <NuxtLink
-          v-for="(post, i) in (posts || []).slice(0, 3)"
-          :key="post.slug"
-          :to="localPath(`/journal/${post.slug}`)"
-          class="editorial-entry"
-          data-reveal
-          ><span class="editorial-number">0{{ i + 1 }}</span>
-          <div>
-            <span class="editorial-category">{{ post.category }} / {{ post.readTime }}</span>
-            <h3>{{ post.title }}</h3>
-            <p>{{ post.description }}</p>
-          </div>
-          <span class="editorial-arrow"><AppIcon :size="36" /></span
-        ></NuxtLink>
-      </div>
-    </section>
-    <section class="art-contact">
-      <div class="wrap">
-        <NuxtLink :to="localPath('/contact')" class="art-contact-link"
-          ><span>{{ u('ЕСТЬ', 'G‘OYA') }}<br />{{ u('ИДЕЯ?', 'BORMI?') }}</span
-          ><span class="contact-orb"><AppIcon :size="110" /></span
-        ></NuxtLink>
-        <div class="art-contact-bottom">
-          <p>{{ u('Расскажите. Вместе найдём ей форму.', 'Ayting. Birga unga shakl topamiz.') }}</p>
-          <NuxtLink :to="localPath('/contact')" class="text-link"
-            >{{ t('Обсудить проект') }} <AppIcon
-          /></NuxtLink>
-        </div>
-      </div>
-    </section>
+
+    <ProjectCta />
   </div>
 </template>

@@ -101,12 +101,12 @@ useHead(() => {
       }}
     </p>
     <div v-if="p.answer" class="article-answer">
-      <span class="eyebrow">{{ t('КОРОТКИЙ ОТВЕТ') }}</span>
+      <span class="label-text">{{ t('КОРОТКИЙ ОТВЕТ') }}</span>
       <p>{{ p.answer }}</p>
     </div>
     <div class="article-layout">
       <aside>
-        <span class="eyebrow">{{ t('В ЭТОЙ СТАТЬЕ') }}</span><a
+        <span class="label-text">{{ t('В ЭТОЙ СТАТЬЕ') }}</span><a
           v-for="(s, i) in p.content"
           :key="i"
           :href="`#section-${i}`"

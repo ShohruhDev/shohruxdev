@@ -5,7 +5,7 @@
   --muted: #a5aaa0;
   --line: #2d312a;
   --accent: #d4f77d;
-  --font: 'Manrope', sans-serif;
+  --font: 'Montserrat', sans-serif;
   color-scheme: dark;
   font-family: var(--font);
   color: var(--text);
