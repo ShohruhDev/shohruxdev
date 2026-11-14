@@ -4,6 +4,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { openStore } from '../server/lib/store.mjs';
+import { nicheTopics } from '../server/lib/topics.mjs';
 const dir = mkdtempSync(join(tmpdir(), 'admin-http-')),
   file = join(dir, 'content.sqlite'),
   port = 3177,
@@ -69,7 +70,7 @@ try {
   assert.equal((await post('/api/admin/action', { action: 'seed' })).status, 200);
   assert.equal((await post('/api/admin/action', { action: 'seed' })).status, 200);
   state = await (await fetch(base + '/api/admin/state', { headers: { Cookie: cookie } })).json();
-  assert.equal(state.topics.length, 24);
+  assert.equal(state.topics.length, nicheTopics.length);
   const revision = async () => {
     const data = await (
       await fetch(base + '/api/admin/state', { headers: { Cookie: cookie } })
