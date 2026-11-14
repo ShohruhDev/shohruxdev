@@ -1,32 +1,8 @@
 <script setup lang="ts">
 import { estimate, projectTypes, options as allOptions } from '#shared/pricing.mjs';
+import { designLabels, formatMln, optionLabels, termText, typeLabel } from '~/data/pricing-labels';
 const { t, localPath, locale } = useLanguage();
 const { goal } = useAnalytics();
-const typeLabels: Record<string, [string, string]> = {
-  landing: ['Лендинг', 'Одна страница под услугу или акцию'],
-  corporate: ['Корпоративный сайт', 'Услуги, о компании, контакты'],
-  catalog: ['Сайт-каталог', 'Товары или услуги с фильтрами'],
-  shop: ['Интернет-магазин', 'Корзина, заказ, оплата'],
-  webapp: ['Веб-сервис / CRM', 'Личный кабинет, внутренняя система'],
-  telegram: ['Telegram-бот или Mini App', 'Запись, заказ или каталог в Telegram'],
-  mobile: ['Мобильное приложение', 'iOS и Android']
-};
-const typeLabel = (id: string): [string, string] =>
-  typeLabels[id] ?? ['Лендинг', 'Одна страница под услугу или акцию'];
-const optionLabels: Record<string, string> = {
-  payments: 'Онлайн-оплата (Payme, Click, Uzum)',
-  booking: 'Онлайн-запись',
-  crm: 'Интеграция с CRM (amoCRM, Bitrix24)',
-  onec: 'Интеграция с 1С',
-  cabinet: 'Личный кабинет клиента',
-  seo: 'Расширенное SEO',
-  copy: 'Написать тексты'
-};
-const designLabels: Record<string, string> = {
-  template: 'На готовой основе',
-  custom: 'Индивидуальный',
-  premium: 'Премиум с анимацией'
-};
 const state = reactive({
   type: 'corporate',
   pages: 7,
@@ -39,17 +15,11 @@ const result = computed(() => estimate(state));
 const available = computed(() => allOptions.filter(o => o.types.includes(state.type)));
 const included = computed(() => projectTypes.find(p => p.id === state.type)?.includedPages);
 // Keep decimal separators identical in server and browser ICU versions.
-const num = (v: number) =>
-  String(Math.round(v * 10) / 10).replace('.', locale.value === 'uz' ? '.' : ',');
+const num = (v: number) => formatMln(v, locale.value);
 const price = computed(
   () => `${num(result.value.price[0])} – ${num(result.value.price[1])} ${t('млн сум')}`
 );
-const term = computed(() => {
-  const [a, b] = result.value.weeks;
-  return b > 8
-    ? `${num(Math.round((a / 4.33) * 2) / 2)} – ${num(Math.round((b / 4.33) * 2) / 2)} ${t('мес.')}`
-    : `${a} – ${b} ${t('нед.')}`;
-});
+const term = computed(() => termText(result.value.weeks, locale.value, t));
 const summary = computed(() =>
   [
     `${t('Расчёт калькулятора')}: ${t(typeLabel(state.type)[0])}`,

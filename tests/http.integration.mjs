@@ -35,6 +35,7 @@ try {
     '/services/mobile-apps',
     '/process',
     '/calculator',
+    '/prices',
     '/journal',
     '/contact',
     '/privacy',
@@ -47,7 +48,14 @@ try {
     assert.match(html, /noindex/);
     assert.match(html, /rel="canonical"/);
   }
-  for (const path of ['/services/missing', '/journal/private-draft', '/missing-page'])
+  // Раздел кейсов скрыт, пока в shared/cases.mjs нет ни одного кейса.
+  const { cases } = await import('../shared/cases.mjs');
+  for (const path of [
+    '/services/missing',
+    '/journal/private-draft',
+    '/missing-page',
+    ...(cases.length ? ['/cases/missing'] : ['/cases', '/cases/missing'])
+  ])
     assert.equal((await fetch(base + path)).status, 404, path);
   const home = await (await fetch(base)).text();
   assert.match(home, /<h1[^>]*>САЙТЫ\./);

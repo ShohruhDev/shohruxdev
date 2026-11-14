@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { authorName, brandAlternateName, brandName } from '#shared/brand.mjs';
+import { cases } from '#shared/cases.mjs';
+const hasCases = cases.length > 0;
 const { t, localPath, locale } = useLanguage();
 
 const config = useRuntimeConfig();
@@ -82,6 +84,8 @@ watch(
           :to="localPath('/process')"
           >{{ t('Подход') }}</NuxtLink
         ><NuxtLink :to="localPath('/calculator')">{{ t('Калькулятор') }}</NuxtLink
+        ><NuxtLink :to="localPath('/prices')">{{ t('Цены') }}</NuxtLink
+        ><NuxtLink v-if="hasCases" :to="localPath('/cases')">{{ t('Кейсы') }}</NuxtLink
         ><NuxtLink :to="localPath('/journal')">{{ t('Журнал') }}</NuxtLink>
       </nav>
       <NuxtLink :to="localPath('/contact')" class="button button-small header-cta">{{
@@ -107,6 +111,8 @@ watch(
           :to="localPath('/process')"
           >{{ t('Подход') }}</NuxtLink
         ><NuxtLink :to="localPath('/calculator')">{{ t('Калькулятор') }}</NuxtLink
+        ><NuxtLink :to="localPath('/prices')">{{ t('Цены') }}</NuxtLink
+        ><NuxtLink v-if="hasCases" :to="localPath('/cases')">{{ t('Кейсы') }}</NuxtLink
         ><NuxtLink :to="localPath('/journal')">{{ t('Журнал') }}</NuxtLink
         ><NuxtLink :to="localPath('/contact')">{{ t('Обсудить проект') }}</NuxtLink>
       </nav>
@@ -122,6 +128,8 @@ watch(
         <NuxtLink :to="localPath('/services')">{{ t('Услуги') }}</NuxtLink><NuxtLink
           :to="localPath('/calculator')"
           >{{ t('Калькулятор') }}</NuxtLink
+        ><NuxtLink :to="localPath('/prices')">{{ t('Цены') }}</NuxtLink
+        ><NuxtLink v-if="hasCases" :to="localPath('/cases')">{{ t('Кейсы') }}</NuxtLink
         ><NuxtLink :to="localPath('/journal')">{{ t('Журнал') }}</NuxtLink
         ><NuxtLink :to="localPath('/contact')">{{ t('Обсудить проект') }}</NuxtLink
         ><TelegramLink place="footer" label="Telegram" /><NuxtLink :to="localPath('/privacy')">{{

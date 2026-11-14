@@ -2,7 +2,6 @@
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import { createHash } from 'node:crypto';
-import { brandDomain, brandName, authorName } from '../../shared/brand.mjs';
 
 export const OG_WIDTH = 1200;
 export const OG_HEIGHT = 630;
@@ -29,7 +28,8 @@ export function ogVersion(post) {
     .slice(0, 10);
 }
 
-export function articleTree({ title, category, locale }) {
+/** brand: { name, domain, author } — передаёт маршрут (импорт #shared работает только в сборке Nuxt). */
+export function articleTree({ title, category, locale }, brand) {
   const label = locale === 'uz' ? 'Blog' : 'Журнал';
   const heading = clip(title, 130);
   return h(
@@ -75,7 +75,7 @@ export function articleTree({ title, category, locale }) {
             letterSpacing: 1,
             textTransform: 'uppercase'
           },
-          brandName
+          brand.name
         )
       ]),
       h('div', { display: 'flex', flexDirection: 'column', gap: 28, maxWidth: 960 }, [
@@ -103,13 +103,17 @@ export function articleTree({ title, category, locale }) {
           heading
         )
       ]),
-      h('div', { display: 'flex', fontSize: 26, color: C.muted }, `${authorName} · ${brandDomain}`)
+      h(
+        'div',
+        { display: 'flex', fontSize: 26, color: C.muted },
+        `${brand.author} · ${brand.domain}`
+      )
     ]
   );
 }
 
-export async function renderArticleImage(post, fonts) {
-  const svg = await satori(articleTree(post), { width: OG_WIDTH, height: OG_HEIGHT, fonts });
+export async function renderArticleImage(post, fonts, brand) {
+  const svg = await satori(articleTree(post, brand), { width: OG_WIDTH, height: OG_HEIGHT, fonts });
   return new Resvg(svg, { fitTo: { mode: 'width', value: OG_WIDTH } }).render().asPng();
 }
 

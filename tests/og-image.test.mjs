@@ -11,6 +11,8 @@ import {
   renderArticleImage,
   titleSize
 } from '../server/lib/og-image.mjs';
+import { authorName, brandDomain, brandName } from '../shared/brand.mjs';
+const brand = { name: brandName, domain: brandDomain, author: authorName };
 
 const dir = 'server/assets/og-fonts';
 const fonts = ogFonts(
@@ -46,7 +48,7 @@ test('renders 1200x630 PNG for Russian and Uzbek titles', async () => {
       locale: 'uz'
     }
   ]) {
-    const png = await renderArticleImage(post, fonts);
+    const png = await renderArticleImage(post, fonts, brand);
     assert.equal(png.subarray(1, 4).toString(), 'PNG');
     assert.equal(png.readUInt32BE(16), OG_WIDTH);
     assert.equal(png.readUInt32BE(20), OG_HEIGHT);

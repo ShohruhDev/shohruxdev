@@ -52,6 +52,7 @@ try {
     '/uz/services/web-apps',
     '/uz/services/mobile-apps',
     '/uz/process',
+    '/uz/prices',
     '/uz/contact',
     '/uz/privacy',
     '/uz/journal',
@@ -114,7 +115,7 @@ try {
   after.close();
   assert.match(await (await fetch(base + '/feed.xml?lang=uz')).text(), /<language>uz<\/language>/);
   console.log(
-    'PASS: 13 Uzbek SSR routes without Russian visible text; lang/canonical/reciprocal alternates, published translation, RU-only exclusion and 404, Uzbek form persistence, RSS language.'
+    'PASS: 14 Uzbek SSR routes without Russian visible text; lang/canonical/reciprocal alternates, published translation, RU-only exclusion and 404, Uzbek form persistence, RSS language.'
   );
 } finally {
   child.kill();

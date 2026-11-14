@@ -1,3 +1,4 @@
+import { cases } from '#shared/cases.mjs';
 export default defineEventHandler(event => {
   const c = useRuntimeConfig();
   setHeader(event, 'Content-Type', 'application/xml; charset=utf-8');
@@ -9,8 +10,10 @@ export default defineEventHandler(event => {
     '/services/mobile-apps',
     '/process',
     '/calculator',
+    '/prices',
     '/journal',
-    '/contact'
+    '/contact',
+    ...(cases.length ? ['/cases', ...cases.map((c: any) => `/cases/${c.slug}`)] : [])
   ].map(path => ({ path, modified: '' }));
   paths.push(
     ...storage()
