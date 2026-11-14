@@ -22,7 +22,7 @@
    - TXT `_railway-verify` — значение из Railway.
 3. Дождаться в Railway статуса домена «Active» и выпуска HTTPS-сертификата. Проверка: `curl -I https://razrabotkatashkent.uz`.
 4. **Railway → Variables**: `SITE_URL=https://razrabotkatashkent.uz`. Остальные переменные не менять, `SITE_INDEXABLE=true` уже стоит на рабочем сайте.
-5. Пересобрать и выложить сервис (SITE_URL используется при сборке): `railway up --service web --detach` из папки проекта или Redeploy в панели.
+5. Пересобрать сервис, потому что SITE_URL используется при сборке: `railway service redeploy --service web` или Redeploy в панели. Изменение переменной в Railway обычно само предлагает передеплой.
 6. Проверить на новом домене:
    - `https://razrabotkatashkent.uz/` — в коде страницы `canonical` указывает на новый домен.
    - `/robots.txt` и `/sitemap.xml` — адреса на новом домене.
