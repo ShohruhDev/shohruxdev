@@ -33,6 +33,8 @@ useHead(() => {
         founder: { '@id': site + '/#person' },
         legalName: company.legalName.en,
         taxID: company.inn,
+        telephone: company.phone,
+        openingHours: 'Mo-Su 09:00-20:00',
         address: {
           '@type': 'PostalAddress',
           streetAddress: company.street,
@@ -48,6 +50,7 @@ useHead(() => {
         contactPoint: {
           '@type': 'ContactPoint',
           contactType: 'sales',
+          telephone: company.phone,
           url: new URL(localPath('/contact'), site).href,
           availableLanguage: ['ru', 'uz']
         }
@@ -137,6 +140,7 @@ watch(
       <div>
         <BrandLogo />
         <p>{{ t('Независимая разработка.') }}<br />{{ t('Узбекистан и СНГ.') }}</p>
+        <p class="footer-phone"><PhoneLink place="footer" /></p>
         <p class="footer-legal">
           {{ locale === 'uz' ? company.legalName.uz : company.legalName.ru }}<br />{{ t('ИНН') }}
           {{ innFormatted }}

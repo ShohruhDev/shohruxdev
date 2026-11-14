@@ -1736,3 +1736,26 @@ details p {
   font-size: 11px;
   line-height: 1.7;
 }
+.footer .footer-phone {
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.contact-hours {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
+/* На телефоне боковые блоки контактов скрыты, но номер для звонка оставляем. */
+@media (max-width: 760px) {
+  .contact-aside.contact-phone {
+    display: block;
+    margin-top: 28px;
+    padding-top: 18px;
+  }
+  .contact-aside.contact-phone p {
+    margin-top: 8px;
+    font-size: 18px;
+  }
+}
