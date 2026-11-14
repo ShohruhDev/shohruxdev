@@ -10,7 +10,7 @@ const hero = ref<HTMLElement>();
 const sculpture = ref<HTMLElement>();
 let frame = 0;
 usePageSeo(
-  'Разработка сайтов и приложений в Ташкенте',
+  'Разработка и создание сайтов и приложений в Ташкенте',
   'Разработка сайтов, веб-сервисов и мобильных приложений для бизнеса в Ташкенте и по всему Узбекистану. Прямое общение с разработчиком, от задачи до запуска.'
 );
 const { data: posts } = await useFetch<any[]>('/api/posts', { query: { lang: locale } });
@@ -54,9 +54,16 @@ onBeforeUnmount(() => {
         <div class="art-stage">
           <div class="art-copy" data-reveal>
             <h1>
-              {{ u('САЙТЫ.', 'SAYTLAR.') }}<br />{{ u('СЕРВИСЫ.', 'XIZMATLAR.') }}<br />{{
-                u('ПРИЛОЖЕНИЯ.', 'ILOVALAR.')
-              }}
+              <span class="h1-kicker">{{
+                u(
+                  'Разработка сайтов и мобильных приложений в Ташкенте',
+                  'Toshkentda sayt va mobil ilova yaratish'
+                )
+              }}</span><span class="h1-poster"
+                >{{ u('САЙТЫ.', 'SAYTLAR.') }}<br />{{ u('СЕРВИСЫ.', 'XIZMATLAR.') }}<br />{{
+                  u('ПРИЛОЖЕНИЯ.', 'ILOVALAR.')
+                }}</span
+              >
             </h1>
             <p>
               {{

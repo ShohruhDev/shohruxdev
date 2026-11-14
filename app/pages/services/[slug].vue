@@ -10,13 +10,6 @@ const services = computed(() => (locale.value === 'uz' ? servicesUz : servicesRu
 const route = useRoute();
 const s = computed(() => services.value.find(s => s.slug === route.params.slug));
 if (!s.value) throw createError({ statusCode: 404, statusMessage: 'Услуга не найдена' });
-usePageSeo(
-  () => s.value?.seoTitle || s.value?.title || '',
-  () => s.value?.seoDescription || s.value?.intro || '',
-  undefined,
-  undefined,
-  { parent: { name: 'Услуги', path: '/services' } }
-);
 const config = useRuntimeConfig();
 const priceRange = computed(() => {
   const types = projectTypes.filter(p => p.service === s.value?.code);
@@ -27,6 +20,13 @@ const priceRange = computed(() => {
 });
 const { list: related } = useCases(() => s.value?.code);
 const fromPrice = computed(() => fromMln(priceRange.value[0], locale.value));
+usePageSeo(
+  () => `${s.value?.seoTitle || s.value?.title || ''} — ${fromPrice.value}`,
+  () => s.value?.seoDescription || s.value?.intro || '',
+  undefined,
+  undefined,
+  { parent: { name: 'Услуги', path: '/services' } }
+);
 useHead(() => {
   const svc = s.value;
   if (!svc) return {};
@@ -82,7 +82,9 @@ useHead(() => {
         ><AppIcon name="left" :size="18" /> {{ t('Все услуги') }}</NuxtLink
       ><span class="eyebrow">{{ s.eyebrow }}</span>
       <h1>{{ s.headline }}</h1>
-      <p class="lede">{{ s.intro }}</p>
+      <p class="lede">
+        <strong>{{ s.tagline }}</strong> {{ s.intro }}
+      </p>
       <NuxtLink :to="{ path: localPath('/contact'), query: { service: s.code } }" class="button"
         >{{ t('Обсудить задачу') }} <AppIcon
       /></NuxtLink>
@@ -90,14 +92,14 @@ useHead(() => {
     <section class="detail-grid wrap">
       <div>
         <span class="eyebrow">{{ t('КОГДА НУЖНО') }}</span>
-        <h2>{{ t('Узнаёте свою задачу?') }}</h2>
+        <h2>{{ s.forTitle }}</h2>
         <ul class="clean-list">
           <li v-for="item in s.for" :key="item"><AppIcon name="check" :size="20" />{{ item }}</li>
         </ul>
       </div>
       <div>
         <span class="eyebrow">{{ t('РЕЗУЛЬТАТ РАБОТЫ') }}</span>
-        <h2>{{ t('Что входит в проект') }}</h2>
+        <h2>{{ s.deliverTitle }}</h2>
         <ul class="clean-list">
           <li v-for="item in s.deliver" :key="item">
             <AppIcon name="check" :size="20" />{{ item }}
@@ -131,7 +133,7 @@ useHead(() => {
       <CaseCards :items="related" />
     </section>
     <section class="faq wrap">
-      <h2>{{ t('Частые вопросы') }}</h2>
+      <h2>{{ s.faqTitle }}</h2>
       <details v-for="item in s.faq" :key="item[0]">
         <summary>{{ item[0] }}<AppIcon name="plus" /></summary>
         <p>{{ item[1] }}</p>

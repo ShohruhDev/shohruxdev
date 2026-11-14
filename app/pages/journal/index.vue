@@ -2,7 +2,7 @@
 const { t, localPath, locale } = useLanguage();
 
 usePageSeo(
-  'Журнал о разработке для бизнеса',
+  'Блог о разработке сайтов и приложений для бизнеса',
   'Как выбирать между сайтом и приложением, планировать бюджет и запускать первую версию продукта.'
 );
 const { data: posts } = await useFetch<any[]>('/api/posts', { query: { lang: locale } });
@@ -20,7 +20,7 @@ const filtered = computed(() =>
 </script>
 <template>
   <section class="page-intro wrap">
-    <h1>{{ t('Разработка.') }}<br />{{ t('На языке бизнеса.') }}</h1>
+    <h1>{{ t('Блог о разработке') }}<br />{{ t('для бизнеса') }}</h1>
     <p class="lede">
       {{
         t(

@@ -1738,3 +1738,24 @@ html[data-motion='off'] .cursor-sculpture {
     overflow-wrap: anywhere;
   }
 }
+/* Ключевая фраза над плакатом главной: часть H1, но набрана мелко. */
+.art-copy h1 .h1-kicker {
+  display: block;
+  margin-bottom: 18px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.art-copy h1 .h1-poster {
+  display: block;
+}
+@media (max-width: 760px) {
+  .art-copy h1 .h1-kicker {
+    font-size: 11px;
+    margin-bottom: 12px;
+  }
+}
