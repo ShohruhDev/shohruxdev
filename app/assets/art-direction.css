@@ -357,9 +357,10 @@
   gap: 20px;
 }
 .manifesto-middle i {
-  font: normal 1.5em/0.7 var(--font);
+  font: normal 1.1em/0.7 var(--font);
   color: var(--orange);
-  transform: rotate(-12deg);
+  /* Подняли стрелку, чтобы она не задевала длинную нижнюю строку. */
+  transform: translateY(-0.18em) rotate(-12deg);
 }
 .manifesto > span:last-child {
   padding-left: 22%;

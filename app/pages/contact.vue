@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { company, innFormatted } from '#shared/brand.mjs';
 const { t, localPath, locale } = useLanguage();
 
 usePageSeo(
@@ -55,6 +56,13 @@ async function submit() {
           {{ t('Уточним задачу и ограничения.') }}<br />{{ t('Обсудим возможный подход.') }}<br />{{
             t('Определим состав первой версии.')
           }}
+        </p>
+      </div>
+      <div class="contact-aside">
+        <span class="eyebrow">{{ t('РЕКВИЗИТЫ') }}</span>
+        <p>
+          {{ locale === 'uz' ? company.legalName.uz : company.legalName.ru }}<br />{{ t('ИНН') }}
+          {{ innFormatted }}<br />{{ locale === 'uz' ? company.address.uz : company.address.ru }}
         </p>
       </div>
       <div v-if="config.public.telegram" class="contact-aside">

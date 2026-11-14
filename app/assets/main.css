@@ -1730,3 +1730,9 @@ details p {
     margin: 25px 0 10px;
   }
 }
+.footer .footer-legal {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+}

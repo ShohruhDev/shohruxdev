@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { authorName, brandAlternateName, brandName } from '#shared/brand.mjs';
+import {
+  authorName,
+  brandAlternateName,
+  brandName,
+  company,
+  innFormatted
+} from '#shared/brand.mjs';
 import { cases } from '#shared/cases.mjs';
 const hasCases = cases.length > 0;
 const { t, localPath, locale } = useLanguage();
@@ -25,7 +31,15 @@ useHead(() => {
           'Разработка сайтов, веб-сервисов и мобильных приложений для бизнеса в Узбекистане и СНГ.'
         ),
         founder: { '@id': site + '/#person' },
-        address: { '@type': 'PostalAddress', addressLocality: 'Tashkent', addressCountry: 'UZ' },
+        legalName: company.legalName.en,
+        taxID: company.inn,
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: company.street,
+          addressLocality: 'Tashkent',
+          addressRegion: company.district,
+          addressCountry: 'UZ'
+        },
         areaServed: [
           { '@type': 'Country', name: 'Uzbekistan' },
           { '@type': 'Place', name: 'CIS' }
@@ -123,6 +137,10 @@ watch(
       <div>
         <BrandLogo />
         <p>{{ t('Независимая разработка.') }}<br />{{ t('Узбекистан и СНГ.') }}</p>
+        <p class="footer-legal">
+          {{ locale === 'uz' ? company.legalName.uz : company.legalName.ru }}<br />{{ t('ИНН') }}
+          {{ innFormatted }}
+        </p>
       </div>
       <div class="footer-links">
         <NuxtLink :to="localPath('/services')">{{ t('Услуги') }}</NuxtLink><NuxtLink

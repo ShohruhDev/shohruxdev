@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { services as servicesRu } from '~/data/services';
 import { servicesUz } from '~/data/services.uz';
+import { company } from '#shared/brand.mjs';
 const { t, localPath, locale } = useLanguage();
 const { enabled } = useMotion();
 const u = (r: string, z: string) => (locale.value === 'uz' ? z : r);
@@ -138,17 +139,17 @@ onBeforeUnmount(() => {
     </section>
     <section id="about" class="art-about wrap">
       <div class="manifesto" data-reveal>
-        <span>{{ u('ВАШ БИЗНЕС', 'BIZNESINGIZ') }}</span><span class="manifesto-middle"
-          >{{ u('НЕ КАК ВСЕ.', 'O‘ZIGA XOS.') }} <i aria-hidden="true">↗</i></span
-        ><span>{{ u('САЙТ — ТОЖЕ.', 'SAYTINGIZ HAM.') }}</span>
+        <span>{{ u('РАБОТАЕМ', 'SHARTNOMA') }}</span><span class="manifesto-middle"
+          >{{ u('ПО ДОГОВОРУ.', 'ASOSIDA.') }} <i aria-hidden="true">↗</i></span
+        ><span>{{ u('ЦЕНА — ДО СТАРТА.', 'NARX — ISHDAN OLDIN.') }}</span>
       </div>
       <div class="about-bottom">
         <span class="about-asterisk" aria-hidden="true">✳</span>
         <p>
           {{
             u(
-              'Хороший сайт начинается с понимания: кому нужен ваш продукт, что он меняет и почему его выберут. Из этих ответов складываются структура, дизайн и удобный путь клиента.',
-              'Yaxshi sayt tushunishdan boshlanadi: mahsulotingiz kimga kerak, nimani o‘zgartiradi va nega uni tanlashadi? Shu javoblardan tuzilma, dizayn va mijoz uchun qulay yo‘l shakllanadi.'
+              `Проекты ведёт ${company.legalName.ru}. Сначала разбираем задачу и согласуем состав работ, затем фиксируем цену в договоре — до начала разработки. Вы общаетесь напрямую с разработчиком.`,
+              `Loyihalarni ${company.legalName.uz} olib boradi. Avval vazifani tahlil qilamiz va ishlar tarkibini kelishamiz, so‘ng narxni shartnomada belgilaymiz — ish boshlanishidan oldin. Siz dasturchi bilan bevosita muloqot qilasiz.`
             )
           }}
         </p>
