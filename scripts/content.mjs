@@ -1,8 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { openStore } from '../server/lib/store.mjs';
+import { indexNowOnPublish } from '../server/lib/indexnow.mjs';
 const [command, arg, date] = process.argv.slice(2);
-const db = openStore(process.env.CONTENT_DB || resolve('.data/content.sqlite'));
+const db = openStore(process.env.CONTENT_DB || resolve('.data/content.sqlite'), {
+  onPublish: indexNowOnPublish()
+});
 try {
   if (command === 'import') {
     if (!arg) throw new Error('JSON file required');

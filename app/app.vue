@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { brandAlternateName, brandName } from '#shared/brand.mjs';
+import { authorName, brandAlternateName, brandName } from '#shared/brand.mjs';
 const { t, localPath, locale } = useLanguage();
 
 const config = useRuntimeConfig();
@@ -39,7 +39,7 @@ useHead(() => {
       {
         '@type': 'Person',
         '@id': site + '/#person',
-        name: 'Burxonov Shohrux',
+        name: authorName,
         jobTitle: t('Разработчик сайтов и мобильных приложений'),
         url: site + '/',
         worksFor: { '@id': site + '/#org' }

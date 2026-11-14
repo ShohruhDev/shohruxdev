@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { validateDraft } from './core.mjs';
 import { editorialStore } from './editorial.mjs';
 
-export function openStore(path) {
+export function openStore(path, { onPublish } = {}) {
   mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
   const db = new DatabaseSync(path);
   db.exec(`PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;
@@ -93,7 +93,7 @@ export function openStore(path) {
       db.exec('BEGIN IMMEDIATE');
       try {
         const rows = db
-          .prepare("SELECT slug FROM posts WHERE status='approved' AND scheduled_at<=?")
+          .prepare("SELECT slug,payload FROM posts WHERE status='approved' AND scheduled_at<=?")
           .all(now);
         for (const r of rows) {
           db.prepare("UPDATE posts SET status='published', published_at=? WHERE slug=?").run(
@@ -103,6 +103,13 @@ export function openStore(path) {
           log('published', r.slug);
         }
         db.exec('COMMIT');
+        if (rows.length && onPublish) {
+          try {
+            onPublish(rows.map(r => ({ ...JSON.parse(r.payload), slug: r.slug })));
+          } catch {
+            // Уведомления о публикации не должны влиять на сам выпуск.
+          }
+        }
         return rows.length;
       } catch (e) {
         db.exec('ROLLBACK');

@@ -23,24 +23,17 @@ export default defineNuxtConfig({
     }
   },
   devtools: { enabled: false },
+  // Файлы по насыщенности содержат unicode-range: браузер грузит только нужные наборы символов.
   css: [
-    '@fontsource/manrope/cyrillic-400.css',
-    '@fontsource/manrope/cyrillic-500.css',
-    '@fontsource/manrope/cyrillic-600.css',
-    '@fontsource/manrope/cyrillic-700.css',
-    '@fontsource/manrope/latin-400.css',
-    '@fontsource/manrope/latin-500.css',
-    '@fontsource/manrope/latin-600.css',
-    '@fontsource/manrope/latin-700.css',
+    '@fontsource/manrope/400.css',
+    '@fontsource/manrope/500.css',
+    '@fontsource/manrope/600.css',
+    '@fontsource/manrope/700.css',
     '~/assets/main.css',
     '~/assets/studio.css',
     '~/assets/art-direction.css',
-    '@fontsource/unbounded/cyrillic-700.css',
-    '@fontsource/unbounded/cyrillic-800.css',
-    '@fontsource/unbounded/latin-700.css',
-    '@fontsource/unbounded/latin-800.css',
-    '@fontsource/unbounded/latin-ext-700.css',
-    '@fontsource/unbounded/latin-ext-800.css'
+    '@fontsource/unbounded/700.css',
+    '@fontsource/unbounded/800.css'
   ],
   runtimeConfig: {
     public: {

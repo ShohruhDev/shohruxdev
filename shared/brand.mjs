@@ -2,3 +2,4 @@
 export const brandName = 'Razrabotka Tashkent';
 export const brandAlternateName = 'Разработка Ташкент';
 export const brandDomain = 'razrabotkatashkent.uz';
+export const authorName = 'Burxonov Shohrux';

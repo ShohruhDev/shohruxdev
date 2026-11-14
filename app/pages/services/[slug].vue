@@ -10,7 +10,10 @@ const s = computed(() => services.value.find(s => s.slug === route.params.slug))
 if (!s.value) throw createError({ statusCode: 404, statusMessage: 'Услуга не найдена' });
 usePageSeo(
   () => s.value?.seoTitle || s.value?.title || '',
-  () => s.value?.seoDescription || s.value?.intro || ''
+  () => s.value?.seoDescription || s.value?.intro || '',
+  undefined,
+  undefined,
+  { parent: { name: 'Услуги', path: '/services' } }
 );
 const config = useRuntimeConfig();
 useHead(() => {
