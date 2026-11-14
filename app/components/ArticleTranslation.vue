@@ -1,6 +1,107 @@
 <script setup lang="ts">
-const model=defineModel<any>()
-watch(()=>model.value?.uz,u=>{if(u){u.faq||=[];u.answer||=''}},{immediate:true})
-function add(){model.value={uz:{title:'',description:'',category:'',answer:'',content:[{heading:'',body:''}],faq:[],sources:[]}}}
+const model = defineModel<any>();
+watch(
+  () => model.value?.uz,
+  u => {
+    if (u) {
+      u.faq ||= [];
+      u.answer ||= '';
+    }
+  },
+  { immediate: true }
+);
+function add() {
+  model.value = {
+    uz: {
+      title: '',
+      description: '',
+      category: '',
+      answer: '',
+      content: [{ heading: '', body: '' }],
+      faq: [],
+      sources: []
+    }
+  };
+}
 </script>
-<template><section class="editor-schedule"><h3>Узбекская версия · O‘zbekcha</h3><p>Полный перевод статьи на латинице. Общие автор, URL и дата публикации. Проверяйте смысл, цифры и ссылки в обеих версиях.</p><button v-if="!model?.uz" class="quiet-button" @click="add">Добавить узбекский перевод</button><template v-else><label>Заголовок · Sarlavha<input v-model="model.uz.title" maxlength="350"></label><label>Описание · Tavsif<textarea v-model="model.uz.description" maxlength="350" rows="2"/></label><label>Рубрика · Bo‘lim<input v-model="model.uz.category" maxlength="100"></label><label>Короткий ответ · Qisqa javob<textarea v-model="model.uz.answer" maxlength="2000" rows="3"/></label><div v-for="(s,i) in model.uz.content" :key="i" class="editor-block"><label>Заголовок раздела {{Number(i)+1}}<input v-model="s.heading" maxlength="200"></label><label>Текст на узбекском<textarea v-model="s.body" maxlength="10000" rows="6"/></label><button class="quiet-button" :disabled="model.uz.content.length===1" @click="model.uz.content.splice(i,1)">Удалить раздел</button></div><button class="quiet-button" :disabled="model.uz.content.length>=40" @click="model.uz.content.push({heading:'',body:''})">+ Раздел на узбекском</button><h3 class="editor-subtitle">Savollar va javoblar</h3><div v-for="(q,i) in model.uz.faq" :key="i" class="editor-block"><label>Вопрос · Savol<input v-model="q.question" maxlength="300"></label><label>Ответ · Javob<textarea v-model="q.answer" maxlength="2000" rows="2"/></label><button class="quiet-button" @click="model.uz.faq.splice(i,1)">Удалить вопрос</button></div><button class="quiet-button" :disabled="model.uz.faq.length>=12" @click="model.uz.faq.push({question:'',answer:''})">+ Вопрос на узбекском</button><h3 class="editor-subtitle">Manbalar</h3><div v-for="(s,i) in model.uz.sources" :key="i" class="editor-block"><label>Название источника<input v-model="s.title" maxlength="300"></label><label>HTTPS-ссылка<input v-model="s.url" type="url" maxlength="2000"></label><button class="quiet-button" @click="model.uz.sources.splice(i,1)">Удалить источник</button></div><button class="quiet-button" :disabled="model.uz.sources.length>=30" @click="model.uz.sources.push({title:'',url:''})">+ Источник</button><p class="editor-help">Чтобы пока оставить только русскую статью, удалите перевод. Узбекский адрес будет недоступен до добавления перевода.</p><button class="quiet-button" @click="model=undefined">Удалить узбекскую версию</button></template></section></template>
+<template>
+  <section class="editor-schedule">
+    <h3>Узбекская версия · O‘zbekcha</h3>
+    <p>
+      Полный перевод статьи на латинице. Общие автор, URL и дата публикации. Проверяйте смысл, цифры
+      и ссылки в обеих версиях.
+    </p>
+    <button v-if="!model?.uz" class="quiet-button" @click="add">Добавить узбекский перевод</button
+    ><template v-else
+      ><label>Заголовок · Sarlavha<input v-model="model.uz.title" maxlength="350" /></label
+      ><label
+        >Описание · Tavsif<textarea
+          v-model="model.uz.description"
+          maxlength="350"
+          rows="2"
+        /></label
+      ><label>Рубрика · Bo‘lim<input v-model="model.uz.category" maxlength="100" /></label
+      ><label
+        >Короткий ответ · Qisqa javob<textarea
+          v-model="model.uz.answer"
+          maxlength="2000"
+          rows="3"
+        />
+      </label>
+      <div v-for="(s, i) in model.uz.content" :key="i" class="editor-block">
+        <label
+          >Заголовок раздела {{ Number(i) + 1 }}<input v-model="s.heading" maxlength="200" /></label
+        ><label>Текст на узбекском<textarea v-model="s.body" maxlength="10000" rows="6" /></label
+        ><button
+          class="quiet-button"
+          :disabled="model.uz.content.length === 1"
+          @click="model.uz.content.splice(i, 1)"
+        >
+          Удалить раздел
+        </button>
+      </div>
+      <button
+        class="quiet-button"
+        :disabled="model.uz.content.length >= 40"
+        @click="model.uz.content.push({ heading: '', body: '' })"
+      >
+        + Раздел на узбекском
+      </button>
+      <h3 class="editor-subtitle">Savollar va javoblar</h3>
+      <div v-for="(q, i) in model.uz.faq" :key="i" class="editor-block">
+        <label>Вопрос · Savol<input v-model="q.question" maxlength="300" /></label
+        ><label>Ответ · Javob<textarea v-model="q.answer" maxlength="2000" rows="2" /></label
+        ><button class="quiet-button" @click="model.uz.faq.splice(i, 1)">Удалить вопрос</button>
+      </div>
+      <button
+        class="quiet-button"
+        :disabled="model.uz.faq.length >= 12"
+        @click="model.uz.faq.push({ question: '', answer: '' })"
+      >
+        + Вопрос на узбекском
+      </button>
+      <h3 class="editor-subtitle">Manbalar</h3>
+      <div v-for="(s, i) in model.uz.sources" :key="i" class="editor-block">
+        <label>Название источника<input v-model="s.title" maxlength="300" /></label
+        ><label>HTTPS-ссылка<input v-model="s.url" type="url" maxlength="2000" /></label
+        ><button class="quiet-button" @click="model.uz.sources.splice(i, 1)">
+          Удалить источник
+        </button>
+      </div>
+      <button
+        class="quiet-button"
+        :disabled="model.uz.sources.length >= 30"
+        @click="model.uz.sources.push({ title: '', url: '' })"
+      >
+        + Источник
+      </button>
+      <p class="editor-help">
+        Чтобы пока оставить только русскую статью, удалите перевод. Узбекский адрес будет недоступен
+        до добавления перевода.
+      </p>
+      <button class="quiet-button" @click="model = undefined">
+        Удалить узбекскую версию
+      </button></template
+    >
+  </section>
+</template>

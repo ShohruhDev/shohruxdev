@@ -1,5 +1,89 @@
 /* Shared motion controls; layout belongs to the selected art direction. */
-html{scroll-padding-top:110px}.header{position:sticky;top:0;z-index:30;background:var(--bg)}.header::after{content:'';position:absolute;left:0;bottom:-1px;height:2px;width:100%;background:currentColor;transform:scaleX(var(--reading-progress,0));transform-origin:left;pointer-events:none}.button{transition:background .25s,transform .3s,translate .4s cubic-bezier(.22,1,.36,1)}.motion-control{position:fixed;bottom:16px;right:18px;z-index:40;border:1px solid #68715d;background:#151915ed;color:#eef3e6;padding:10px 14px;border-radius:30px;display:flex;gap:8px;align-items:center;font-size:10px}.motion-control>span:first-child{font-size:15px;line-height:1}.motion-control:disabled{cursor:default;opacity:.75}.article-layout aside{top:110px}
-@media(max-width:760px){html{scroll-padding-top:90px}.article-layout aside{top:auto}.motion-control{bottom:12px;right:12px;padding:10px}.motion-control>span:last-child{display:none}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-html[data-motion=off]{scroll-behavior:auto}html[data-motion=off] *,html[data-motion=off] *::before,html[data-motion=off] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+html {
+  scroll-padding-top: 110px;
+}
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--bg);
+}
+.header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 2px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(var(--reading-progress, 0));
+  transform-origin: left;
+  pointer-events: none;
+}
+.button {
+  transition:
+    background 0.25s,
+    transform 0.3s,
+    translate 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.motion-control {
+  position: fixed;
+  bottom: 16px;
+  right: 18px;
+  z-index: 40;
+  border: 1px solid #68715d;
+  background: #151915ed;
+  color: #eef3e6;
+  padding: 10px 14px;
+  border-radius: 30px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 10px;
+}
+.motion-control > span:first-child {
+  font-size: 15px;
+  line-height: 1;
+}
+.motion-control:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+.article-layout aside {
+  top: 110px;
+}
+@media (max-width: 760px) {
+  html {
+    scroll-padding-top: 90px;
+  }
+  .article-layout aside {
+    top: auto;
+  }
+  .motion-control {
+    bottom: 12px;
+    right: 12px;
+    padding: 10px;
+  }
+  .motion-control > span:last-child {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+html[data-motion='off'] {
+  scroll-behavior: auto;
+}
+html[data-motion='off'] *,
+html[data-motion='off'] *::before,
+html[data-motion='off'] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
