@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { publicationDate } from '#shared/locale.mjs';
-import { brandName } from '#shared/brand.mjs';
+import { authorName, brandName } from '#shared/brand.mjs';
 const { t, localPath, locale } = useLanguage();
 
 const route = useRoute();
@@ -14,11 +14,20 @@ const related = computed(() =>
     .slice(0, 3)
 );
 const date = (v: string) => publicationDate(v, locale.value);
+const ogImage = computed(() => {
+  const post = p.value;
+  if (!post) return undefined;
+  const url = new URL(`/og/journal/${post.slug}.png`, config.public.siteUrl);
+  if (locale.value === 'uz') url.searchParams.set('lang', 'uz');
+  url.searchParams.set('v', post.ogVersion);
+  return url.href;
+});
 usePageSeo(
   () => p.value?.title || '',
   () => p.value?.description || '',
   () => !!p.value?.demo,
-  () => p.value?.availableLocales || ['ru']
+  () => p.value?.availableLocales || ['ru'],
+  { parent: { name: 'Журнал', path: '/journal' }, image: () => ogImage.value }
 );
 useSeoMeta({ ogType: 'article' });
 useHead(() => {
@@ -30,10 +39,11 @@ useHead(() => {
     headline: post.title,
     description: post.description,
     inLanguage: locale.value,
-    image: new URL('/images/og-default.jpg', config.public.siteUrl).href,
-    author: post.author
-      ? { '@type': 'Person', name: post.author, url: config.public.siteUrl + '/' }
-      : { '@id': config.public.siteUrl + '/#person' },
+    image: ogImage.value,
+    author:
+      post.author && post.author !== authorName
+        ? { '@type': 'Person', name: post.author }
+        : { '@id': config.public.siteUrl + '/#person' },
     publisher: { '@id': config.public.siteUrl + '/#org' },
     ...(post.publishedAt
       ? {

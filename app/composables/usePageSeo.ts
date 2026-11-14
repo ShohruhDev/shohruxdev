@@ -4,8 +4,14 @@ export function usePageSeo(
   title: string | (() => string),
   description: string | (() => string),
   noindex: boolean | (() => boolean) = false,
-  availableLocales: string[] | (() => string[]) = ['ru', 'uz']
+  availableLocales: string[] | (() => string[]) = ['ru', 'uz'],
+  options: {
+    parent?: { name: string; path: string };
+    /** Абсолютный адрес картинки для соцсетей; по умолчанию общая обложка. */
+    image?: () => string | undefined;
+  } = {}
 ) {
+  const { parent } = options;
   const config = useRuntimeConfig();
   const route = useRoute();
   const { t, locale, localPath } = useLanguage();
@@ -20,10 +26,12 @@ export function usePageSeo(
     ogType: 'website',
     ogUrl: url,
     ogLocale: () => (locale.value === 'uz' ? 'uz_UZ' : 'ru_RU'),
-    ogImage: new URL('/images/og-default.jpg', config.public.siteUrl).href,
+    ogImage: () =>
+      options.image?.() || new URL('/images/og-default.jpg', config.public.siteUrl).href,
     ogImageWidth: 1200,
     ogImageHeight: 630,
-    ogImageAlt: () => t('Интерфейс веб-сервиса и мобильного приложения'),
+    ogImageAlt: () =>
+      options.image?.() ? titleText() : t('Интерфейс веб-сервиса и мобильного приложения'),
     ogSiteName: brandName,
     twitterCard: 'summary_large_image',
     robots: () =>
@@ -37,9 +45,26 @@ export function usePageSeo(
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: t('Главная'), item: home },
+        ...(parent
+          ? [
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: t(parent.name),
+                item: new URL(localPath(parent.path), config.public.siteUrl).href
+              }
+            ]
+          : []),
         ...(route.path === localPath('/')
           ? []
-          : [{ '@type': 'ListItem', position: 2, name: titleText(), item: url() }])
+          : [
+              {
+                '@type': 'ListItem',
+                position: parent ? 3 : 2,
+                name: titleText(),
+                item: url()
+              }
+            ])
       ]
     };
     return {

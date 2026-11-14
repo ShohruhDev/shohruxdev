@@ -1,8 +1,11 @@
 import { resolve } from 'node:path';
 import { openStore } from '../server/lib/store.mjs';
+import { indexNowOnPublish } from '../server/lib/indexnow.mjs';
 import { seedTopics } from '../server/lib/topics.mjs';
 import { runGeneration, generationConfig } from '../server/lib/pipeline.mjs';
-const db = openStore(process.env.CONTENT_DB || resolve('.data/content.sqlite'));
+const db = openStore(process.env.CONTENT_DB || resolve('.data/content.sqlite'), {
+  onPublish: indexNowOnPublish()
+});
 try {
   const cmd = process.argv[2];
   if (cmd === 'seed') {
