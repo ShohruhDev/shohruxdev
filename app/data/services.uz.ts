@@ -1,7 +1,7 @@
 export const servicesUz = [
   {
     slug: 'websites',
-    seoTitle: 'Biznes uchun sayt yaratish Toshkentda',
+    seoTitle: 'Toshkentda sayt yaratish va ishlab chiqish',
     seoDescription:
       'Toshkent va O‘zbekiston bizneslari uchun korporativ sayt, katalog va xizmat sahifalarini yaratish: tuzilma, moslashuvchan dizayn, murojaat shakllari, SEO asosi.',
     code: 'web',
@@ -9,7 +9,11 @@ export const servicesUz = [
     title: 'Biznes uchun saytlar',
     short: 'Korporativ saytlar, kataloglar va xizmat sahifalari.',
     eyebrow: 'VEB-DASTURLASH',
-    headline: 'Mijoz sizni tanlashiga yordam beradigan sayt.',
+    headline: 'Toshkentda biznes uchun sayt yaratish',
+    tagline: 'Mijoz sizni tanlashiga yordam beradigan sayt.',
+    forTitle: 'Biznesga sayt qachon kerak',
+    deliverTitle: 'Sayt yaratishga nimalar kiradi',
+    faqTitle: 'Sayt yaratish haqida savollar',
     intro:
       'Mahsulotingizni tushunarli taqdim etadi, mijoz savollariga javob beradi va keyingi qadamni qo‘yishga yordam beradi.',
     for: [
@@ -38,7 +42,7 @@ export const servicesUz = [
   },
   {
     slug: 'web-apps',
-    seoTitle: 'Toshkentda veb-xizmat va shaxsiy kabinet yaratish',
+    seoTitle: 'Toshkentda veb-xizmat, CRM va Telegram-bot yaratish',
     seoDescription:
       'Toshkent va O‘zbekiston bizneslari uchun buyurtma asosida veb-ilovalar: shaxsiy kabinetlar, band qilish xizmatlari va ichki tizimlar. Interfeys, API, ma’lumotlar bazasi va integratsiyalar.',
     code: 'apps',
@@ -46,7 +50,11 @@ export const servicesUz = [
     title: 'Veb-xizmatlar',
     short: 'Shaxsiy kabinetlar, ichki tizimlar va integratsiyalar.',
     eyebrow: 'VEB-ILOVALAR',
-    headline: 'Biznesga oddiy saytdan ko‘proq imkoniyat kerak bo‘lsa.',
+    headline: 'Biznes uchun veb-xizmat, CRM va Telegram-botlar',
+    tagline: 'Biznesga oddiy saytdan ko‘proq imkoniyat kerak bo‘lsa.',
+    forTitle: 'Veb-xizmat yoki bot qachon kerak',
+    deliverTitle: 'Xizmat yaratishga nimalar kiradi',
+    faqTitle: 'Veb-xizmat yaratish haqida savollar',
     intro:
       'Shaxsiy kabinet, band qilish xizmati yoki ichki tizim. Ish jarayonini o‘ylab chiqamiz va uni qulay interfeysga aylantiramiz.',
     for: [
@@ -76,7 +84,7 @@ export const servicesUz = [
   },
   {
     slug: 'mobile-apps',
-    seoTitle: 'Toshkentda mobil ilova yaratish',
+    seoTitle: 'Toshkentda mobil ilova yaratish (Android va iOS)',
     seoDescription:
       'Toshkent va O‘zbekiston bizneslari uchun mobil ilovalar: takroriy buyurtmalar, onlayn yozilish va xodimlar ishi. Dizayn, dasturlash va nashrga tayyorlash.',
     code: 'mobile',
@@ -84,7 +92,11 @@ export const servicesUz = [
     title: 'Mobil ilovalar',
     short: 'Mijozlar va xodimlar uchun ilovalar.',
     eyebrow: 'MOBIL DASTURLASH',
-    headline: 'Xizmatingiz doim qo‘l ostida.',
+    headline: 'Android va iOS uchun mobil ilova yaratish',
+    tagline: 'Xizmatingiz doim qo‘l ostida.',
+    forTitle: 'Mobil ilova qachon kerak',
+    deliverTitle: 'Ilova yaratishga nimalar kiradi',
+    faqTitle: 'Ilova yaratish haqida savollar',
     intro:
       'Takroriy buyurtmalar, yozilish va kundalik ish uchun ilovalar. Foydalanuvchi ssenariysidan nashrga tayyorlashgacha.',
     for: [

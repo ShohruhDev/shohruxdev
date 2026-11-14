@@ -8,7 +8,7 @@ usePageSeo(
 <template>
   <div>
     <section class="page-intro wrap">
-      <h1>{{ t('Сколько стоит') }}<br />{{ t('ваш проект?') }}</h1>
+      <h1>{{ t('Калькулятор стоимости') }}<br />{{ t('сайта и приложения') }}</h1>
       <p class="lede">
         {{
           t(

@@ -58,7 +58,10 @@ try {
   ])
     assert.equal((await fetch(base + path)).status, 404, path);
   const home = await (await fetch(base)).text();
-  assert.match(home, /<h1[^>]*>САЙТЫ\./);
+  assert.match(
+    home,
+    /<h1[^>]*><span class="h1-kicker">Разработка сайтов и мобильных приложений в Ташкенте<\/span><span class="h1-poster">САЙТЫ\./
+  );
   assert.match(home, /Мобильные приложения/);
   assert.match(await (await fetch(base + '/robots.txt')).text(), /Disallow: \//);
   assert.doesNotMatch(await (await fetch(base + '/sitemap.xml')).text(), /<loc>/);

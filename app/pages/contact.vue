@@ -2,7 +2,7 @@
 const { t, localPath, locale } = useLanguage();
 
 usePageSeo(
-  'Обсудить проект',
+  'Заказать сайт или приложение в Ташкенте',
   'Расскажите о задаче: сайт, веб-сервис или мобильное приложение. Форма обращения к разработчику.'
 );
 const route = useRoute();
@@ -45,7 +45,7 @@ async function submit() {
 <template>
   <section class="contact-layout wrap">
     <div class="contact-intro">
-      <h1>{{ t('Что хотите') }}<br />{{ t('создать?') }}</h1>
+      <h1>{{ t('Заказать сайт') }}<br />{{ t('или приложение') }}</h1>
       <p class="lede">
         {{ t('Расскажите о проекте своими словами. Даже если пока есть только идея.') }}
       </p>

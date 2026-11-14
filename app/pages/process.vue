@@ -4,14 +4,14 @@ import { steps as stepsRu } from '~/data/services';
 import { stepsUz } from '~/data/services.uz';
 const steps = computed(() => (locale.value === 'uz' ? stepsUz : stepsRu));
 usePageSeo(
-  'Как проходит работа',
+  'Этапы разработки сайта и приложения',
   'От первого обсуждения до запуска: сценарии, оценка, дизайн, разработка, проверка и передача проекта.'
 );
 </script>
 <template>
   <section class="page-intro wrap">
     <span class="eyebrow">{{ t('ПОДХОД') }}</span>
-    <h1>{{ t('Понятно, что делаем.') }}<br />{{ t('Видно, как движемся.') }}</h1>
+    <h1>{{ t('Как проходит разработка:') }}<br />{{ t('этапы, сроки, результат') }}</h1>
     <p class="lede">
       {{
         t(

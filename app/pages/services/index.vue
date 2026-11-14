@@ -8,7 +8,7 @@ usePageSeo(
 <template>
   <section class="page-intro wrap">
     <span class="eyebrow">{{ t('УСЛУГИ') }}</span>
-    <h1>{{ t('Одна задача.') }}<br />{{ t('Подходящее решение.') }}</h1>
+    <h1>{{ t('Разработка сайтов, сервисов') }}<br />{{ t('и приложений в Ташкенте') }}</h1>
     <p class="lede">
       {{
         t(
