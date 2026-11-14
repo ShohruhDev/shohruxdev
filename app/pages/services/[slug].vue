@@ -3,6 +3,8 @@ const { t, localPath, locale } = useLanguage();
 
 import { services as servicesRu } from '~/data/services';
 import { servicesUz } from '~/data/services.uz';
+import { projectTypes } from '#shared/pricing.mjs';
+import { fromMln } from '~/data/pricing-labels';
 const services = computed(() => (locale.value === 'uz' ? servicesUz : servicesRu));
 
 const route = useRoute();
@@ -16,6 +18,15 @@ usePageSeo(
   { parent: { name: 'Услуги', path: '/services' } }
 );
 const config = useRuntimeConfig();
+const priceRange = computed(() => {
+  const types = projectTypes.filter(p => p.service === s.value?.code);
+  return [
+    Math.min(...types.map(p => p.price[0] ?? 0)),
+    Math.max(...types.map(p => p.price[1] ?? 0))
+  ];
+});
+const { list: related } = useCases(() => s.value?.code);
+const fromPrice = computed(() => fromMln(priceRange.value[0], locale.value));
 useHead(() => {
   const svc = s.value;
   if (!svc) return {};
@@ -31,6 +42,13 @@ useHead(() => {
     inLanguage: locale.value,
     provider: { '@id': site + '/#org' },
     areaServed: { '@type': 'Country', name: 'Uzbekistan' },
+    offers: {
+      '@type': 'AggregateOffer',
+      priceCurrency: 'UZS',
+      lowPrice: (priceRange.value[0] ?? 0) * 1_000_000,
+      highPrice: (priceRange.value[1] ?? 0) * 1_000_000,
+      url: new URL(localPath('/prices'), site).href
+    },
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: t('Что входит в проект'),
@@ -89,8 +107,9 @@ useHead(() => {
     </section>
     <section class="estimate-block wrap">
       <span class="eyebrow">{{ t('СТОИМОСТЬ И СРОКИ') }}</span>
-      <h2>{{ t('Оценка начинается') }}<br />{{ t('с состава работ.') }}</h2>
-      <p>
+      <h2>{{ t('Стоимость') }} — {{ fromPrice }}</h2>
+      <PriceTable :service="s.code" />
+      <p class="estimate-note">
         {{ s.factors }}
         {{
           t(
@@ -98,9 +117,18 @@ useHead(() => {
           )
         }}
       </p>
-      <NuxtLink :to="localPath('/calculator')" class="text-link"
-        >{{ t('Рассчитать стоимость в калькуляторе') }} <AppIcon
-      /></NuxtLink>
+      <div class="estimate-links">
+        <NuxtLink :to="localPath('/calculator')" class="text-link"
+          >{{ t('Рассчитать стоимость в калькуляторе') }} <AppIcon /></NuxtLink
+        ><NuxtLink :to="localPath('/prices')" class="text-link"
+          >{{ t('Все цены') }} <AppIcon
+        /></NuxtLink>
+      </div>
+    </section>
+    <section v-if="related.length" class="related-cases wrap">
+      <span class="eyebrow">{{ t('КЕЙСЫ') }}</span>
+      <h2>{{ t('Проекты по направлению') }}</h2>
+      <CaseCards :items="related" />
     </section>
     <section class="faq wrap">
       <h2>{{ t('Частые вопросы') }}</h2>
@@ -112,3 +140,18 @@ useHead(() => {
     <ProjectCta />
   </div>
 </template>
+<style scoped>
+.estimate-note {
+  margin-top: 28px;
+}
+.related-cases {
+  padding-block: 65px;
+  border-bottom: 1px solid var(--line);
+}
+.estimate-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  margin-top: 8px;
+}
+</style>
