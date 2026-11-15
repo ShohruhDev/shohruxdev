@@ -10,7 +10,7 @@
 export const instagramPosts = [
   {
     id: 'ig-01',
-    publishAt: '2026-11-16T12:00:00+05:00',
+    publishAt: '2026-11-16T00:45:00+05:00',
     approved: true,
     image: '/social/brand/ig-01.jpg',
     hashtags: ['#ташкент', '#разработкасайтов', '#saytyaratish', '#созданиесайтов', '#телеграмбот'],
@@ -37,7 +37,7 @@ Aloqa: +998 90 515 55 65, Telegram @shohrux_0626, har kuni 9:00–20:00. Sayt ha
   },
   {
     id: 'ig-02',
-    publishAt: '2026-11-16T12:00:00+05:00',
+    publishAt: '2026-11-16T00:45:00+05:00',
     approved: true,
     image: '/social/brand/ig-02.jpg',
     hashtags: ['#разработкасайтов', '#ташкент', '#saytyaratish', '#сайтподключ', '#онлайнзапись'],
@@ -62,7 +62,7 @@ Batafsil: profildagi havola.`
   },
   {
     id: 'ig-03',
-    publishAt: '2026-11-16T12:00:00+05:00',
+    publishAt: '2026-11-16T00:45:00+05:00',
     approved: true,
     image: '/social/brand/ig-03.jpg',
     hashtags: [
@@ -270,7 +270,7 @@ Dastlabki baholash bepul. Telegram: @shohrux_0626, telefon: +998 90 515 55 65.`
 export const facebookPosts = [
   {
     id: 'fb-1',
-    publishAt: '2026-11-16T12:00:00+05:00',
+    publishAt: '2026-11-16T00:45:00+05:00',
     approved: true,
     image: '/social/brand/ig-01.jpg',
     message: `Razrabotka Tashkent: сайты, веб-сервисы, Telegram-боты и мобильные приложения для бизнеса в Ташкенте и по всему Узбекистану.
