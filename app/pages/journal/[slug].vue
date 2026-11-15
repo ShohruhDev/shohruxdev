@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { publicationDate } from '#shared/locale.mjs';
-import { authorName, brandName } from '#shared/brand.mjs';
+import { authorFor, brandName } from '#shared/brand.mjs';
 import { PhArrowLeft, PhArrowUpRight, PhClock } from '@phosphor-icons/vue';
 import { services as servicesRu } from '~/data/services';
 import { servicesUz } from '~/data/services.uz';
@@ -60,7 +60,7 @@ useHead(() => {
     inLanguage: locale.value,
     image: ogImage.value,
     author:
-      post.author && post.author !== authorName
+      post.author && post.author !== authorFor(locale.value)
         ? { '@type': 'Person', name: post.author }
         : { '@id': config.public.siteUrl + '/#person' },
     publisher: { '@id': config.public.siteUrl + '/#org' },

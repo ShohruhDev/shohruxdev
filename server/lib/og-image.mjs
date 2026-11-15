@@ -24,10 +24,12 @@ export function clip(text, max) {
   return cut.slice(0, Math.max(cut.lastIndexOf(' '), max - 15)).trimEnd() + '…';
 }
 
+// Версия шаблона: увеличить при изменении оформления или подписи (2 — имя автора кириллицей на RU).
+export const OG_TEMPLATE = 2;
 /** Короткая версия содержимого: меняется вместе с текстом и сбрасывает кэш соцсетей. */
 export function ogVersion(post) {
   return createHash('sha256')
-    .update([post.title, post.category, post.locale].join('\n'))
+    .update([OG_TEMPLATE, post.title, post.category, post.locale].join('\n'))
     .digest('hex')
     .slice(0, 10);
 }

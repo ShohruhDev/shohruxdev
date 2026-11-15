@@ -82,6 +82,26 @@ test('Uzbek publication never inherits optional Russian body fields', () => {
   assert.equal(uz.author, 'Author');
 });
 
+test('site author is shown in Cyrillic on RU and in Latin on UZ, whatever the stored spelling', () => {
+  for (const author of [
+    'Burxonov Shohrux',
+    'Burxonov Sh.',
+    'Shohrux Burxonov',
+    'Шохрух Бурхонов'
+  ]) {
+    const p = {
+      slug: 'a',
+      title: 'Заголовок',
+      author,
+      translations: {
+        uz: { title: 'Sarlavha', description: 'T', category: 'B', content: [], sources: [] }
+      }
+    };
+    assert.equal(localizePost(p, 'ru').author, 'Шохрух Бурхонов');
+    assert.equal(localizePost(p, 'uz').author, 'Shohrux Burxonov');
+  }
+});
+
 test('publication dates use readable RU/UZ months and the Tashkent calendar day', async () => {
   const { publicationDate } = await import('../shared/locale.mjs');
   assert.equal(publicationDate('2026-10-28T20:00:00Z', 'uz'), '2026-yil 29-oktabr');

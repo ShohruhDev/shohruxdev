@@ -83,7 +83,7 @@ try {
     description: 'Материал для теста',
     category: 'Планирование',
     service: 'websites',
-    author: 'Burxonov Shohrux',
+    author: 'Шохрух Бурхонов',
     answer: 'Начните с задач заказчика и условий запуска. '.repeat(4),
     content: Array.from({ length: 4 }, (_, i) => ({
       heading: `Раздел ${i}`,
@@ -148,7 +148,7 @@ try {
   const published = await post('/api/admin/action', { action: 'publish-due' });
   assert.equal((await published.json()).published, 1);
   const publicArticle = await (await fetch(base + '/journal/admin-test')).text();
-  assert.match(publicArticle, /Burxonov Shohrux/);
+  assert.match(publicArticle, /Шохрух Бурхонов/);
   assert.match(publicArticle, /КОРОТКИЙ ОТВЕТ/);
   assert.match(publicArticle, /Первый вопрос/);
   assert.match(publicArticle, /datePublished/);
