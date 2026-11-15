@@ -94,9 +94,10 @@ node scripts/telegram.mjs status
 
 ## Meta: автопостинг в Instagram и на Facebook-страницу
 
-Сервер сам публикует одобренные посты из `shared/social-posts.mjs` (массивы `instagramPosts` и `facebookPosts`, тексты из `docs/social-kit-2026-11.md`) в бизнес-аккаунт Instagram и на Facebook-страницу через Graph API, версия по умолчанию `v27.0` (`https://graph.facebook.com/v27.0`). Проверка раз в минуту (`server/plugins/meta-social.ts`), не больше одного запроса к Graph API за проверку.
+Сервер сам публикует одобренные посты из `shared/social-posts.mjs` (массивы `instagramPosts`, `instagramStories` и `facebookPosts`, тексты из `docs/social-kit-2026-11.md`) в бизнес-аккаунт Instagram и на Facebook-страницу через Graph API, версия по умолчанию `v27.0` (`https://graph.facebook.com/v27.0`). Проверка раз в минуту (`server/plugins/meta-social.ts`), не больше одного запроса к Graph API за проверку.
 
 - Instagram: три шага, каждый в своей проверке. Создать контейнер (`POST /{ig-user-id}/media`: `image_url` = `SITE_URL + image`, `caption`), дождаться `status_code=FINISHED` (`GET /{container-id}`, не дольше 5 минут), опубликовать (`POST /{ig-user-id}/media_publish`, `creation_id`). Пост уходит примерно через 2–3 минуты после `publishAt`. Подпись: RU, строка «—», UZ, хэштеги (первые пять из списка в пакете).
+- Истории Instagram (stories, массив `instagramStories`): те же три шага, но контейнер создаётся с `media_type=STORIES` и `image_url`, без подписи. Учёт отдельно от ленты (сеть `instagram_story` в `meta_posts`), поэтому строки уже опубликованных постов ленты не меняются.
 - Facebook: одна публикация `POST /{page-id}/photos` (`url` + `caption`, `published=true`), для поста без картинки `POST /{page-id}/feed` (`message`, необязательный `link`).
 
 Картинки Meta забирает с сайта сама, поэтому `SITE_URL` должен быть на HTTPS, а файлы из `public/social/brand/` открываться по нему без авторизации. Instagram принимает только JPEG.
@@ -108,7 +109,8 @@ node scripts/telegram.mjs status
 - `META_IG_USER_ID` (необязательно): id бизнес-аккаунта Instagram. Если не задан, сервер один раз узнаёт его через `GET /{page-id}?fields=instagram_business_account` и держит в памяти до перезапуска.
 - `META_GRAPH_VERSION` (необязательно): версия Graph API, по умолчанию `v27.0`.
 - `META_AUTOPOST` (необязательно): `true` включает постинг вне боевого режима, `false` выключает всегда.
-- `META_INSTAGRAM=false` / `META_FACEBOOK=false` (необязательно): выключить одну из сетей.
+- `META_INSTAGRAM=false` / `META_FACEBOOK=false` (необязательно): выключить одну из сетей. `META_INSTAGRAM=false` выключает и ленту, и истории Instagram.
+- `META_INSTAGRAM_STORIES=false` (необязательно): выключить только истории; лента Instagram и Facebook идут как раньше.
 
 ### Как получить токен
 
@@ -131,7 +133,7 @@ node scripts/telegram.mjs status
 - боевой режим: `NODE_ENV=production` и `SITE_INDEXABLE=true`, и `META_AUTOPOST` не равен `false`;
 - или явно `META_AUTOPOST=true`.
 
-В остальных случаях плагин ничего не делает. Локально (`npm run dev`, сборка, тесты) постинг выключен. При запуске с включённым постингом в логе есть строка `Meta autopost enabled for page 1521124361073770: instagram N of 9, facebook M of 6 posts approved.`
+В остальных случаях плагин ничего не делает. Локально (`npm run dev`, сборка, тесты) постинг выключен. При запуске с включённым постингом в логе есть строка `Meta autopost enabled for page 1521124361073770: instagram N of 9, instagram_story K of L, facebook M of 6 posts approved.` (без `instagram_story`, если истории выключены). Ошибка в очереди историй выключает только истории (`Meta autopost: stories disabled, invalid queue: …`), ошибка в очереди ленты или Facebook выключает весь постинг.
 
 ### Как одобрить пост
 
@@ -140,7 +142,26 @@ node scripts/telegram.mjs status
 
 Посты каждой сети публикуются строго по порядку `publishAt` (при равном времени по `id`): ig-01 → ig-09 держат рисунок сетки профиля. Пост, ожидающий повтора, задерживает следующие посты своей сети, другую сеть не задерживает. Не меняйте `id` и текст поста, который уже начал публиковаться. `npm test` проверяет очередь: уникальные `id`, даты, наличие картинок, лимиты подписи Instagram (2200 символов, 30 хэштегов, 20 упоминаний) и совпадение текстов с пакетом.
 
-Лимит Instagram: 50 публикаций через API за 24 часа (`content_publishing_limit`); сервер сам не публикует больше. Наш план: до трёх постов в день.
+Лимит Instagram: 50 публикаций через API за 24 часа (`content_publishing_limit`); сервер сам не публикует больше. Лимит считается по `media_publish`, поэтому истории входят в него вместе с постами ленты: при 50 публикациях (лента + истории) за последние 24 часа Instagram ждёт, Facebook идёт дальше. Наш план: до трёх постов в день.
+
+### Как поставить и одобрить историю
+
+1. Положить картинку в `public/social/stories/<имя>.jpg`: JPEG, 1080×1920 (9:16, иначе Instagram обрежет или добавит поля), до 8 МБ, sRGB. Имя: латиница в нижнем регистре, цифры и дефис.
+2. Добавить в массив `instagramStories` в `shared/social-posts.mjs` запись без текста:
+
+   ```js
+   { id: 'st-01', publishAt: '2026-11-23T18:00:00+05:00', approved: false, image: '/social/stories/st-01.jpg' }
+   ```
+
+   Подписи у историй нет: поля `caption`, `ru`, `uz`, `hashtags`, `message`, `link` считаются ошибкой очереди.
+3. Проверить: `npm test` (уникальные `id`, даты, `approved` true/false, путь `/social/stories/…` и наличие файла) и `node scripts/meta-social.mjs status` (раздел `instagram_story`).
+4. Одобрить: `approved: true`, закоммитить и влить в `master`. История уйдёт в `publishAt` (примерно через 2–3 минуты), если время прошло — вскоре после деплоя.
+
+Истории идут в том же цикле «один запрос к Graph API за проверку», строго по `publishAt`; при равном времени сначала пост ленты Instagram, затем история, затем Facebook. Незавершённая история (в работе или ждёт повтора) задерживает следующие истории, но не ленту и не Facebook. Повторы, `uncertain`, `confirm`/`retry` такие же, как у постов ленты.
+
+История видна 24 часа. Через API нельзя добавить её в «Актуальное» (highlights) и нельзя поставить стикер-ссылку, опрос или геометку: это делается вручную в приложении Instagram (для «Актуального» — из архива историй, после публикации).
+
+Документация Meta: [Content Publishing](https://developers.facebook.com/docs/instagram-platform/content-publishing/) (истории `media_type=STORIES`, опрос `status_code` раз в минуту не дольше 5 минут, лимит по `media_publish`), [IG User Media](https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/media) (параметры контейнера истории, 9:16, 8 МБ, стикеры не поддерживаются), [Content Publishing Limit](https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/content_publishing_limit) (`quota_total` 50 за 86400 секунд).
 
 ### Что уже опубликовано
 
@@ -154,11 +175,11 @@ node scripts/meta-social.mjs status
 
 `uncertain` значит, что Meta могла опубликовать пост, но ответа не было (таймаут, ответ 5xx или перезапуск во время `media_publish` / публикации на странице). Такой пост автоматически не повторяется, следующие посты идут дальше. Проверьте Instagram или страницу вручную:
 
-- пост есть: `node scripts/meta-social.mjs confirm instagram ig-02` (или `facebook fb-3`);
-- поста нет, или пост в `gave_up` после исправления токена/прав: `node scripts/meta-social.mjs retry instagram ig-02`.
+- пост есть: `node scripts/meta-social.mjs confirm instagram ig-02` (или `facebook fb-3`, или `story st-01`);
+- поста нет, или пост в `gave_up` после исправления токена/прав: `node scripts/meta-social.mjs retry instagram ig-02` (для истории `retry story st-01`; `story` и `instagram_story` равнозначны).
 
 Сбой до `media_publish` (создание или обработка контейнера) повторяется сам: неопубликованный контейнер подписчикам не виден и истекает через 24 часа.
 
 ### Как выключить
 
-Задать `META_AUTOPOST=false` (или удалить `META_PAGE_ID`) и перезапустить сервис. Одну сеть: `META_INSTAGRAM=false` или `META_FACEBOOK=false`. Отменить отдельный пост: вернуть `approved: false` и задеплоить. Уже опубликованное удаляется только вручную в Instagram или на странице. Отозвать токен: удалить системного пользователя или приложение в бизнес-портфолио.
+Задать `META_AUTOPOST=false` (или удалить `META_PAGE_ID`) и перезапустить сервис. Одну сеть: `META_INSTAGRAM=false` или `META_FACEBOOK=false`; только истории: `META_INSTAGRAM_STORIES=false`. Отменить отдельный пост: вернуть `approved: false` и задеплоить. Уже опубликованное удаляется только вручную в Instagram или на странице. Отозвать токен: удалить системного пользователя или приложение в бизнес-портфолио.

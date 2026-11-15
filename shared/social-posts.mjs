@@ -400,3 +400,140 @@ Telegram-бот или Mini App: от 8 млн сум, 2–5 недель. По�
 Опишите задачу: https://razrabotkatashkent.uz/contact?utm_source=facebook&utm_medium=social&utm_campaign=posts`
   }
 ];
+
+// Истории Instagram (stories): только картинка, без подписи. Публикуются тем же автопостингом
+// (media_type=STORIES), строго по publishAt, только с approved: true; учёт под сетью instagram_story.
+// Картинка: /social/stories/<имя>.jpg из public/social/stories/, JPEG 1080×1920 (9:16), до 8 МБ.
+// История видна 24 часа; «Актуальное» (highlights) и стикеры-ссылки добавляются вручную в приложении.
+// Пример: { id: 'st-01', publishAt: '2026-11-23T18:00:00+05:00', approved: true, image: '/social/stories/st-01.jpg' }
+// Не меняйте id истории, которая уже начала публиковаться.
+
+/** @type {{ id: string, publishAt: string, approved: boolean, image: string }[]} */
+export const instagramStories = [
+  {
+    id: 'st-prices-1',
+    publishAt: '2026-11-16T01:30:00+05:00',
+    approved: true,
+    image: '/social/stories/prices-1.jpg'
+  },
+  {
+    id: 'st-prices-2',
+    publishAt: '2026-11-16T01:32:00+05:00',
+    approved: true,
+    image: '/social/stories/prices-2.jpg'
+  },
+  {
+    id: 'st-prices-3',
+    publishAt: '2026-11-16T01:34:00+05:00',
+    approved: true,
+    image: '/social/stories/prices-3.jpg'
+  },
+  {
+    id: 'st-prices-1-uz',
+    publishAt: '2026-11-16T01:36:00+05:00',
+    approved: true,
+    image: '/social/stories/prices-1-uz.jpg'
+  },
+  {
+    id: 'st-prices-2-uz',
+    publishAt: '2026-11-16T01:38:00+05:00',
+    approved: true,
+    image: '/social/stories/prices-2-uz.jpg'
+  },
+  {
+    id: 'st-prices-3-uz',
+    publishAt: '2026-11-16T01:40:00+05:00',
+    approved: true,
+    image: '/social/stories/prices-3-uz.jpg'
+  },
+  {
+    id: 'st-cases-1',
+    publishAt: '2026-11-16T01:42:00+05:00',
+    approved: true,
+    image: '/social/stories/cases-1.jpg'
+  },
+  {
+    id: 'st-cases-2',
+    publishAt: '2026-11-16T01:44:00+05:00',
+    approved: true,
+    image: '/social/stories/cases-2.jpg'
+  },
+  {
+    id: 'st-cases-3',
+    publishAt: '2026-11-16T01:46:00+05:00',
+    approved: true,
+    image: '/social/stories/cases-3.jpg'
+  },
+  {
+    id: 'st-cases-4',
+    publishAt: '2026-11-16T01:48:00+05:00',
+    approved: true,
+    image: '/social/stories/cases-4.jpg'
+  },
+  {
+    id: 'st-cases-5',
+    publishAt: '2026-11-16T01:50:00+05:00',
+    approved: true,
+    image: '/social/stories/cases-5.jpg'
+  },
+  {
+    id: 'st-process-1',
+    publishAt: '2026-11-16T01:52:00+05:00',
+    approved: true,
+    image: '/social/stories/process-1.jpg'
+  },
+  {
+    id: 'st-process-2',
+    publishAt: '2026-11-16T01:54:00+05:00',
+    approved: true,
+    image: '/social/stories/process-2.jpg'
+  },
+  {
+    id: 'st-process-3',
+    publishAt: '2026-11-16T01:56:00+05:00',
+    approved: true,
+    image: '/social/stories/process-3.jpg'
+  },
+  {
+    id: 'st-process-4',
+    publishAt: '2026-11-16T01:58:00+05:00',
+    approved: true,
+    image: '/social/stories/process-4.jpg'
+  },
+  {
+    id: 'st-faq-1',
+    publishAt: '2026-11-16T02:00:00+05:00',
+    approved: true,
+    image: '/social/stories/faq-1.jpg'
+  },
+  {
+    id: 'st-faq-2',
+    publishAt: '2026-11-16T02:02:00+05:00',
+    approved: true,
+    image: '/social/stories/faq-2.jpg'
+  },
+  {
+    id: 'st-faq-3',
+    publishAt: '2026-11-16T02:04:00+05:00',
+    approved: true,
+    image: '/social/stories/faq-3.jpg'
+  },
+  {
+    id: 'st-faq-4',
+    publishAt: '2026-11-16T02:06:00+05:00',
+    approved: true,
+    image: '/social/stories/faq-4.jpg'
+  },
+  {
+    id: 'st-contacts-1',
+    publishAt: '2026-11-16T02:08:00+05:00',
+    approved: true,
+    image: '/social/stories/contacts-1.jpg'
+  },
+  {
+    id: 'st-contacts-1-uz',
+    publishAt: '2026-11-16T02:10:00+05:00',
+    approved: true,
+    image: '/social/stories/contacts-1-uz.jpg'
+  }
+];

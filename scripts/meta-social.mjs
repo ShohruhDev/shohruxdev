@@ -2,7 +2,8 @@ import { existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { openStore } from '../server/lib/store.mjs';
 import {
-  NETWORKS,
+  QUEUE_NETWORKS,
+  STORY,
   TOKEN_KINDS,
   graphRequest,
   instagramCaption,
@@ -13,12 +14,20 @@ import {
   validatePosts,
   withToken
 } from '../server/lib/meta-social.mjs';
-import { instagramPosts, facebookPosts } from '../shared/social-posts.mjs';
+import { instagramPosts, facebookPosts, instagramStories } from '../shared/social-posts.mjs';
 
-const ALIASES = { ig: 'instagram', instagram: 'instagram', fb: 'facebook', facebook: 'facebook' };
-const USAGE =
-  'Usage: npm run meta -- status | retry <instagram|facebook> <post-id> | confirm <instagram|facebook> <post-id> | whoami';
-const queues = { instagram: instagramPosts, facebook: facebookPosts };
+const ALIASES = {
+  ig: 'instagram',
+  instagram: 'instagram',
+  fb: 'facebook',
+  facebook: 'facebook',
+  story: STORY,
+  stories: STORY,
+  instagram_story: STORY
+};
+const NETS = '<instagram|story|facebook>';
+const USAGE = `Usage: npm run meta -- status | retry ${NETS} <post-id> | confirm ${NETS} <post-id> | whoami`;
+const queues = { instagram: instagramPosts, [STORY]: instagramStories, facebook: facebookPosts };
 const [cmd, net, id] = process.argv.slice(2);
 const network = ALIASES[String(net || '').toLowerCase()];
 
@@ -39,7 +48,12 @@ async function whoami() {
       token: TOKEN_KINDS[resolved.kind],
       page: { id: page.id, name: page.name },
       instagram: ig ? { id: ig.id, username: ig.username ?? null } : null,
-      autopost: { enabled: cfg.enabled, reason: cfg.reason, networks: cfg.networks }
+      autopost: {
+        enabled: cfg.enabled,
+        reason: cfg.reason,
+        networks: cfg.networks,
+        stories: cfg.stories
+      }
     };
     if (cfg.igUserId && ig && cfg.igUserId !== ig.id)
       out.warning = `META_IG_USER_ID=${cfg.igUserId} differs from the Page's linked account`;
@@ -69,9 +83,9 @@ try {
     const exists = p => ['public', '.output/public'].some(dir => existsSync(join(dir, p)));
     const out = {
       config: cfg,
-      issues: NETWORKS.flatMap(n => validatePosts(queues[n], n, { exists })),
+      issues: QUEUE_NETWORKS.flatMap(n => validatePosts(queues[n], n, { exists })),
       posts: Object.fromEntries(
-        NETWORKS.map(n => [
+        QUEUE_NETWORKS.map(n => [
           n,
           queues[n].map(p => {
             const r = records.get(postKey(n, p.id));
@@ -79,7 +93,9 @@ try {
               id: p.id,
               publishAt: p.publishAt,
               approved: p.approved,
-              chars: n === 'instagram' ? instagramCaption(p).length : p.message.length,
+              ...(n === STORY
+                ? { image: p.image }
+                : { chars: n === 'instagram' ? instagramCaption(p).length : p.message.length }),
               status: r ? r.status : 'pending',
               ...(r?.attempts ? { attempts: r.attempts } : {}),
               ...(r?.container_id ? { container: r.container_id } : {}),

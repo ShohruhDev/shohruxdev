@@ -10,6 +10,12 @@
 // поэтому сбой до media_publish безопасно повторять. Сбой во время media_publish или публикации
 // на странице без ответа помечается 'uncertain' и автоматически не повторяется.
 //
+// Истории Instagram (очередь instagramStories) идут теми же тремя шагами, только контейнер
+// создаётся с media_type=STORIES и без подписи; учёт под отдельным ключом сети 'instagram_story',
+// поэтому строки ленты ('instagram') не меняются. Документация Meta:
+// https://developers.facebook.com/docs/instagram-platform/content-publishing/ (Story posts, лимит,
+// опрос контейнера) и .../instagram-graph-api/reference/ig-user/media (media_type=STORIES).
+//
 // Токен уходит только в заголовке Authorization, не в адресе запроса, и вычищается из ошибок.
 import {
   PRE_CONNECT,
@@ -23,11 +29,19 @@ import {
 export const GRAPH_HOST = 'https://graph.facebook.com';
 export const DEFAULT_GRAPH_VERSION = 'v27.0';
 export const NETWORKS = /** @type {const} */ (['instagram', 'facebook']);
+/** Ключ учёта историй Instagram в meta_posts (отдельно от ленты 'instagram'). */
+export const STORY = 'instagram_story';
+/** Все очереди в порядке выбора при равном publishAt: лента Instagram, истории, Facebook. */
+export const QUEUE_NETWORKS = /** @type {const} */ (['instagram', STORY, 'facebook']);
+/** Сети, публикуемые в Instagram через media → media_publish (общий суточный лимит). */
+export const IG_NETWORKS = /** @type {const} */ (['instagram', STORY]);
 export const IG_CAPTION_LIMIT = 2200;
 export const IG_HASHTAG_LIMIT = 30; // лимит API; сами очереди держат не больше 5 (см. shared/social-posts.mjs)
 export const IG_MENTION_LIMIT = 20;
 export const FB_TEXT_LIMIT = 63206;
-export const IG_DAILY_LIMIT = 50; // content_publishing_limit: quota_total 50 за 24 часа
+// content_publishing_limit: quota_total 50 за 24 часа. Лимит считается по media_publish
+// (опубликованные контейнеры), поэтому истории в него входят наравне с постами ленты.
+export const IG_DAILY_LIMIT = 50;
 export const RETRY_MS = 30 * 60000;
 export const MAX_ATTEMPTS = 5;
 export const STALE_MS = 5 * 60000;
@@ -41,6 +55,8 @@ const NUM_ID_RE = /^\d{5,25}$/;
 const VERSION_RE = /^v\d{1,3}\.\d$/;
 const ID_RE = /^[a-z0-9][a-z0-9-]{1,60}$/;
 const IMAGE_RE = /^\/social\/(?:brand|telegram)\/[a-z0-9-]+\.jpe?g$/;
+const STORY_IMAGE_RE = /^\/social\/stories\/[a-z0-9-]+\.jpe?g$/;
+const STORY_TEXT_FIELDS = ['caption', 'ru', 'uz', 'hashtags', 'message', 'link'];
 const HASHTAG_RE = /#[\p{L}\p{N}_]+/gu;
 const MENTION_RE = /(?<![\p{L}\p{N}_.])@[A-Za-z0-9_.]+/gu;
 
@@ -54,6 +70,7 @@ const flagOff = v =>
  * тоже), SITE_URL на HTTPS (Meta забирает картинки с сайта) и META_AUTOPOST=true, либо боевой
  * режим (NODE_ENV=production и SITE_INDEXABLE=true) без META_AUTOPOST=false.
  * META_INSTAGRAM=false / META_FACEBOOK=false выключают отдельную сеть.
+ * Истории (stories) идут, когда включён Instagram и META_INSTAGRAM_STORIES не равен false.
  */
 export function metaConfig(env = process.env) {
   const token = String(env.META_PAGE_ACCESS_TOKEN || '').trim();
@@ -73,11 +90,16 @@ export function metaConfig(env = process.env) {
   else if (!siteUrl.startsWith('https://')) reason = 'SITE_URL must be https://';
   else if (!networks.length) reason = 'META_INSTAGRAM=false and META_FACEBOOK=false';
   else reason = liveGateReason(env, 'META_AUTOPOST');
-  const cfg = { enabled: !reason, reason, pageId, igUserId, version, siteUrl, networks };
+  const stories = networks.includes('instagram') && !flagOff(env.META_INSTAGRAM_STORIES);
+  const cfg = { enabled: !reason, reason, pageId, igUserId, version, siteUrl, networks, stories };
   // Токен не перечисляется: JSON.stringify(cfg) и console.log(cfg) его не покажут.
   Object.defineProperty(cfg, 'token', { value: token, enumerable: false });
   return /** @type {typeof cfg & { token: string }} */ (cfg);
 }
+
+/** Очереди, которые публикует тик: включённые сети и, если разрешены, истории. */
+export const activeNetworks = cfg =>
+  QUEUE_NETWORKS.filter(n => (n === STORY ? !!cfg.stories : cfg.networks.includes(n)));
 
 /** Подпись Instagram: RU, разделитель «—», UZ и хэштеги, как в docs/social-kit-2026-11.md. */
 export function instagramCaption(post) {
@@ -95,7 +117,7 @@ export const countMentions = s => (String(s).match(MENTION_RE) || []).length;
  * exists(path) проверяет наличие картинки (в тестах и CLI: файл в public/).
  */
 export function validatePosts(posts, network, { exists } = {}) {
-  if (!NETWORKS.includes(network)) return [`unknown network ${network}`];
+  if (!QUEUE_NETWORKS.includes(network)) return [`unknown network ${network}`];
   if (!Array.isArray(posts)) return [`${network}: queue must be an array`];
   const issues = [];
   const seen = new Set();
@@ -110,12 +132,20 @@ export function validatePosts(posts, network, { exists } = {}) {
     seen.add(p.id);
     if (!isZonedIso(p.publishAt)) issues.push(`${at}: publishAt must be ISO with timezone`);
     if (typeof p.approved !== 'boolean') issues.push(`${at}: approved must be true/false`);
+    const story = network === STORY;
     if (p.image !== undefined) {
-      if (!IMAGE_RE.test(String(p.image)))
-        issues.push(`${at}: image must be /social/brand|telegram/<name>.jpg`);
+      if (!(story ? STORY_IMAGE_RE : IMAGE_RE).test(String(p.image)))
+        issues.push(
+          `${at}: image must be ${story ? '/social/stories' : '/social/brand|telegram'}/<name>.jpg`
+        );
       else if (exists && !exists(p.image)) issues.push(`${at}: image file not found`);
     }
-    if (network === 'instagram') {
+    if (story) {
+      // История: только картинка (рекомендуется JPEG 1080×1920, 9:16), подписи у историй нет.
+      if (p.image === undefined) issues.push(`${at}: image is required`);
+      const extra = STORY_TEXT_FIELDS.filter(k => p[k] !== undefined);
+      if (extra.length) issues.push(`${at}: stories have no caption (remove ${extra.join(', ')})`);
+    } else if (network === 'instagram') {
       if (p.image === undefined) issues.push(`${at}: image is required`);
       if (typeof p.ru !== 'string' || !p.ru.trim()) issues.push(`${at}: ru text is required`);
       if (typeof p.uz !== 'string' || !p.uz.trim()) issues.push(`${at}: uz text is required`);
@@ -166,7 +196,7 @@ export function nextStep(network, posts, records, now = Date.now()) {
   for (const post of selectDue(posts, now)) {
     const rec = records.get(postKey(network, post.id));
     const fresh = { network, post, rec };
-    if (!rec) return { ...fresh, step: network === 'instagram' ? 'create' : 'publish' };
+    if (!rec) return { ...fresh, step: network === 'facebook' ? 'publish' : 'create' };
     switch (rec.status) {
       case 'published':
       case 'gave_up':
@@ -186,7 +216,10 @@ export function nextStep(network, posts, records, now = Date.now()) {
   return null;
 }
 
-/** Шаг для тика: самый ранний по publishAt среди включённых сетей (при равенстве Instagram). */
+/**
+ * Шаг для тика: самый ранний по publishAt среди включённых очередей; при равенстве лента
+ * Instagram, затем истории, затем Facebook. igBlocked останавливает ленту и истории Instagram.
+ */
 export function nextAction(
   queues,
   records,
@@ -195,8 +228,8 @@ export function nextAction(
   { igBlocked = false } = {}
 ) {
   let best = null;
-  for (const network of NETWORKS) {
-    if (!networks.includes(network) || (network === 'instagram' && igBlocked)) continue;
+  for (const network of QUEUE_NETWORKS) {
+    if (!networks.includes(network) || (IG_NETWORKS.includes(network) && igBlocked)) continue;
     const step = nextStep(network, queues[network] || [], records, now);
     if (step && (!best || Date.parse(step.post.publishAt) < Date.parse(best.post.publishAt)))
       best = step;
@@ -354,12 +387,13 @@ export async function metaTick(
   const rows = store.metaPosts();
   const records = new Map(rows.map(r => [postKey(r.network, r.post_id), r]));
   const igToday = rows.filter(
-    r => r.network === 'instagram' && r.published_at && Date.parse(r.published_at) > now - DAY_MS
+    r =>
+      IG_NETWORKS.includes(r.network) && r.published_at && Date.parse(r.published_at) > now - DAY_MS
   ).length;
   const igUserId = cfg.igUserId || cache.igUserId || '';
   const igBlocked =
     igToday >= IG_DAILY_LIMIT || (!igUserId && Date.parse(cache.igRetryAt || '') > now);
-  const action = nextAction(queues, records, cfg.networks, now, { igBlocked });
+  const action = nextAction(queues, records, activeNetworks(cfg), now, { igBlocked });
   if (!action) return { status: 'idle' };
   const { network, post, step } = action;
   const ref = { network, postId: post.id, step };
@@ -384,7 +418,7 @@ export async function metaTick(
   cfg = withToken(cfg, cache.pageToken);
 
   // IG User ID нужен для media и media_publish; находим один раз и держим в памяти.
-  if (network === 'instagram' && step !== 'poll' && !igUserId) {
+  if (network !== 'facebook' && step !== 'poll' && !igUserId) {
     try {
       cache.igUserId = await resolveIgUserId(cfg, fetchImpl);
       delete cache.igRetryAt;
@@ -405,12 +439,26 @@ export async function metaTick(
     const attempts = store.claimMetaPost(network, post.id, 'publishing', at);
     if (!attempts) return { status: 'busy' };
     try {
-      const data = post.image
+      // Фото с подписью одним запросом (/photos, published=true) Graph отклоняет для
+      // новой страницы (324/2069019). Поэтому в два шага: скрытое временное фото,
+      // затем пост в ленте с этим фото. Скрытое фото не видно подписчикам, поэтому
+      // повтор после сбоя на первом шаге безопасен.
+      const photo = post.image
         ? await graphRequest(
             cfg,
             'POST',
             `${cfg.pageId}/photos`,
-            { url: imageUrl(cfg, post.image), caption: post.message, published: true },
+            { url: imageUrl(cfg, post.image), published: false, temporary: true },
+            fetchImpl
+          )
+        : null;
+      if (photo && !photo.id) throw new GraphError('Graph: no photo id in response');
+      const data = photo
+        ? await graphRequest(
+            cfg,
+            'POST',
+            `${cfg.pageId}/feed`,
+            { message: post.message, attached_media: JSON.stringify([{ media_fbid: photo.id }]) },
             fetchImpl
           )
         : await graphRequest(
@@ -430,7 +478,7 @@ export async function metaTick(
     }
   }
 
-  // Instagram.
+  // Instagram: лента ('instagram') или история (STORY), учёт под своим ключом сети.
   if (step === 'create' || step === 'resume') {
     const to = step === 'create' ? 'creating' : 'container';
     const attempts = store.claimMetaPost(network, post.id, to, at);
@@ -444,7 +492,9 @@ export async function metaTick(
         cfg,
         'POST',
         `${igUserId}/media`,
-        { image_url: imageUrl(cfg, post.image), caption: instagramCaption(post) },
+        network === STORY
+          ? { image_url: imageUrl(cfg, post.image), media_type: 'STORIES' }
+          : { image_url: imageUrl(cfg, post.image), caption: instagramCaption(post) },
         fetchImpl
       );
       const containerId = String(data.id || '');
@@ -520,7 +570,7 @@ function settleFailure(store, network, postId, from, attempts, f, now, ref, opts
 
 /** Проверяет готовность контейнера (GET /{container}?fields=status_code,status). */
 async function pollContainer(store, cfg, post, rec, { now, at, fetchImpl, ref, cache }) {
-  const network = 'instagram';
+  const network = ref.network;
   const elapsed = now - Date.parse(rec.container_at);
   const giveUp = (error, keepContainer = false) =>
     settleFailure(

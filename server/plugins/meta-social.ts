@@ -1,11 +1,11 @@
-import { metaConfig, metaTick, validatePosts } from '../lib/meta-social.mjs';
-import { instagramPosts, facebookPosts } from '#shared/social-posts.mjs';
-// Автопостинг в Instagram и на Facebook-страницу. Без валидных настроек плагин ничего не делает
-// (см. deploy/railway.md, раздел Meta).
+import { STORY, activeNetworks, metaConfig, metaTick, validatePosts } from '../lib/meta-social.mjs';
+import { instagramPosts, facebookPosts, instagramStories } from '#shared/social-posts.mjs';
+// Автопостинг в Instagram (лента и истории) и на Facebook-страницу. Без валидных настроек плагин
+// ничего не делает (см. deploy/railway.md, раздел Meta).
 export default defineNitroPlugin(nitro => {
   const cfg = metaConfig();
   if (!cfg.enabled) return;
-  const queues = { instagram: instagramPosts, facebook: facebookPosts };
+  const queues = { instagram: instagramPosts, [STORY]: instagramStories, facebook: facebookPosts };
   const issues = [
     ...validatePosts(instagramPosts, 'instagram'),
     ...validatePosts(facebookPosts, 'facebook')
@@ -14,9 +14,15 @@ export default defineNitroPlugin(nitro => {
     console.error(`Meta autopost disabled, invalid queue: ${issues.join('; ')}`);
     return;
   }
-  const summary = cfg.networks
+  // Ошибка в очереди историй выключает только истории: лента и Facebook идут как раньше.
+  const storyIssues = cfg.stories ? validatePosts(instagramStories, STORY) : [];
+  if (storyIssues.length) {
+    console.error(`Meta autopost: stories disabled, invalid queue: ${storyIssues.join('; ')}`);
+    cfg.stories = false;
+  }
+  const summary = activeNetworks(cfg)
     .map(n => {
-      const q = queues[n as keyof typeof queues];
+      const q: { approved: boolean }[] = queues[n];
       return `${n} ${q.filter(p => p.approved).length} of ${q.length}`;
     })
     .join(', ');
