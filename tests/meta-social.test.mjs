@@ -25,6 +25,13 @@ import {
   validatePosts
 } from '../server/lib/meta-social.mjs';
 import { openStore } from '../server/lib/store.mjs';
+import {
+  IG_DAILY_LIMIT,
+  QUEUE_NETWORKS,
+  STORY,
+  activeNetworks
+} from '../server/lib/meta-social.mjs';
+import { instagramStories } from '../shared/social-posts.mjs';
 import { instagramPosts, facebookPosts } from '../shared/social-posts.mjs';
 
 const token = 'EAAGm0PX4ZCpsBAKzZBexampleTokenValue1234567890abcdefXYZ';
@@ -721,7 +728,7 @@ test('Page token lookup failures wait before retrying; a rejected token (#190) i
     assert.equal(calls.at(-1).headers.Authorization, `Bearer ${cache.pageToken}`);
   }));
 
-test('Facebook: photo post with caption, text post via feed, one call each', () =>
+test('Facebook: photo post = hidden photo + feed post, text post via feed', () =>
   withStore(async box => {
     const cfg = metaConfig({ ...env, META_INSTAGRAM: 'false' });
     const q = queues(
@@ -738,18 +745,23 @@ test('Facebook: photo post with caption, text post via feed, one call each', () 
     const p = await metaTick(box.store, q, cfg, { now: T0 + 15 * MIN, fetchImpl });
     assert.deepEqual(
       [p.status, p.network, p.postId, p.mediaId],
-      ['published', 'facebook', 'photo', '61596688616863_1']
+      ['published', 'facebook', 'photo', '61596688616863_2']
     );
     assert.equal(calls[0].path, '61596688616863/photos');
     assert.deepEqual(calls[0].body, {
       url: 'https://razrabotkatashkent.uz/social/brand/ig-01.jpg',
-      caption: 'FB photo',
-      published: 'true'
+      published: 'false',
+      temporary: 'true'
+    });
+    assert.equal(calls[1].path, '61596688616863/feed');
+    assert.deepEqual(calls[1].body, {
+      message: 'FB photo',
+      attached_media: JSON.stringify([{ media_fbid: '55' }])
     });
     const t = await metaTick(box.store, q, cfg, { now: T0 + 16 * MIN, fetchImpl });
     assert.equal(t.postId, 'text');
-    assert.equal(calls[1].path, '61596688616863/feed');
-    assert.deepEqual(calls[1].body, {
+    assert.equal(calls[2].path, '61596688616863/feed');
+    assert.deepEqual(calls[2].body, {
       message: 'FB text',
       link: 'https://razrabotkatashkent.uz/prices'
     });
@@ -757,7 +769,7 @@ test('Facebook: photo post with caption, text post via feed, one call each', () 
       (await metaTick(box.store, q, cfg, { now: T0 + 17 * MIN, fetchImpl })).status,
       'idle'
     );
-    assert.equal(calls.length, 2);
+    assert.equal(calls.length, 3);
   }));
 
 test('Facebook: definite failures back off and give up; timeouts are uncertain', () =>
@@ -854,4 +866,406 @@ test('Telegram and Meta records live side by side in the same database', () =>
     );
     assert.equal(box.store.recoverMetaPosts(new Date(T0 + STALE_MS + 1).toISOString()), 1);
     assert.equal(box.store.metaPosts()[0].status, 'uncertain');
+  }));
+
+// ── Истории Instagram (instagram_story) ─────────────────────────────────────────────────────
+const storyPost = (id, publishAt = AT, extra = {}) => ({
+  id,
+  publishAt,
+  approved: true,
+  image: `/social/stories/${id}.jpg`,
+  ...extra
+});
+const allQueues = (ig = [], stories = [], fb = []) => ({
+  instagram: ig,
+  [STORY]: stories,
+  facebook: fb
+});
+
+test('stories config: on with Instagram, META_INSTAGRAM_STORIES=false turns off stories only', () => {
+  const on = metaConfig(env);
+  assert.equal(on.stories, true);
+  assert.deepEqual(activeNetworks(on), ['instagram', STORY, 'facebook']);
+  const off = metaConfig({ ...env, META_INSTAGRAM_STORIES: 'false' });
+  assert.equal(off.enabled, true);
+  assert.equal(off.stories, false);
+  assert.deepEqual(off.networks, ['instagram', 'facebook'], 'feed networks unchanged');
+  assert.deepEqual(activeNetworks(off), ['instagram', 'facebook']);
+  assert.equal(metaConfig({ ...env, META_INSTAGRAM_STORIES: ' FALSE ' }).stories, false);
+  assert.equal(metaConfig({ ...env, META_INSTAGRAM_STORIES: 'true' }).stories, true);
+  const noIg = metaConfig({ ...env, META_INSTAGRAM: 'false' });
+  assert.equal(noIg.stories, false, 'META_INSTAGRAM=false also stops stories');
+  assert.deepEqual(activeNetworks(noIg), ['facebook']);
+  assert.deepEqual(QUEUE_NETWORKS, ['instagram', STORY, 'facebook']);
+  assert.equal(STORY, 'instagram_story');
+});
+
+test('stories queue: an array of valid entries with images under /social/stories/', () => {
+  assert.ok(Array.isArray(instagramStories));
+  assert.deepEqual(validatePosts(instagramStories, STORY, { exists }), []);
+  for (const s of instagramStories) {
+    assert.equal(typeof s.approved, 'boolean', `${s.id}: approval is explicit`);
+    assert.match(s.image, /^\/social\/stories\/[a-z0-9-]+\.jpe?g$/, s.id);
+    assert.ok(exists(s.image), s.image);
+  }
+});
+
+test('validatePosts: stories need a /social/stories image and carry no caption', () => {
+  const v = (posts, opts = { exists: () => true }) => validatePosts(posts, STORY, opts).join();
+  assert.equal(v([storyPost('st-01'), storyPost('st-02')]), '');
+  assert.equal(v([storyPost('st-01', AT, { image: '/social/stories/a.jpeg' })]), '');
+  assert.match(v([storyPost('st-01'), storyPost('st-01')]), /duplicate id/);
+  assert.match(v([storyPost('Bad Id')]), /bad id/);
+  assert.match(v([storyPost('st-01', 'tomorrow')]), /publishAt/);
+  assert.match(v([storyPost('st-01', '2026-11-23T18:00:00')]), /publishAt/);
+  assert.match(v([storyPost('st-01', AT, { approved: 'yes' })]), /approved/);
+  assert.match(v([storyPost('st-01', AT, { image: undefined })]), /image is required/);
+  assert.match(
+    v([storyPost('st-01', AT, { image: '/social/brand/ig-01.jpg' })]),
+    /image must be \/social\/stories\/<name>\.jpg/
+  );
+  assert.match(v([storyPost('st-01', AT, { image: '/social/stories/a.png' })]), /image must be/);
+  assert.match(v([storyPost('st-01', AT, { image: '/social/stories/../x.jpg' })]), /image must be/);
+  assert.match(v([storyPost('st-01', AT, { caption: 'x' })]), /no caption \(remove caption\)/);
+  assert.match(v([storyPost('st-01', AT, { ru: 'x', hashtags: [] })]), /remove ru, hashtags/);
+  assert.match(v([storyPost('st-01')], { exists: () => false }), /image file not found/);
+  assert.equal(v([storyPost('st-01')], {}), '', 'without exists the file is not checked');
+  assert.match(validatePosts({}, STORY).join(), /queue must be an array/);
+  assert.equal(validatePosts([], STORY).length, 0);
+  // Картинка истории не подходит для ленты, и наоборот.
+  assert.match(
+    validatePosts([igPost('a', AT, { image: '/social/stories/a.jpg' })], 'instagram').join(),
+    /image must be \/social\/brand\|telegram/
+  );
+});
+
+test('stories: ordered by publishAt with the other queues; Instagram feed wins ties', () => {
+  const all = ['instagram', STORY, 'facebook'];
+  const ig = [igPost('ig', AT)];
+  const st = [storyPost('st', AT), storyPost('st-early', '2026-11-23T11:00:00+05:00')];
+  const fb = [fbPost('fb', AT)];
+  const tie = nextAction(allQueues(ig, [storyPost('st', AT)], fb), new Map(), all, T0);
+  assert.deepEqual([tie.network, tie.post.id, tie.step], ['instagram', 'ig', 'create']);
+  const early = nextAction(allQueues(ig, st, fb), new Map(), all, T0);
+  assert.deepEqual([early.network, early.post.id, early.step], [STORY, 'st-early', 'create']);
+  const storyBeforeFb = nextAction(allQueues([], [storyPost('st', AT)], fb), new Map(), all, T0);
+  assert.equal(storyBeforeFb.network, STORY);
+  assert.equal(
+    nextAction(allQueues([], st, fb), new Map(), ['instagram', 'facebook'], T0).network,
+    'facebook',
+    'stories are skipped when not active'
+  );
+  // История в ожидании повтора задерживает следующие истории, но не ленту и не Facebook.
+  const records = new Map([
+    [`${STORY}:st-early`, { status: 'failed', next_attempt_at: new Date(T0 + MIN).toISOString() }]
+  ]);
+  assert.equal(nextAction(allQueues([], st, []), records, all, T0), null);
+  assert.equal(nextAction(allQueues(ig, st, []), records, all, T0).network, 'instagram');
+  // Учёт ленты и историй раздельный: опубликованный пост ленты с тем же id не закрывает историю.
+  const sameId = new Map([['instagram:x', { status: 'published' }]]);
+  const r = nextAction(allQueues([igPost('x')], [storyPost('x')]), sameId, all, T0);
+  assert.deepEqual([r.network, r.post.id], [STORY, 'x']);
+  // Суточный лимит Instagram останавливает и ленту, и истории.
+  assert.equal(
+    nextAction(allQueues(ig, st, fb), new Map(), all, T0, { igBlocked: true }).network,
+    'facebook'
+  );
+});
+
+test('stories: container (media_type=STORIES, no caption) → poll → publish, never twice', () =>
+  withStore(async box => {
+    const cfg = metaConfig(env);
+    const q = allQueues([], [storyPost('st-01'), storyPost('st-02', AT, { approved: false })]);
+    const { calls, fetchImpl } = fakeGraph();
+    const tick = now => metaTick(box.store, q, cfg, { now, fetchImpl });
+    assert.deepEqual(await tick(T0 - 1), { status: 'idle' });
+
+    const r1 = await tick(T0);
+    assert.deepEqual(
+      [r1.status, r1.network, r1.postId, r1.containerId],
+      ['container', STORY, 'st-01', '901']
+    );
+    assert.equal(calls[0].path, '17841400000000001/media');
+    assert.deepEqual(calls[0].body, {
+      image_url: 'https://razrabotkatashkent.uz/social/stories/st-01.jpg',
+      media_type: 'STORIES'
+    });
+    assert.equal(calls[0].headers.Authorization, `Bearer ${token}`);
+
+    const r2 = await tick(T0 + MIN);
+    assert.equal(r2.status, 'ready');
+    assert.equal(calls[1].path, '901');
+    assert.equal(calls[1].url.searchParams.get('fields'), 'status_code,status');
+
+    const r3 = await tick(T0 + 2 * MIN);
+    assert.deepEqual([r3.status, r3.network, r3.mediaId], ['published', STORY, '1802']);
+    assert.equal(calls[2].path, '17841400000000001/media_publish');
+    assert.deepEqual(calls[2].body, { creation_id: '901' });
+
+    for (let i = 3; i < 6; i++) assert.equal((await tick(T0 + i * MIN)).status, 'idle');
+    assert.equal(calls.length, 3);
+    const rows = box.store.metaPosts();
+    assert.equal(rows.length, 1);
+    assert.deepEqual(
+      [rows[0].network, rows[0].post_id, rows[0].status, rows[0].media_id, rows[0].attempts],
+      [STORY, 'st-01', 'published', '1802', 1]
+    );
+    assert.equal(box.store.claimMetaPost(STORY, 'st-01', 'creating', new Date().toISOString()), 0);
+  }));
+
+test('stories and feed share one request per tick; story rows never touch feed rows', () =>
+  withStore(async box => {
+    const cfg = metaConfig(env);
+    const q = allQueues([igPost('a')], [storyPost('a')], [fbPost('f')]);
+    const { calls, fetchImpl } = fakeGraph();
+    const seen = [];
+    for (let i = 0; i < 8; i++) {
+      const r = await metaTick(box.store, q, cfg, { now: T0 + i * MIN, fetchImpl });
+      seen.push(`${r.network ?? '-'} ${r.status}`);
+    }
+    assert.deepEqual(seen, [
+      'instagram container',
+      'instagram ready',
+      'instagram published',
+      `${STORY} container`,
+      `${STORY} ready`,
+      `${STORY} published`,
+      'facebook published',
+      '- idle'
+    ]);
+    // Один запрос за тик, кроме поста Facebook с фото: скрытое фото + пост (2 запроса).
+    assert.equal(calls.length, 8, 'one Graph request per tick (FB photo post: two)');
+    assert.equal(calls[0].body.caption, 'RU a\n\n—\n\nUZ a\n\n#ташкент', 'feed caption unchanged');
+    assert.equal(calls[0].body.media_type, undefined, 'feed has no media_type');
+    assert.equal(calls[3].body.media_type, 'STORIES');
+    assert.deepEqual(
+      box.store.metaPosts().map(r => `${r.network}:${r.post_id}:${r.status}`),
+      ['facebook:f:published', 'instagram:a:published', `${STORY}:a:published`]
+    );
+    // Без историй (META_INSTAGRAM_STORIES=false) очередь историй не трогается.
+    const noStories = metaConfig({ ...env, META_INSTAGRAM_STORIES: 'false' });
+    const q2 = allQueues([], [storyPost('b')]);
+    assert.equal(
+      (await metaTick(box.store, q2, noStories, { now: T0 + 9 * MIN, fetchImpl })).status,
+      'idle'
+    );
+    assert.equal(calls.length, 8);
+  }));
+
+test('stories: restart after the container was created resumes it, no second container', () =>
+  withStore(async box => {
+    const cfg = metaConfig(env);
+    const q = allQueues([], [storyPost('st-01')]);
+    let status = 'IN_PROGRESS';
+    const { calls, fetchImpl } = fakeGraph({
+      'GET container': () => ({ body: { status_code: status } })
+    });
+    assert.equal((await metaTick(box.store, q, cfg, { now: T0, fetchImpl })).status, 'container');
+    const r = await metaTick(box.reopen(), q, cfg, { now: T0 + MIN, fetchImpl });
+    assert.deepEqual(
+      [r.status, r.network, r.containerStatus],
+      ['processing', STORY, 'IN_PROGRESS']
+    );
+    status = 'FINISHED';
+    assert.equal(
+      (await metaTick(box.reopen(), q, cfg, { now: T0 + 2 * MIN, fetchImpl })).status,
+      'ready'
+    );
+    assert.equal(
+      (await metaTick(box.reopen(), q, cfg, { now: T0 + 3 * MIN, fetchImpl })).status,
+      'published'
+    );
+    assert.deepEqual(
+      calls.map(c => `${c.method} ${c.path}`),
+      ['POST 17841400000000001/media', 'GET 901', 'GET 901', 'POST 17841400000000001/media_publish']
+    );
+    // Сбой во время создания контейнера: после STALE_MS повтор (ничего не опубликовано).
+    const q2 = allQueues([], [storyPost('st-02')]);
+    box.store.claimMetaPost(STORY, 'st-02', 'creating', new Date(T0 + 4 * MIN).toISOString());
+    assert.equal(
+      (await metaTick(box.reopen(), q2, cfg, { now: T0 + 5 * MIN, fetchImpl })).status,
+      'idle'
+    );
+    const again = await metaTick(box.store, q2, cfg, {
+      now: T0 + 4 * MIN + STALE_MS + 1,
+      fetchImpl
+    });
+    assert.deepEqual([again.status, again.network], ['container', STORY]);
+  }));
+
+test('stories: publish timeout or crash is uncertain; refusals back off and reuse the container', () =>
+  withStore(async box => {
+    const cfg = metaConfig(env);
+    const q = allQueues([], [storyPost('st-01'), storyPost('st-02', '2026-11-23T12:05:00+05:00')]);
+    let mode = 'refuse';
+    const { calls, fetchImpl } = fakeGraph({
+      'POST 17841400000000001/media_publish': () => {
+        if (mode === 'refuse')
+          return {
+            status: 400,
+            body: { error: { code: 9, error_subcode: 2207042, message: 'limit' } }
+          };
+        if (mode === 'timeout') throw new DOMException('aborted', 'TimeoutError');
+        return { body: { id: '777' } };
+      }
+    });
+    const tick = now => metaTick(box.store, q, cfg, { now, fetchImpl });
+    await tick(T0);
+    await tick(T0 + MIN);
+    const f = await tick(T0 + 2 * MIN);
+    assert.deepEqual([f.status, f.network], ['failed', STORY]);
+    assert.match(f.error, /Graph 9\/2207042: limit/);
+    const row = () => box.store.metaPosts().find(r => r.post_id === 'st-01');
+    assert.deepEqual(
+      [row().container_id, row().next_attempt_at],
+      ['901', new Date(T0 + 2 * MIN + RETRY_MS).toISOString()]
+    );
+    assert.equal((await tick(T0 + 3 * MIN)).status, 'idle', 'backs off and holds later stories');
+    const resume = await tick(T0 + 2 * MIN + RETRY_MS);
+    assert.deepEqual([resume.status, resume.step, resume.network], ['ready', 'resume', STORY]);
+    mode = 'timeout';
+    const u = await tick(T0 + 3 * MIN + RETRY_MS);
+    assert.deepEqual([u.status, u.network, u.postId], ['uncertain', STORY, 'st-01']);
+    assert.equal(row().container_id, '901', 'container kept for manual checking');
+    assert.equal(calls.filter(c => c.path.endsWith('/media')).length, 1, 'one container only');
+    // Следующая история идёт дальше; st-01 сам не повторяется.
+    mode = 'ok';
+    const next = await tick(T0 + 4 * MIN + RETRY_MS);
+    assert.deepEqual([next.status, next.postId], ['container', 'st-02']);
+    assert.equal(
+      calls.filter(c => c.path.endsWith('media_publish') && c.body.creation_id === '901').length,
+      2,
+      'refused once, timed out once, never a third time'
+    );
+    // Ручная проверка: confirm/retry работают по ключу instagram_story и не трогают ленту.
+    assert.equal(box.store.confirmMetaPost('instagram', 'st-01'), 0);
+    assert.equal(box.store.confirmMetaPost(STORY, 'st-01'), 1);
+    assert.equal(row().status, 'published');
+    assert.equal(box.store.retryMetaPost(STORY, 'st-01'), 0, 'published rows are never cleared');
+
+    // Падение процесса во время media_publish → uncertain после STALE_MS.
+    await tick(T0 + 5 * MIN + RETRY_MS); // st-02 ready
+    const crashAt = T0 + 6 * MIN + RETRY_MS;
+    assert.equal(
+      box.store.moveMetaPost(
+        STORY,
+        'st-02',
+        'container',
+        'publishing',
+        new Date(crashAt).toISOString()
+      ),
+      1
+    );
+    assert.equal(
+      (await metaTick(box.reopen(), q, cfg, { now: crashAt + MIN, fetchImpl })).status,
+      'idle'
+    );
+    assert.equal(
+      (await metaTick(box.store, q, cfg, { now: crashAt + STALE_MS + 1, fetchImpl })).status,
+      'idle'
+    );
+    const st2 = box.store.metaPosts().find(r => r.post_id === 'st-02');
+    assert.deepEqual([st2.network, st2.status], [STORY, 'uncertain']);
+    assert.equal(box.store.retryMetaPost(STORY, 'st-02'), 1);
+    assert.equal(
+      (await metaTick(box.store, q, cfg, { now: crashAt + STALE_MS + MIN, fetchImpl })).status,
+      'container'
+    );
+  }));
+
+test('stories: container ERROR fails definitely and a fresh container is created on retry', () =>
+  withStore(async box => {
+    const cfg = metaConfig(env);
+    const q = allQueues([], [storyPost('st-01')]);
+    let reply = { body: { status_code: 'ERROR', status: 'Error: 2207004' } };
+    const { calls, fetchImpl } = fakeGraph({ 'GET container': () => reply });
+    await metaTick(box.store, q, cfg, { now: T0, fetchImpl });
+    const e = await metaTick(box.store, q, cfg, { now: T0 + MIN, fetchImpl });
+    assert.deepEqual([e.status, e.network], ['failed', STORY]);
+    assert.match(e.error, /Container ERROR: Error: 2207004/);
+    reply = { body: { status_code: 'FINISHED' } };
+    assert.equal(
+      (await metaTick(box.store, q, cfg, { now: T0 + MIN + RETRY_MS, fetchImpl })).status,
+      'container'
+    );
+    assert.equal(calls.filter(c => c.path.endsWith('/media')).length, 2);
+    // Явный отказ при создании контейнера (например, картинка недоступна) тоже повторяется.
+    const bad = fakeGraph({
+      'POST 17841400000000001/media': () => ({
+        status: 400,
+        body: {
+          error: { code: 9004, message: 'Only photo or video can be accepted as media type.' }
+        }
+      })
+    });
+    const q2 = allQueues([], [storyPost('st-02')]);
+    const b = await metaTick(box.store, q2, cfg, { now: T0, fetchImpl: bad.fetchImpl });
+    assert.deepEqual([b.status, b.network, b.postId], ['failed', STORY, 'st-02']);
+  }));
+
+test('stories count toward the 24h Instagram publishing limit together with feed posts', () =>
+  withStore(async box => {
+    const cfg = metaConfig(env);
+    const at = new Date(T0 - MIN).toISOString();
+    for (let i = 0; i < 50; i++) {
+      const network = i % 2 ? STORY : 'instagram';
+      box.store.claimMetaPost(network, `old-${i}`, 'publishing', at);
+      box.store.finishMetaPost(
+        network,
+        `old-${i}`,
+        'publishing',
+        { status: 'published', mediaId: String(i) },
+        at
+      );
+    }
+    const q = allQueues(
+      [igPost('a')],
+      [storyPost('s')],
+      [fbPost('f', '2026-11-23T12:30:00+05:00')]
+    );
+    const { fetchImpl } = fakeGraph();
+    assert.equal((await metaTick(box.store, q, cfg, { now: T0, fetchImpl })).status, 'idle');
+    assert.equal(
+      (await metaTick(box.store, q, cfg, { now: T0 + 30 * MIN, fetchImpl })).network,
+      'facebook'
+    );
+    assert.equal(IG_DAILY_LIMIT, 50);
+    const later = await metaTick(box.store, q, cfg, { now: T0 + 24 * 3600000, fetchImpl });
+    assert.deepEqual([later.status, later.network], ['container', 'instagram']);
+    // 49 публикаций за сутки: лимит ещё не достигнут, история идёт.
+    const fresh = allQueues([], [storyPost('s2')]);
+    const dir = mkdtempSync(join(tmpdir(), 'meta-q-'));
+    const s2 = openStore(join(dir, 'c.sqlite'));
+    try {
+      for (let i = 0; i < 49; i++) {
+        s2.claimMetaPost(STORY, `old-${i}`, 'publishing', at);
+        s2.finishMetaPost(
+          STORY,
+          `old-${i}`,
+          'publishing',
+          { status: 'published', mediaId: String(i) },
+          at
+        );
+      }
+      assert.equal((await metaTick(s2, fresh, cfg, { now: T0, fetchImpl })).status, 'container');
+    } finally {
+      s2.close();
+      rmSync(dir, { recursive: true, force: true });
+    }
+  }));
+
+test('stories: IG user id is resolved via the Page when META_IG_USER_ID is empty', () =>
+  withStore(async box => {
+    const cfg = metaConfig({ ...env, META_IG_USER_ID: '' });
+    const q = allQueues([], [storyPost('st-01')]);
+    const cache = { pageToken: token, tokenKind: 'page' };
+    const { calls, fetchImpl } = fakeGraph();
+    const tick = now => rawTick(box.store, q, cfg, { now, fetchImpl, cache });
+    const r = await tick(T0);
+    assert.deepEqual(r, { status: 'resolved', igUserId: '17841400000000009' });
+    assert.equal((await tick(T0 + MIN)).status, 'container');
+    assert.equal(calls[1].path, '17841400000000009/media');
+    await tick(T0 + 2 * MIN);
+    assert.equal((await tick(T0 + 3 * MIN)).status, 'published');
+    assert.equal(calls.at(-1).path, '17841400000000009/media_publish');
   }));
