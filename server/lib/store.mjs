@@ -4,6 +4,7 @@ import { dirname } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { validateDraft } from './core.mjs';
 import { editorialStore } from './editorial.mjs';
+import { telegramStore } from './telegram.mjs';
 
 export function openStore(path, { onPublish } = {}) {
   mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
@@ -19,6 +20,7 @@ export function openStore(path, { onPublish } = {}) {
       .run(new Date().toISOString(), action, slug);
   return {
     ...editorialStore(db, log),
+    ...telegramStore(db, log),
     close: () => db.close(),
     saveLead(p) {
       const id = randomUUID();
