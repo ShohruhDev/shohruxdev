@@ -2,7 +2,7 @@
 
 Проект: web-mobile-studio. Сервис: web. Окружение: production.
 Панель: https://railway.com/project/b298e9f2-0706-4c95-90f0-e8482fd073f6
-Адреса: https://shohruxdev.uz (основной до переезда), https://web-production-0506cb.up.railway.app
+Адреса: https://razrabotkatashkent.uz (основной с 15.11.2026), https://www.razrabotkatashkent.uz, https://web-production-0506cb.up.railway.app
 
 ## Деплой
 
@@ -10,9 +10,9 @@
 
 Ручной деплой без GitHub (только в крайнем случае): `railway up --service web --detach` из папки проекта. Повторить последний деплой: `railway service redeploy --service web`.
 
-Dockerfile собирает Nuxt на Node 24 и запускает отдельный runtime-образ. `railway.json` задаёт проверку `/` и одну реплику.
+Dockerfile собирает Nuxt на Node 24 и запускает отдельный runtime-образ. Railway находит корневой `Dockerfile` сам.
 
-Railway CLI 5.57.9 сообщает, что Config as Code поддерживается до 1 декабря 2026. Перед этой датой перенести настройки в актуальную Infrastructure as Code командой `railway config migrate`, затем проверить plan/apply; миграцию не применять вслепую к тому и переменным.
+Настройки сервиса задаются только в панели Railway (Service → Settings): рестарт ON_FAILURE, до 10 попыток, одна реплика, healthcheck не задан. Файла `railway.json` нет: Config as Code отключается 01.12.2026, а сервис создан 27.10.2026, после 28.08.2026, и этот файл никогда не читал. Переходить на Infrastructure as Code (`.railway/railway.ts`) не обязательно; если понадобится, начинать с `railway config migrate` (пробный прогон) и `railway config plan`, не применять вслепую к тому и переменным.
 
 ## Данные и настройки
 
