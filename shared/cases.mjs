@@ -33,7 +33,7 @@ export const caseList = [
     cover: { src: '/cases/leadvex.webp', width: 1600, height: 1100 },
     ru: {
       title: 'CRM-система для автодилеров ОАЭ',
-      client: 'Leadvex, SaaS-продукт для автосалонов ОАЭ',
+      client: 'Собственный продукт ООО «LEADVEX AI»: SaaS для автосалонов ОАЭ',
       summary:
         'Рабочее пространство для отдела продаж автосалона: переписка из WhatsApp, Messenger и Instagram, лиды, склад автомобилей и тест-драйвы. Интерфейс на английском и арабском.',
       task: 'Автосалоны в ОАЭ получают заявки в WhatsApp, Messenger и Instagram, а данные о клиенте, интересующей его машине и записи на тест-драйв хранятся в разных местах. Нужен был облачный сервис, в котором продавец ведёт заявку от первого сообщения до визита в салон. Каждый салон работает в своём изолированном аккаунте, а интерфейс должен поддерживать арабский язык с письмом справа налево.',
@@ -57,7 +57,7 @@ export const caseList = [
     },
     uz: {
       title: 'BAA avtodilerlari uchun CRM tizimi',
-      client: 'Leadvex, BAA avtosalonlari uchun SaaS mahsulot',
+      client: '«LEADVEX AI» MChJning o‘z mahsuloti: BAA avtosalonlari uchun SaaS',
       summary:
         'Avtosalon savdo bo‘limi uchun ish maydoni: WhatsApp, Messenger va Instagram yozishmalari, lidlar, avtomobillar ombori va test-drayvlar. Interfeys ingliz va arab tillarida.',
       task: 'BAA avtosalonlari murojaatlarni WhatsApp, Messenger va Instagram orqali oladi, mijoz, u qiziqqan avtomobil va test-drayv yozuvi haqidagi ma’lumotlar esa turli joylarda saqlanadi. Sotuvchi murojaatni birinchi xabardan salonga tashrifgacha olib boradigan bulutli xizmat kerak edi. Har bir salon o‘zining alohida akkauntida ishlaydi, interfeys esa arab tilini o‘ngdan chapga yozuv bilan qo‘llab-quvvatlashi kerak edi.',
@@ -206,7 +206,7 @@ export const caseList = [
         'Каталог проектов и лента новостей с датами.',
         'Раздел частых вопросов и форма обращения с выбором региона, телефоном и типом пользователя.',
         'Вход для участников организации.',
-        'Контент загружается из API организации, поэтому новости и проекты публикуются без правки кода.'
+        'Сайт подключён к API организации: бэкенд и админ-панель разрабатывал другой подрядчик, мы сделали публичную часть. Новости и проекты публикуются без правки кода.'
       ],
       results: [
         'Портал работает на bolalartashkiloti.uz на трёх языках.',
@@ -227,7 +227,7 @@ export const caseList = [
         'Loyihalar katalogi va sanalari ko‘rsatilgan yangiliklar lentasi.',
         'Ko‘p beriladigan savollar bo‘limi va hudud, telefon raqami hamda foydalanuvchi turini ko‘rsatiladigan murojaat shakli.',
         'Tashkilot a’zolari uchun kirish.',
-        'Kontent tashkilot API’sidan yuklanadi, shuning uchun yangiliklar va loyihalar kodni o‘zgartirmasdan e’lon qilinadi.'
+        'Sayt tashkilot API’siga ulangan: backend va admin panelni boshqa pudratchi ishlab chiqqan, biz ommaviy qismni tayyorladik. Yangiliklar va loyihalar kodni o‘zgartirmasdan e’lon qilinadi.'
       ],
       results: [
         'Portal bolalartashkiloti.uz manzilida uch tilda ishlaydi.',
@@ -245,7 +245,7 @@ export const caseList = [
     cover: { src: '/cases/legat.webp', width: 1600, height: 1100 },
     ru: {
       title: 'CRM для автоматизации судебной работы по кредитам',
-      client: 'Компания, продающая товары в рассрочку, Узбекистан',
+      client: 'Компания, продающая товары в рассрочку, Ташкент',
       summary:
         'Веб-система для юристов: от загрузки просроченных кредитов из Excel до претензии через UzPost, квитанции о госпошлине и пакета документов для суда.',
       task: 'Чтобы подать в суд по просроченному договору рассрочки, юристу нужно собрать данные заёмщика и долга, отправить претензию почтой, выждать срок, определить подсудный суд, оплатить госпошлину и подготовить пакет документов. Клиенту нужна была система, которая ведёт реестр кредитов, проводит каждое дело по этим этапам и сама формирует типовые документы.',
@@ -269,7 +269,7 @@ export const caseList = [
     },
     uz: {
       title: 'Kreditlar bo‘yicha sud ishlarini avtomatlashtirish uchun CRM',
-      client: 'Muddatli to‘lovga tovar sotuvchi kompaniya, O‘zbekiston',
+      client: 'Muddatli to‘lovga tovar sotuvchi kompaniya, Toshkent',
       summary:
         'Yuristlar uchun veb-tizim: muddati o‘tgan kreditlarni Excel’dan yuklashdan UzPost orqali talabnoma, davlat boji kvitansiyasi va sud uchun hujjatlar to‘plamigacha.',
       task: 'Muddati o‘tgan muddatli to‘lov shartnomasi bo‘yicha sudga murojaat qilish uchun yurist qarzdor va qarz ma’lumotlarini yig‘ishi, talabnomani pochta orqali yuborishi, belgilangan muddatni kutishi, sudlovga taalluqli sudni aniqlashi, davlat bojini to‘lashi va hujjatlar to‘plamini tayyorlashi kerak. Mijozga kreditlar reyestrini yuritadigan, har bir ishni shu bosqichlardan o‘tkazadigan va namunaviy hujjatlarni o‘zi tayyorlaydigan tizim kerak edi.',
