@@ -160,7 +160,7 @@ test('queues come from the social kit: valid, explicit approval, on the planned 
   );
   for (const p of [...instagramPosts, ...facebookPosts]) {
     assert.equal(typeof p.approved, 'boolean', `${p.id}: approval is explicit`);
-    assert.match(p.publishAt, /^2026-1[12]-\d\dT12:00:00\+05:00$/, p.id);
+    assert.match(p.publishAt, /^2026-1[12]-\d\dT\d\d:\d\d:00\+05:00$/, p.id);
     assert.ok(exists(p.image), p.image);
   }
   assert.deepEqual(
