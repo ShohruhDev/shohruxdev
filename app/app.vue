@@ -153,6 +153,18 @@ watch(
         <BrandLogo />
         <p>{{ t('Независимая разработка.') }}<br />{{ t('Узбекистан и СНГ.') }}</p>
         <p class="footer-phone"><PhoneLink place="footer" /></p>
+        <ul class="footer-social" :aria-label="t('Мы в соцсетях')">
+          <li v-for="p in socialProfiles" :key="p.id">
+            <a
+              :href="p.url"
+              target="_blank"
+              rel="noopener"
+              :aria-label="t(p.label)"
+              :title="t(p.label)"
+              ><AppIcon :name="p.id" :size="22"
+            /></a>
+          </li>
+        </ul>
         <p class="footer-legal">
           {{ locale === 'uz' ? company.legalName.uz : company.legalName.ru }}<br />{{ t('ИНН') }}
           {{ innFormatted }}
@@ -170,9 +182,6 @@ watch(
         ><TelegramLink place="footer" label="Telegram" /><NuxtLink :to="localPath('/privacy')">{{
           t('Обработка данных')
         }}</NuxtLink
-        ><a v-for="p in socialProfiles" :key="p.id" :href="p.url" target="_blank" rel="noopener">{{
-          t(p.label)
-        }}</a
         ><NuxtLink v-if="!config.public.indexable" :to="localPath('/admin')">{{
           t('Редакция')
         }}</NuxtLink>
@@ -181,5 +190,6 @@ watch(
         {{ t('Веб. Мобильные приложения.') }}<br />{{ t('Внимание к деталям.') }}
       </div>
     </footer>
+    <ClientOnly><CookieNotice v-if="route.path !== '/admin'" /></ClientOnly>
   </div>
 </template>

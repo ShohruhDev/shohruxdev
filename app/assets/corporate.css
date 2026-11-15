@@ -335,6 +335,33 @@
 .app-public .footer-links a:hover {
   color: var(--accent);
 }
+.app-public .footer-social {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.app-public .footer-social a {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid var(--line);
+  transition:
+    color 0.2s,
+    background 0.2s,
+    border-color 0.2s;
+}
+.app-public .footer-social a:hover,
+.app-public .footer-social a:focus-visible {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
 
 /* ---------- Главная ---------- */
 .home-hero {
