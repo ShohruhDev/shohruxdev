@@ -17,5 +17,15 @@ export const company = {
   street: 'Qorasaroy ko‘chasi, 335-uy',
   district: 'Olmazor tumani'
 };
+// Публичные страницы бренда в соцсетях (подвал и schema.org sameAs).
+export const socialProfiles = [
+  { id: 'telegram', label: 'Telegram-канал', url: 'https://t.me/razrabotkatashkent' },
+  { id: 'instagram', label: 'Instagram', url: 'https://www.instagram.com/razrabotkatashkent/' },
+  {
+    id: 'facebook',
+    label: 'Facebook',
+    url: 'https://www.facebook.com/profile.php?id=61596688616863'
+  }
+];
 /** ИНН с пробелами для чтения: 313 300 268. */
 export const innFormatted = company.inn.replace(/(\d{3})(?=\d)/g, '$1 ');

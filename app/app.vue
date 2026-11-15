@@ -4,7 +4,8 @@ import {
   brandAlternateName,
   brandName,
   company,
-  innFormatted
+  innFormatted,
+  socialProfiles
 } from '#shared/brand.mjs';
 import { cases } from '#shared/cases.mjs';
 const hasCases = cases.length > 0;
@@ -47,6 +48,7 @@ useHead(() => {
           { '@type': 'Place', name: 'CIS' }
         ],
         knowsLanguage: ['ru', 'uz'],
+        sameAs: socialProfiles.map(p => p.url),
         contactPoint: {
           '@type': 'ContactPoint',
           contactType: 'sales',
@@ -168,6 +170,9 @@ watch(
         ><TelegramLink place="footer" label="Telegram" /><NuxtLink :to="localPath('/privacy')">{{
           t('Обработка данных')
         }}</NuxtLink
+        ><a v-for="p in socialProfiles" :key="p.id" :href="p.url" target="_blank" rel="noopener">{{
+          t(p.label)
+        }}</a
         ><NuxtLink v-if="!config.public.indexable" :to="localPath('/admin')">{{
           t('Редакция')
         }}</NuxtLink>
