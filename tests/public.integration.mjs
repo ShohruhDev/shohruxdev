@@ -13,6 +13,7 @@ const p = {
   title: 'Рабочая статья',
   description: 'Проверка автоматического выпуска',
   category: 'Запуск',
+  // Прежнее латинское написание из уже сохранённых статей: на страницах показывается по языку.
   author: 'Burxonov Shohrux',
   content: [{ heading: 'Первый раздел', body: 'Текст материала.' }],
   sources: []
@@ -62,7 +63,8 @@ try {
   assert.equal(r.status, 200);
   assert.ok(!r.headers.get('x-robots-tag')?.includes('noindex'));
   const html = await r.text();
-  assert.match(html, /Burxonov Shohrux/);
+  assert.match(html, /<span[^>]*>Шохрух Бурхонов<\/span>/);
+  assert.doesNotMatch(html, /Burxonov Shohrux/);
   assert.doesNotMatch(html, /name="robots" content="noindex/);
   assert.match(html, /https:\/\/qa\.web-mobile\.test\/journal\/worker-post/);
   assert.equal((await fetch(base + '/journal/private-future')).status, 404);
@@ -75,6 +77,7 @@ try {
   const uz = await (await fetch(base + '/uz/journal/worker-post')).text();
   assert.match(uz, /<html[^>]*lang="uz"/);
   assert.match(uz, /Ishlaydigan maqola/);
+  assert.match(uz, /<span[^>]*>Shohrux Burxonov<\/span>/);
   assert.match(await (await fetch(base + '/feed.xml?lang=uz')).text(), /Ishlaydigan maqola/);
   const sitemap = await (await fetch(base + '/sitemap.xml')).text();
   assert.match(sitemap, /<lastmod>/);

@@ -1,6 +1,5 @@
 import { localizePost } from '#shared/locale.mjs';
-import { authorName, brandDomain, brandName } from '#shared/brand.mjs';
-const brand = { name: brandName, domain: brandDomain, author: authorName };
+import { authorFor, brandDomain, brandName } from '#shared/brand.mjs';
 import { ogFonts, ogVersion, renderArticleImage } from '../../../lib/og-image.mjs';
 // /og/journal/<slug>.png?lang=uz — картинка для соцсетей, создаётся при первом запросе.
 let fonts: Promise<any[]> | undefined;
@@ -32,7 +31,9 @@ export default defineEventHandler(async event => {
   const key = `${slug}|${lang}|${ogVersion(post)}`;
   let png = cache.get(key);
   if (!png) {
-    png = loadFonts().then(f => renderArticleImage(post, f, brand));
+    png = loadFonts().then(f =>
+      renderArticleImage(post, f, { name: brandName, domain: brandDomain, author: authorFor(lang) })
+    );
     png.catch(() => cache.delete(key));
     cache.set(key, png);
     if (cache.size > 200) cache.delete(cache.keys().next().value!);

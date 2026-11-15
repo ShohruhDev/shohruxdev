@@ -1,3 +1,4 @@
+import { displayAuthor } from './brand.mjs';
 export function localeOf(path) {
   return /^\/uz(?:\/|$)/.test(path) ? 'uz' : 'ru';
 }
@@ -12,8 +13,10 @@ export function localizePost(post, locale) {
   if (locale === 'uz' && !translations?.uz) return null;
   const { title, description, category, content, answer, faq, readTime, sources, ...metadata } =
     base;
+  const localized = locale === 'uz' ? { ...metadata, ...translations.uz } : base;
   return {
-    ...(locale === 'uz' ? { ...metadata, ...translations.uz } : base),
+    ...localized,
+    ...(localized.author ? { author: displayAuthor(localized.author, locale) } : {}),
     locale,
     availableLocales: translations?.uz ? ['ru', 'uz'] : ['ru']
   };

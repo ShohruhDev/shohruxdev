@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {
-  authorName,
+  authorFor,
   brandAlternateName,
   brandName,
   company,
@@ -60,7 +60,8 @@ useHead(() => {
       {
         '@type': 'Person',
         '@id': site + '/#person',
-        name: authorName,
+        name: authorFor(locale.value),
+        alternateName: authorFor(locale.value === 'uz' ? 'ru' : 'uz'),
         jobTitle: t('Разработчик сайтов и мобильных приложений'),
         url: site + '/',
         worksFor: { '@id': site + '/#org' }

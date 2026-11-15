@@ -1,4 +1,5 @@
 import { validateDraft } from './core.mjs';
+import { authorName } from '../../shared/brand.mjs';
 export function generationConfig(env = process.env) {
   const limit = Number(env.CONTENT_MONTHLY_RUN_LIMIT || 30);
   const ready = Boolean(
@@ -9,7 +10,7 @@ export function generationConfig(env = process.env) {
     model: env.CONTENT_MODEL || '',
     monthlyLimit: limit,
     enabled: env.CONTENT_AUTOMATION_ENABLED === 'true',
-    author: env.CONTENT_AUTHOR || 'Burxonov Shohrux'
+    author: env.CONTENT_AUTHOR || authorName.ru
   };
 }
 const str = { type: 'string' };

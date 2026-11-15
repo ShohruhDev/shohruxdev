@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { authorName } from '#shared/brand.mjs';
 usePageSeo('Редакция', 'Управление журналом', true);
 const session = ref<any>(null),
   state = ref<any>(null),
@@ -137,7 +138,7 @@ function openPost(p?: any) {
         description: '',
         category: 'Выбор решения',
         service: 'websites',
-        author: 'Burxonov Shohrux',
+        author: authorName.ru,
         answer: '',
         content: [{ heading: '', body: '' }],
         sources: [],
@@ -145,7 +146,7 @@ function openPost(p?: any) {
       };
   editor.value.faq ||= [];
   editor.value.answer ||= '';
-  editor.value.author ||= 'Burxonov Shohrux';
+  editor.value.author ||= authorName.ru;
   savedEditor.value = JSON.stringify(editor.value);
   isNew.value = !p;
   preview.value = false;
