@@ -2,20 +2,19 @@
 // Включается только при валидных настройках; ошибки не выходят за пределы тика и не ломают сайт.
 // Учёт отправки ведётся по каждому сообщению (пост × язык × номер части), поэтому
 // перезапуск между RU и UZ не публикует RU повторно.
+import {
+  PRE_CONNECT,
+  isZonedIso,
+  liveGateReason,
+  networkCode,
+  redact,
+  siteUrlFrom
+} from './autopost.mjs';
+
 const TOKEN_RE = /^\d{5,}:[A-Za-z0-9_-]{30,}$/;
 const CHANNEL_RE = /^(?:@[A-Za-z][A-Za-z0-9_]{4,31}|-100\d{5,})$/;
 const ID_RE = /^[a-z0-9][a-z0-9-]{1,60}$/;
-const TIME_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})$/;
 const IMAGE_RE = /^\/social\/telegram\/[a-z0-9-]+\.(?:jpg|jpeg|png)$/;
-// Ошибки, при которых запрос гарантированно не дошёл до Telegram: такую отправку можно повторить.
-const PRE_CONNECT = new Set([
-  'ENOTFOUND',
-  'EAI_AGAIN',
-  'ECONNREFUSED',
-  'ENETUNREACH',
-  'EHOSTUNREACH',
-  'UND_ERR_CONNECT_TIMEOUT'
-]);
 
 export const TELEGRAM_API = 'https://api.telegram.org';
 export const LANGS = ['ru', 'uz'];
@@ -35,21 +34,13 @@ const TIMEOUT_MS = 15000;
 export function telegramConfig(env = process.env) {
   const token = String(env.TELEGRAM_CHANNEL_BOT_TOKEN || env.TELEGRAM_BOT_TOKEN || '').trim();
   const channel = String(env.TELEGRAM_CHANNEL_ID || '').trim();
-  const siteUrl = String(env.SITE_URL || '')
-    .trim()
-    .replace(/\/+$/, '');
-  const flag = String(env.TELEGRAM_AUTOPOST || '')
-    .trim()
-    .toLowerCase();
-  const live = env.NODE_ENV === 'production' && env.SITE_INDEXABLE === 'true';
+  const siteUrl = siteUrlFrom(env);
   let reason = '';
   if (!channel) reason = 'TELEGRAM_CHANNEL_ID is not set';
   else if (!CHANNEL_RE.test(channel)) reason = 'TELEGRAM_CHANNEL_ID must be @username or -100…';
   else if (!TOKEN_RE.test(token)) reason = 'bot token is missing or malformed';
   else if (!siteUrl.startsWith('https://')) reason = 'SITE_URL must be https://';
-  else if (flag === 'false') reason = 'TELEGRAM_AUTOPOST=false';
-  else if (flag !== 'true' && !live)
-    reason = 'not production+indexable and TELEGRAM_AUTOPOST is not true';
+  else reason = liveGateReason(env, 'TELEGRAM_AUTOPOST');
   const cfg = { enabled: !reason, reason, channel, siteUrl };
   // Токен не перечисляется: JSON.stringify(cfg) и console.log(cfg) его не покажут.
   Object.defineProperty(cfg, 'token', { value: token, enumerable: false });
@@ -73,8 +64,7 @@ export function validatePosts(posts) {
     if (!ID_RE.test(String(p.id))) issues.push(`${at}: bad id`);
     else if (seen.has(p.id)) issues.push(`${at}: duplicate id`);
     seen.add(p.id);
-    if (!TIME_RE.test(String(p.publishAt)) || !Number.isFinite(Date.parse(p.publishAt)))
-      issues.push(`${at}: publishAt must be ISO with timezone`);
+    if (!isZonedIso(p.publishAt)) issues.push(`${at}: publishAt must be ISO with timezone`);
     if (typeof p.approved !== 'boolean') issues.push(`${at}: approved must be true/false`);
     if (typeof p.ru !== 'string' || !p.ru.trim()) issues.push(`${at}: ru text is required`);
     if (p.uz !== undefined && (typeof p.uz !== 'string' || !p.uz.trim()))
@@ -187,8 +177,6 @@ export class TelegramSendError extends Error {
   }
 }
 
-const redact = (s, token) => (token ? String(s).split(token).join('<token>') : String(s));
-
 /** Отправляет одно сообщение. Возвращает message_id или бросает TelegramSendError. */
 export async function sendTelegram(cfg, message, fetchImpl = fetch) {
   let res;
@@ -200,7 +188,7 @@ export async function sendTelegram(cfg, message, fetchImpl = fetch) {
       signal: AbortSignal.timeout(TIMEOUT_MS)
     });
   } catch (e) {
-    const code = e?.code || e?.cause?.code;
+    const code = networkCode(e);
     throw new TelegramSendError(
       redact(`Network error: ${e?.message || e}${code ? ` (${code})` : ''}`, cfg.token),
       {
