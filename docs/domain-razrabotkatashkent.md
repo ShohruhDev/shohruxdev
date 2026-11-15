@@ -1,5 +1,14 @@
 # Переезд на razrabotkatashkent.uz
 
+## Статус: выполнено 15.11.2026
+
+- Railway: `SITE_URL=https://razrabotkatashkent.uz`, задан `INDEXNOW_KEY`. Домены сервиса: `razrabotkatashkent.uz` и `www.razrabotkatashkent.uz` (на тарифе максимум два своих домена).
+- Eskiz DNS: корень — **A `153.52.255.92`** (IP, на который указывает адрес Railway; CNAME в корне невозможен из‑за записей NS, MX, TXT), `www` — CNAME `m03h7vx1.up.railway.app`, TXT `_railway-verify` и `_railway-verify.www` для подтверждения.
+- Риск: если Railway сменит IP, корень перестанет открываться — тогда обновить A-запись по `dig +short <адрес>.up.railway.app` (адрес в `railway domain status razrabotkatashkent.uz`).
+- `shohruxdev.uz` и `www.shohruxdev.uz` удалены из Railway, без редиректа (решение владельца). DNS-записи старого домена в Eskiz оставлены, их можно удалить или вернуть домен, добавив его в Railway снова.
+- Осталось владельцу: Search Console и Вебмастер для нового домена, адрес сайта в Метрике и GA4, ссылки в карточках Google/Яндекс/2GIS, Telegram и соцсетях.
+
+
 Новый основной домен — `razrabotkatashkent.uz`, бренд — «Razrabotka Tashkent». Регистратор — Eskiz. Старый домен `shohruxdev.uz` полностью отключается, без редиректа (решение владельца, 14.11.2026).
 
 ## Уже готово в коде
