@@ -15,6 +15,7 @@
     "preview:local": "HOST=127.0.0.1 PORT=3000 ADMIN_LOCAL_PREVIEW=true CONTENT_AUTOMATION_ENABLED=true node --env-file-if-exists=.env .output/server/index.mjs",
     "editorial": "node --env-file-if-exists=.env scripts/editorial.mjs",
     "telegram": "node --env-file-if-exists=.env scripts/telegram.mjs",
+    "meta": "node --env-file-if-exists=.env scripts/meta-social.mjs",
     "test:bilingual": "node tests/bilingual.integration.mjs",
     "start": "node .output/server/index.mjs",
     "format": "prettier --write .",
