@@ -10,6 +10,8 @@ export const company = {
   // Совпадает с карточками Google, Яндекс Бизнеса и 2GIS (NAP).
   phone: '+998905155565',
   phoneDisplay: '+998 90 515 55 65',
+  // Для запросов по персональным данным (политика обработки данных).
+  email: 'team@leadvexai.com',
   address: {
     ru: 'г. Ташкент, Алмазарский район, МФЙ «Тараккиёт», ул. Корасарой, 335',
     uz: 'Toshkent shahri, Olmazor tumani, Taraqqiyot MFY, Qorasaroy ko‘chasi, 335-uy'
