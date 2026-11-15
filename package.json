@@ -19,7 +19,8 @@
     "test:bilingual": "node tests/bilingual.integration.mjs",
     "start": "node .output/server/index.mjs",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "pr-bot": "node --env-file-if-exists=.env scripts/pr-bot.mjs"
   },
   "dependencies": {
     "@fontsource/manrope": "5.3.0",
