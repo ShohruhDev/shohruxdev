@@ -10,14 +10,14 @@
 | Юрлицо | ООО «LEADVEX AI», ИНН 313 300 268 |
 | Адрес | **скрыт** — офиса для посетителей нет, указывается только зона обслуживания (юрадрес ООО: г. Ташкент, Алмазарский район, ул. Корасарой, 335 — в карточке не показывается) |
 | Телефон | +998 90 515 55 65 (на сайте: контакты, подвал, разметка `telephone`) |
-| Сайт (Google) | https://shohruxdev.uz/?utm_source=google&utm_medium=organic&utm_campaign=gbp |
-| Сайт (Яндекс) | https://shohruxdev.uz/?utm_source=yandex&utm_medium=organic&utm_campaign=yabusiness |
-| Сайт (2GIS) | https://shohruxdev.uz/?utm_source=2gis&utm_medium=organic&utm_campaign=2gis |
+| Сайт (Google) | https://razrabotkatashkent.uz/?utm_source=google&utm_medium=organic&utm_campaign=gbp |
+| Сайт (Яндекс) | https://razrabotkatashkent.uz/?utm_source=yandex&utm_medium=organic&utm_campaign=yabusiness |
+| Сайт (2GIS) | https://razrabotkatashkent.uz/?utm_source=2gis&utm_medium=organic&utm_campaign=2gis |
 | Telegram | https://t.me/shohrux_0626 |
 | Часы работы | ежедневно 9:00–20:00 |
 | Зона обслуживания | Ташкент, Ташкентская область, весь Узбекистан |
 
-После переезда на razrabotkatashkent.uz ссылки на сайт в карточках нужно поменять.
+Домен переехал 15.11.2026: в карточках, созданных раньше, ссылку на shohruxdev.uz нужно заменить на эти адреса.
 
 ## Категории
 
