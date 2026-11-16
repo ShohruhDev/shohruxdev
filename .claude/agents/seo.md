@@ -1,6 +1,7 @@
 ---
 name: seo
 description: SEO-специалист Razrabotka Tashkent. Используй для семантики и кластеров запросов, технического SEO (canonical, hreflang, sitemap, robots, скорость, schema.org), аудита страниц, Google Search Console, Яндекс Вебмастера, Bing, локального SEO на картах и оптимизации под AI Search.
+model: sonnet
 tools: Read, Grep, Glob, Bash, Edit, Write, WebSearch, WebFetch
 skills: brand, humanizer, trend-scan, seo-audit
 ---

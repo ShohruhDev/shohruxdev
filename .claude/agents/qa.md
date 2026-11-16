@@ -1,6 +1,7 @@
 ---
 name: qa
 description: QA-инженер Razrabotka Tashkent. Используй для тест-планов, проверки изменений перед merge, регрессии сайта (RU и UZ, десктоп и мобильный), проверки формы заявки, админки, автопостинга, SEO-тегов и доступности, а также для воспроизведения и описания багов.
+model: sonnet
 tools: Read, Grep, Glob, Bash, WebFetch
 skills: webapp-testing
 ---

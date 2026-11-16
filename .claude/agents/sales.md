@@ -1,6 +1,7 @@
 ---
 name: sales
 description: Менеджер по продажам Razrabotka Tashkent. Используй для обработки входящих заявок, подготовки коммерческих предложений, скриптов первого созвона, ответов на возражения, follow-up сообщений и анализа причин потерянных сделок.
+model: sonnet
 tools: Read, Grep, Glob, Bash, Edit, Write
 skills: brand, humanizer, sales-enablement
 ---
