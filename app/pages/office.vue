@@ -143,8 +143,16 @@ async function assign() {
     say(
       `Задача #${r.number} поставлена — ${open.value.persona} возьмёт её в ближайший рабочий цикл.`
     );
+    // GitHub отдаёт новую задачу в списке с задержкой: показываем её сразу, перечитываем позже.
+    open.value.tasks.unshift({
+      number: r.number,
+      title: task.title.trim(),
+      url: r.url,
+      createdAt: new Date().toISOString()
+    });
+    open.value.status = 'busy';
     Object.assign(task, { title: '', details: '' });
-    await load(true);
+    setTimeout(() => load(true), 8000);
   } catch (e) {
     fail(e);
   } finally {
@@ -366,7 +374,7 @@ onBeforeUnmount(() => {
               <ul class="feed">
                 <li v-for="(f, i) in data.feed" :key="i">
                   <TeamAvatar v-if="ava(f.who)" v-bind="ava(f.who)!" :size="28" />
-                  <span v-else class="me">Вы</span>
+                  <span v-else class="feed-me">Вы</span>
                   <div>
                     <b>{{ byId[f.who]?.persona || 'Вы' }}</b>
                     <a v-if="f.url" :href="f.url" target="_blank" rel="noopener">{{ f.text }}</a>
@@ -647,6 +655,13 @@ h1 {
     border-color 0.15s,
     transform 0.15s;
 }
+.person:focus {
+  outline: none;
+}
+.person:focus-visible {
+  outline: 2px solid var(--c);
+  outline-offset: 2px;
+}
 .person:hover,
 .person.active {
   border-color: var(--c);
@@ -697,6 +712,8 @@ h1 {
   color: #067647;
 }
 .person-said {
+  width: 100%;
+  overflow-wrap: anywhere;
   margin-top: 6px;
   font-size: 11.5px;
   color: var(--soft);
@@ -819,7 +836,7 @@ h1 {
 .feed span {
   overflow-wrap: anywhere;
 }
-.me {
+.feed-me {
   flex: none;
   width: 28px;
   height: 28px;
