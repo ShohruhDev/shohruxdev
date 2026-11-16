@@ -149,7 +149,7 @@ try {
   assert.equal((await published.json()).published, 1);
   const publicArticle = await (await fetch(base + '/journal/admin-test')).text();
   assert.match(publicArticle, /Шохрух Бурхонов/);
-  assert.match(publicArticle, /КОРОТКИЙ ОТВЕТ/);
+  assert.match(publicArticle, /Короткий ответ/);
   assert.match(publicArticle, /Первый вопрос/);
   assert.match(publicArticle, /datePublished/);
   const lead = await post('/api/leads', {
