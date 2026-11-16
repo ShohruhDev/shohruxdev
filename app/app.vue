@@ -94,7 +94,8 @@ watch(
 );
 </script>
 <template>
-  <div :class="route.path === '/admin' ? 'app-admin' : 'app-public'">
+  <NuxtPage v-if="route.path === '/office'" />
+  <div v-else :class="route.path === '/admin' ? 'app-admin' : 'app-public'">
     <a class="skip" href="#main">{{ t('К содержанию') }}</a>
     <header class="header wrap">
       <BrandLogo />
