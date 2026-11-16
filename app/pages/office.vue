@@ -23,6 +23,7 @@ const session = ref<any>(null),
   error = ref(''),
   toast = ref(''),
   updatedAt = ref('');
+const view = ref<'team' | 'clients'>('team');
 const openId = ref<string | null>(null),
   pane = ref<'chat' | 'tasks'>('chat'),
   dm = ref<{ at: string; author: string; text: string }[]>([]),
@@ -225,135 +226,161 @@ onBeforeUnmount(() => {
     </div>
 
     <template v-else-if="data">
-      <section class="office-stats" aria-label="Главное">
-        <div>
-          <span>Заявки за 7 дней</span><strong>{{ data.leads.week }}</strong
-          ><small>всего {{ data.leads.total }}</small>
-        </div>
-        <div>
-          <span>Задачи в работе</span><strong>{{ taskCount }}</strong
-          ><small
-            >{{ busyCount }}
-            {{ plural(busyCount, 'специалист', 'специалиста', 'специалистов') }} заняты</small
-          >
-        </div>
-        <div>
-          <span>Ждут решения</span><strong>{{ inbox.length }}</strong
-          ><small>PR на проверку</small>
-        </div>
-        <div>
-          <span>ИИ за месяц</span><strong>{{ usd(data.usage.month.cost) }}</strong
-          ><small
-            >сегодня {{ usd(data.usage.today.cost) }} · {{ data.usage.month.calls }} запросов</small
-          >
-        </div>
-      </section>
-
-      <div class="office-grid">
-        <section class="office-team" aria-labelledby="team-h">
-          <div class="o-head">
-            <h2 id="team-h">Команда</h2>
-            <span>нажмите на специалиста, чтобы поговорить или дать задачу</span>
+      <div class="seg views" role="tablist" aria-label="Разделы офиса">
+        <button
+          role="tab"
+          :aria-selected="view === 'team'"
+          :class="{ on: view === 'team' }"
+          @click="view = 'team'"
+        >
+          Команда
+        </button>
+        <button
+          role="tab"
+          :aria-selected="view === 'clients'"
+          :class="{ on: view === 'clients' }"
+          @click="view = 'clients'"
+        >
+          Клиенты
+        </button>
+      </div>
+      <OfficeClients v-if="view === 'clients'" :people="byId" @toast="say" />
+      <template v-else>
+        <section class="office-stats" aria-label="Главное">
+          <div>
+            <span>Заявки за 7 дней</span><strong>{{ data.leads.week }}</strong
+            ><small>всего {{ data.leads.total }}</small>
           </div>
-          <ul class="people">
-            <li v-for="p in people" :key="p.id">
-              <button
-                class="person"
-                :class="{ active: openId === p.id }"
-                :style="{ '--c': p.color }"
-                @click="openPerson(p.id)"
-              >
-                <span class="person-ava">
-                  <TeamAvatar :look="p.look" :color="p.color" :size="64" />
-                  <i
-                    class="dot"
-                    :class="p.status"
-                    :title="p.status === 'busy' ? 'В работе' : 'Свободен'"
-                  />
-                </span>
-                <span class="person-name">{{ p.persona }}</span>
-                <span class="person-role">{{ p.title }}</span>
-                <span class="person-state" :class="p.status">
-                  {{
-                    p.status === 'busy'
-                      ? `${p.tasks.length} ${plural(p.tasks.length, 'задача', 'задачи', 'задач')}`
-                      : 'Нет задач'
-                  }}
-                </span>
-                <span v-if="p.lastSaid" class="person-said">«{{ p.lastSaid.text }}»</span>
-              </button>
-            </li>
-          </ul>
+          <div>
+            <span>Задачи в работе</span><strong>{{ taskCount }}</strong
+            ><small
+              >{{ busyCount }}
+              {{ plural(busyCount, 'специалист', 'специалиста', 'специалистов') }} заняты</small
+            >
+          </div>
+          <div>
+            <span>Ждут решения</span><strong>{{ inbox.length }}</strong
+            ><small>PR на проверку</small>
+          </div>
+          <div>
+            <span>ИИ за месяц</span><strong>{{ usd(data.usage.month.cost) }}</strong
+            ><small
+              >сегодня {{ usd(data.usage.today.cost) }} ·
+              {{ data.usage.month.calls }} запросов</small
+            >
+          </div>
         </section>
 
-        <aside class="office-side">
-          <section class="o-card" aria-labelledby="inbox-h">
-            <div class="o-head"><h2 id="inbox-h">Ждёт вас</h2></div>
-            <p v-if="data.githubError" class="o-muted">GitHub: {{ data.githubError }}</p>
-            <p v-else-if="!inbox.length" class="o-muted">Всё разобрано. Новые PR появятся здесь.</p>
-            <ul class="inbox">
-              <li v-for="pr in inbox" :key="pr.number">
-                <a :href="pr.url" target="_blank" rel="noopener" class="inbox-title"
-                  >#{{ pr.number }} {{ pr.title }}</a
-                >
-                <div class="inbox-meta">
-                  <span class="ci" :class="pr.ci">{{ ciLabel[pr.ci] }}</span>
-                  <span v-if="pr.needsReview" class="tag">нужно ваше ревью</span>
-                  <span>{{ ago(pr.createdAt) }}</span>
-                </div>
+        <div class="office-grid">
+          <section class="office-team" aria-labelledby="team-h">
+            <div class="o-head">
+              <h2 id="team-h">Команда</h2>
+              <span>нажмите на специалиста, чтобы поговорить или дать задачу</span>
+            </div>
+            <ul class="people">
+              <li v-for="p in people" :key="p.id">
                 <button
-                  class="o-btn small"
-                  :disabled="pr.ci !== 'success' || busyAction === 'merge-' + pr.number"
-                  :title="pr.ci !== 'success' ? 'Смёржить можно после зелёного CI' : ''"
-                  @click="merge(pr.number)"
+                  class="person"
+                  :class="{ active: openId === p.id }"
+                  :style="{ '--c': p.color }"
+                  @click="openPerson(p.id)"
                 >
-                  {{ busyAction === 'merge-' + pr.number ? 'Мёржу…' : 'Смёржить' }}
+                  <span class="person-ava">
+                    <TeamAvatar :look="p.look" :color="p.color" :size="64" />
+                    <i
+                      class="dot"
+                      :class="p.status"
+                      :title="p.status === 'busy' ? 'В работе' : 'Свободен'"
+                    />
+                  </span>
+                  <span class="person-name">{{ p.persona }}</span>
+                  <span class="person-role">{{ p.title }}</span>
+                  <span class="person-state" :class="p.status">
+                    {{
+                      p.status === 'busy'
+                        ? `${p.tasks.length} ${plural(p.tasks.length, 'задача', 'задачи', 'задач')}`
+                        : 'Нет задач'
+                    }}
+                  </span>
+                  <span v-if="p.lastSaid" class="person-said">«{{ p.lastSaid.text }}»</span>
                 </button>
               </li>
             </ul>
-            <div v-if="data.leads.latest.length" class="leads">
-              <h3>Последние заявки</h3>
-              <NuxtLink v-for="l in data.leads.latest" :key="l.id" to="/admin" class="lead">
-                <strong>{{ l.name || 'Без имени' }}</strong>
-                <span>{{ l.direction || 'направление не указано' }} · {{ ago(l.createdAt) }}</span>
-              </NuxtLink>
-            </div>
           </section>
 
-          <section class="o-card" aria-labelledby="plan-h">
-            <div class="o-head"><h2 id="plan-h">Расписание</h2></div>
-            <ul class="routines">
-              <li v-for="r in data.routines" :key="r.id">
-                <TeamAvatar v-if="ava(r.who)" v-bind="ava(r.who)!" :size="36" />
-                <div>
-                  <strong>{{ r.title }}</strong>
-                  <span>{{ r.what }}</span>
-                  <small>следующий запуск: {{ when(r.next) }}</small>
-                </div>
-              </li>
-            </ul>
-          </section>
+          <aside class="office-side">
+            <section class="o-card" aria-labelledby="inbox-h">
+              <div class="o-head"><h2 id="inbox-h">Ждёт вас</h2></div>
+              <p v-if="data.githubError" class="o-muted">GitHub: {{ data.githubError }}</p>
+              <p v-else-if="!inbox.length" class="o-muted">
+                Всё разобрано. Новые PR появятся здесь.
+              </p>
+              <ul class="inbox">
+                <li v-for="pr in inbox" :key="pr.number">
+                  <a :href="pr.url" target="_blank" rel="noopener" class="inbox-title"
+                    >#{{ pr.number }} {{ pr.title }}</a
+                  >
+                  <div class="inbox-meta">
+                    <span class="ci" :class="pr.ci">{{ ciLabel[pr.ci] }}</span>
+                    <span v-if="pr.needsReview" class="tag">нужно ваше ревью</span>
+                    <span>{{ ago(pr.createdAt) }}</span>
+                  </div>
+                  <button
+                    class="o-btn small"
+                    :disabled="pr.ci !== 'success' || busyAction === 'merge-' + pr.number"
+                    :title="pr.ci !== 'success' ? 'Смёржить можно после зелёного CI' : ''"
+                    @click="merge(pr.number)"
+                  >
+                    {{ busyAction === 'merge-' + pr.number ? 'Мёржу…' : 'Смёржить' }}
+                  </button>
+                </li>
+              </ul>
+              <div v-if="data.leads.latest.length" class="leads">
+                <h3>Последние заявки</h3>
+                <NuxtLink v-for="l in data.leads.latest" :key="l.id" to="/admin" class="lead">
+                  <strong>{{ l.name || 'Без имени' }}</strong>
+                  <span
+                    >{{ l.direction || 'направление не указано' }} · {{ ago(l.createdAt) }}</span
+                  >
+                </NuxtLink>
+              </div>
+            </section>
 
-          <section class="o-card" aria-labelledby="feed-h">
-            <div class="o-head"><h2 id="feed-h">Лента</h2></div>
-            <p v-if="!data.feed.length" class="o-muted">Пока тихо.</p>
-            <ul class="feed">
-              <li v-for="(f, i) in data.feed" :key="i">
-                <TeamAvatar v-if="ava(f.who)" v-bind="ava(f.who)!" :size="28" />
-                <span v-else class="me">Вы</span>
-                <div>
-                  <b>{{ byId[f.who]?.persona || 'Вы' }}</b>
-                  <a v-if="f.url" :href="f.url" target="_blank" rel="noopener">{{ f.text }}</a>
-                  <span v-else>{{
-                    f.text.length > 220 ? f.text.slice(0, 220) + '…' : f.text
-                  }}</span>
-                  <small>{{ ago(f.at) }}</small>
-                </div>
-              </li>
-            </ul>
-          </section>
-        </aside>
-      </div>
+            <section class="o-card" aria-labelledby="plan-h">
+              <div class="o-head"><h2 id="plan-h">Расписание</h2></div>
+              <ul class="routines">
+                <li v-for="r in data.routines" :key="r.id">
+                  <TeamAvatar v-if="ava(r.who)" v-bind="ava(r.who)!" :size="36" />
+                  <div>
+                    <strong>{{ r.title }}</strong>
+                    <span>{{ r.what }}</span>
+                    <small>следующий запуск: {{ when(r.next) }}</small>
+                  </div>
+                </li>
+              </ul>
+            </section>
+
+            <section class="o-card" aria-labelledby="feed-h">
+              <div class="o-head"><h2 id="feed-h">Лента</h2></div>
+              <p v-if="!data.feed.length" class="o-muted">Пока тихо.</p>
+              <ul class="feed">
+                <li v-for="(f, i) in data.feed" :key="i">
+                  <TeamAvatar v-if="ava(f.who)" v-bind="ava(f.who)!" :size="28" />
+                  <span v-else class="me">Вы</span>
+                  <div>
+                    <b>{{ byId[f.who]?.persona || 'Вы' }}</b>
+                    <a v-if="f.url" :href="f.url" target="_blank" rel="noopener">{{ f.text }}</a>
+                    <span v-else>{{
+                      f.text.length > 220 ? f.text.slice(0, 220) + '…' : f.text
+                    }}</span>
+                    <small>{{ ago(f.at) }}</small>
+                  </div>
+                </li>
+              </ul>
+            </section>
+          </aside>
+        </div>
+      </template>
     </template>
 
     <div v-if="open" class="drawer-shade" @click.self="openId = null">
@@ -526,33 +553,6 @@ h1 {
   display: flex;
   gap: 8px;
 }
-.o-btn {
-  border: 0;
-  background: var(--accent);
-  color: #fff;
-  border-radius: 10px;
-  padding: 10px 16px;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.o-btn:disabled {
-  opacity: 0.45;
-  cursor: default;
-}
-.o-btn.ghost {
-  background: var(--card);
-  color: var(--ink);
-  border: 1px solid var(--line);
-}
-.o-btn.small {
-  padding: 6px 12px;
-  font-size: 13px;
-}
 .office-toast,
 .office-error {
   position: fixed;
@@ -614,23 +614,6 @@ h1 {
   grid-template-columns: minmax(0, 1fr) 360px;
   gap: 16px;
   align-items: start;
-}
-.o-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-.o-head h2 {
-  font-size: 17px;
-  margin: 0;
-  font-weight: 700;
-}
-.o-head span,
-.o-muted {
-  color: var(--soft);
-  font-size: 13px;
 }
 .office-team {
   background: var(--card);
@@ -725,11 +708,6 @@ h1 {
 .office-side {
   display: grid;
   gap: 16px;
-}
-.o-card {
-  background: var(--card);
-  border-radius: 20px;
-  padding: 18px;
 }
 .inbox,
 .routines,
@@ -907,6 +885,10 @@ h1 {
   cursor: pointer;
   color: var(--soft);
 }
+.seg.views {
+  margin: 0 0 16px;
+  max-width: 320px;
+}
 .seg {
   display: flex;
   margin: 0 18px;
@@ -993,23 +975,6 @@ h1 {
   border-top: 1px solid var(--line);
   align-items: flex-end;
 }
-textarea,
-input {
-  font: inherit;
-  font-size: 14px;
-  width: 100%;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 10px 12px;
-  resize: vertical;
-  background: #fff;
-  color: var(--ink);
-}
-textarea:focus,
-input:focus {
-  outline: 2px solid var(--c, var(--accent));
-  outline-offset: -1px;
-}
 .tasks {
   padding: 16px 18px;
   overflow: auto;
@@ -1093,6 +1058,82 @@ input:focus {
   .office-team,
   .o-card {
     padding: 14px;
+  }
+}
+</style>
+
+<style>
+/* Общие элементы офиса — нужны и вложенным компонентам (OfficeClients). */
+.office .o-btn {
+  border: 0;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.office .o-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.office .o-btn.ghost {
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.office .o-btn.small {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+.office .o-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.office .o-head h2 {
+  font-size: 17px;
+  margin: 0;
+  font-weight: 700;
+}
+.office .o-head span,
+.office .o-muted {
+  color: var(--soft);
+  font-size: 13px;
+}
+.office .o-card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 18px;
+}
+.office textarea,
+.office input,
+.office select {
+  font: inherit;
+  font-size: 14px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  resize: vertical;
+  background: #fff;
+  color: var(--ink);
+}
+.office textarea:focus,
+.office input:focus {
+  outline: 2px solid var(--c, var(--accent));
+  outline-offset: -1px;
+}
+@media (max-width: 520px) {
+  .office .o-head span {
+    display: none;
   }
 }
 </style>
