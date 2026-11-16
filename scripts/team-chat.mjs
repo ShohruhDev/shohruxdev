@@ -26,7 +26,7 @@ if (cmd === 'check') {
     console.log(`${r.id}: ${me.ok ? '@' + me.result.username : 'токен не работает'}`);
   }
   console.log(
-    `ANTHROPIC_API_KEY: ${cfg.apiKey ? 'задан' : 'нет'}; TEAM_CHAT_ID: ${cfg.chatId || 'нет'}; TEAM_OWNER_ID: ${cfg.ownerId ? 'задан' : 'нет'}; TEAM_WEBHOOK_SECRET: ${cfg.secret ? 'задан' : 'нет'}`
+    `Модель: ${cfg.provider} / ${cfg.model}, ключ ${cfg.apiKey.length >= 20 ? 'задан' : 'нет'}; TEAM_CHAT_ID: ${cfg.chatId || 'нет'}; TEAM_OWNER_ID: ${cfg.ownerId ? 'задан' : 'нет'}; TEAM_WEBHOOK_SECRET: ${cfg.secret ? 'задан' : 'нет'}`
   );
 } else if (cmd === 'discover') {
   if (!cfg.bots.pm) throw Error('Нет TEAM_BOT_PM');

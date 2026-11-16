@@ -1,8 +1,8 @@
-import { createClaude, handleTeamUpdate, teamConfig } from '../../lib/team-chat.mjs';
+import { createTeamLlm, handleTeamUpdate, teamConfig } from '../../lib/team-chat.mjs';
 import { safeEqual } from '../../lib/pr-bot.mjs';
 // Webhook бота pm командного чата. Отвечает сразу; разговор ролей идёт в фоне
 // (ответ Claude дольше таймаута Telegram, иначе Telegram будет повторять обновление).
-let llm: ReturnType<typeof createClaude> | undefined;
+let llm: ReturnType<typeof createTeamLlm> | undefined;
 let queue: Promise<unknown> = Promise.resolve();
 export default defineEventHandler(async event => {
   const cfg = teamConfig();
@@ -17,7 +17,7 @@ export default defineEventHandler(async event => {
   } catch {
     return { ok: true };
   }
-  llm ||= createClaude(cfg);
+  llm ||= createTeamLlm(cfg);
   // Сообщения обрабатываются по одному, чтобы роли видели ответы друг друга по порядку.
   queue = queue
     .then(() => handleTeamUpdate(update, { store: storage(), cfg, llm: llm! }))

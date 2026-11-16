@@ -2,6 +2,7 @@
 // Telegram не пересылает ботам сообщения других ботов, поэтому разговор ведёт сервер:
 // координатор (Claude) решает, кто отвечает, сервер пишет от имени бота роли.
 // Входящие сообщения принимает бот pm (webhook /api/team/webhook, privacy mode выключен).
+// Модель: через OpenRouter (OPENROUTER_API_KEY) или напрямую через Anthropic API (ANTHROPIC_API_KEY).
 import Anthropic from '@anthropic-ai/sdk';
 import { TEAM_CONTEXT, TEAM_ROLES, roleById } from '../../shared/team-roles.mjs';
 
@@ -10,10 +11,17 @@ const TG_LIMIT = 4000;
 const SKIP = /^\s*ПРОПУСК\.?\s*$/i;
 
 export function teamConfig(env = process.env) {
-  const bots = Object.fromEntries(TEAM_ROLES.map(r => [r.id, env[r.env] || '']));
+  // Значения короче 20 символов — заглушки вроде «…», а не токены: такие роли пишут через бота pm.
+  const real = v => (String(v || '').trim().length >= 20 ? String(v).trim() : '');
+  const bots = Object.fromEntries(TEAM_ROLES.map(r => [r.id, real(env[r.env])]));
+  const provider = env.TEAM_PROVIDER || (env.OPENROUTER_API_KEY ? 'openrouter' : 'anthropic');
   return {
-    apiKey: env.ANTHROPIC_API_KEY || '',
-    model: env.TEAM_MODEL || 'claude-opus-5-5',
+    provider,
+    apiKey: real(provider === 'openrouter' ? env.OPENROUTER_API_KEY : env.ANTHROPIC_API_KEY),
+    model:
+      env.TEAM_MODEL ||
+      (provider === 'openrouter' ? 'anthropic/claude-opus-5.5' : 'claude-opus-5-5'),
+    siteUrl: env.SITE_URL || '',
     effort: env.TEAM_EFFORT || 'low',
     chatId: String(env.TEAM_CHAT_ID || ''),
     ownerId: String(env.TEAM_OWNER_ID || ''),
@@ -109,6 +117,79 @@ const ROUTER_SCHEMA = {
 const ROUTER_PROMPT = `Ты — координатор командного чата. По последнему сообщению CEO реши, какие роли должны ответить (1–3, самые полезные для этого вопроса, по порядку; на простой вопрос — одна роль). Роли: ${TEAM_ROLES.map(r => `${r.id} — ${r.name}`).join('; ')}.
 has_task = true, только если CEO явно ставит задачу или одобряет конкретную работу («сделайте», «задача:», «давайте, делаем»). Тогда task_title — короткий заголовок задачи, task_role — ответственная роль, task_details — что сделать и критерий готовности на основе всего обсуждения. Иначе has_task = false, а task_* — пустые строки и task_role = "pm".`;
 
+function parsePlan(text) {
+  try {
+    const json = String(text).match(/\{[\s\S]*\}/)?.[0];
+    const plan = JSON.parse(json || text);
+    if (Array.isArray(plan.responders)) return plan;
+  } catch {}
+  return { responders: ['pm'], has_task: false };
+}
+const roleSystem = role => `${role.prompt}\nТвой id в чате: @${role.id}.`;
+const replyPrompt = (role, history) =>
+  `${transcript(history)}\n\nНапиши следующую реплику в чат от имени роли «${role.name}».`;
+
+/** Модель через OpenRouter (OpenAI-совместимый Chat Completions). */
+export function createOpenRouter(cfg, fetcher = fetch) {
+  async function call(system, user, extra = {}) {
+    const r = await fetcher('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${cfg.apiKey}`,
+        'Content-Type': 'application/json',
+        ...(cfg.siteUrl ? { 'HTTP-Referer': cfg.siteUrl } : {}),
+        'X-Title': 'Razrabotka Tashkent team chat'
+      },
+      body: JSON.stringify({
+        model: cfg.model,
+        max_tokens: 16000,
+        // Для моделей без reasoning (например openai/gpt-4o) задайте TEAM_EFFORT=none.
+        ...(cfg.effort && cfg.effort !== 'none' ? { reasoning: { effort: cfg.effort } } : {}),
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: user }
+        ],
+        ...(extra.schema
+          ? {
+              response_format: {
+                type: 'json_schema',
+                json_schema: { name: 'route', strict: true, schema: extra.schema }
+              }
+            }
+          : {})
+      }),
+      signal: AbortSignal.timeout(120000)
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw Error(`OpenRouter HTTP ${r.status}: ${data?.error?.message || ''}`.trim());
+    const choice = data.choices?.[0];
+    const text =
+      choice?.finish_reason === 'content_filter'
+        ? ''
+        : String(choice?.message?.content || '').trim();
+    return {
+      text,
+      usage: { input: data.usage?.prompt_tokens || 0, output: data.usage?.completion_tokens || 0 }
+    };
+  }
+  return {
+    async route(history) {
+      const r = await call(`${TEAM_CONTEXT}\n\n${ROUTER_PROMPT}`, transcript(history), {
+        schema: ROUTER_SCHEMA
+      });
+      return { plan: parsePlan(r.text), usage: r.usage };
+    },
+    async reply(roleId, history) {
+      const role = roleById(roleId);
+      return call(`${TEAM_CONTEXT}\n\n${roleSystem(role)}`, replyPrompt(role, history));
+    }
+  };
+}
+
+/** Модель для чата по настройкам: OpenRouter или Anthropic API. */
+export const createTeamLlm = cfg =>
+  cfg.provider === 'openrouter' ? createOpenRouter(cfg) : createClaude(cfg);
+
 /** Клиент Claude для чата. В тестах подменяется заглушкой с теми же методами. */
 export function createClaude(cfg, client = new Anthropic({ apiKey: cfg.apiKey })) {
   async function call(system, content, extra = {}) {
@@ -137,20 +218,11 @@ export function createClaude(cfg, client = new Anthropic({ apiKey: cfg.apiKey })
       const r = await call([shared, { type: 'text', text: ROUTER_PROMPT }], transcript(history), {
         format: { type: 'json_schema', schema: ROUTER_SCHEMA }
       });
-      let plan;
-      try {
-        plan = JSON.parse(r.text);
-      } catch {
-        plan = { responders: ['pm'], has_task: false };
-      }
-      return { plan, usage: r.usage };
+      return { plan: parsePlan(r.text), usage: r.usage };
     },
     async reply(roleId, history) {
       const role = roleById(roleId);
-      return call(
-        [shared, { type: 'text', text: `${role.prompt}\nТвой id в чате: @${role.id}.` }],
-        `${transcript(history)}\n\nНапиши следующую реплику в чат от имени роли «${role.name}».`
-      );
+      return call([shared, { type: 'text', text: roleSystem(role) }], replyPrompt(role, history));
     }
   };
 }
@@ -215,7 +287,10 @@ export async function handleTeamUpdate(
 
   const day = today(now);
   const say = async (roleId, text) => {
-    await tgSend(cfg.bots[roleId] || cfg.bots.pm, cfg.chatId, text, fetcher);
+    // У роли пока нет своего бота — пишет бот pm с подписью роли.
+    const own = cfg.bots[roleId];
+    const label = own || roleId === 'pm' ? '' : `${roleById(roleId)?.name || roleId}: `;
+    await tgSend(own || cfg.bots.pm, cfg.chatId, label + text, fetcher);
     store.teamAdd(roleId, text);
   };
 

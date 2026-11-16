@@ -17,15 +17,16 @@
 - Роли зовут друг друга через `@id` в тексте. Не больше `TEAM_MAX_BOT_TURNS` (по умолчанию 4) реплик ботов на одно сообщение CEO.
 - Обратиться к роли напрямую: `@seo что по индексации?`. Статус и расход за день: `/status`.
 - Если CEO ставит задачу («задача: …», «делаем»), координатор заводит GitHub Issue с меткой `team-task`; ежедневный облачный цикл команды берёт такие задачи в работу и открывает PR.
-- Лимит: `TEAM_DAILY_MESSAGES` сообщений CEO в день (по умолчанию 50). Модель и уровень усилий: `TEAM_MODEL` (по умолчанию `claude-opus-5-5`), `TEAM_EFFORT` (по умолчанию `low`).
+- Лимит: `TEAM_DAILY_MESSAGES` сообщений CEO в день (по умолчанию 50). Модель: через OpenRouter (`OPENROUTER_API_KEY`, по умолчанию `anthropic/claude-opus-5.5`) или напрямую через Anthropic API (`ANTHROPIC_API_KEY`, `claude-opus-5-5`); сменить — `TEAM_MODEL`, уровень усилий — `TEAM_EFFORT` (по умолчанию `low`; для моделей без reasoning, например `openai/gpt-4o`, — `none`).
+- Если у роли ещё нет своего бота, она пишет через бота PM с подписью роли.
 - Правила команды те же, что в `docs/team.md`: реальные факты, публикации и траты — только после «да» CEO.
 
 ## Настройка
 
 1. **Боты.** В @BotFather создайте 6 ботов (`/newbot`), например «Razrabotka PM», «Razrabotka Маркетолог» и т. д. Для бота PM: `/setprivacy` → выбрать бота → **Disable** (иначе он не увидит ваши сообщения в группе).
 2. **Группа.** Создайте группу, добавьте всех шестерых ботов, напишите в ней любое сообщение.
-3. **Ключ Claude.** На platform.claude.com создайте API-ключ и поставьте лимит расходов в настройках организации.
-4. **Переменные в Railway:** `ANTHROPIC_API_KEY`, `TEAM_BOT_*` (6 токенов), `TEAM_WEBHOOK_SECRET` (случайная строка, например `openssl rand -hex 24`).
+3. **Ключ модели.** На openrouter.ai → Keys создайте ключ и задайте у него лимит расходов (или ключ Anthropic на platform.claude.com).
+4. **Переменные в Railway:** `OPENROUTER_API_KEY` (или `ANTHROPIC_API_KEY`), `TEAM_BOT_*` (6 токенов), `TEAM_WEBHOOK_SECRET` (случайная строка, например `openssl rand -hex 24`).
 5. **id группы и ваш id:** `railway run npm run team -- discover` → задать `TEAM_CHAT_ID` и `TEAM_OWNER_ID`.
 6. **Проверка и запуск:** `railway run npm run team -- check`, затем после перезапуска сервиса `railway run npm run team -- set-webhook`.
 7. **Задачи в GitHub:** токену `GITHUB_TOKEN` нужно право **Issues: Read and write**.
