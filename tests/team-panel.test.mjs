@@ -94,7 +94,15 @@ test('GitHub: задачи по ролям, PR с CI и меткой ревью'
     return json({}, 404);
   });
   assert.deepEqual(gh.tasks, [
-    { number: 5, title: 'Посты', url: 'u5', createdAt: 't', role: 'smm' }
+    {
+      number: 5,
+      title: 'Посты',
+      url: 'u5',
+      createdAt: 't',
+      role: 'smm',
+      urgent: false,
+      inProgress: false
+    }
   ]);
   assert.equal(gh.prs[0].ci, 'success');
   assert.equal(gh.prs[0].needsReview, true);
@@ -149,7 +157,7 @@ test('поручить задачу: Issue с меткой роли и заме�
       }
     }
   );
-  assert.deepEqual(r, { number: 12, url: 'u12' });
+  assert.deepEqual(r, { number: 12, url: 'u12', urgent: false });
   assert.deepEqual(sent[0].body.labels, ['team-task', 'role:copywriter']);
   assert.equal(sent[0].body.title, 'Текст для лендинга');
   assert.match(sent[1].url, /api\.telegram\.org\/bottok-pm/);

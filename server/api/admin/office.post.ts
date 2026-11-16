@@ -14,7 +14,7 @@ export default defineEventHandler(async event => {
     if (b.action === 'history') return { messages: store.dmHistory(String(b.person || '')) };
     if (b.action === 'assign') {
       const r = await assignTask(
-        { personId: b.person, title: b.title, details: b.details },
+        { personId: b.person, title: b.title, details: b.details, urgent: b.urgent === true },
         { store, cfg }
       );
       resetOfficeCache();

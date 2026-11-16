@@ -122,6 +122,7 @@ function github(cfg, fetcher) {
   };
 }
 
+const labelNames = issue => (issue.labels || []).map(l => (typeof l === 'string' ? l : l.name));
 const roleOf = issue =>
   (issue.labels || [])
     .map(l => (typeof l === 'string' ? l : l.name))
@@ -161,8 +162,11 @@ export async function githubOverview(cfg, fetcher = fetch) {
         title: i.title,
         url: i.html_url,
         createdAt: i.created_at,
-        role: roleOf(i) || 'pm'
-      })),
+        role: roleOf(i) || 'pm',
+        urgent: labelNames(i).includes('priority:high'),
+        inProgress: labelNames(i).includes('in-progress')
+      }))
+      .sort((a, b) => Number(b.urgent) - Number(a.urgent)),
     prs,
     merged: (closed.ok ? closed.data : [])
       .filter(p => p.merged_at)
@@ -262,7 +266,10 @@ const clean = (v, max) =>
     .slice(0, max);
 
 /** Поручить задачу: Issue с метками team-task и role:<id>; ежедневный цикл берёт их первыми. */
-export async function assignTask({ personId, title, details }, { store, cfg, fetcher = fetch }) {
+export async function assignTask(
+  { personId, title, details, urgent = false },
+  { store, cfg, fetcher = fetch }
+) {
   const p = personById(personId);
   if (!p) throw Error('Нет такого специалиста.');
   const t = clean(title, 200);
@@ -273,16 +280,17 @@ export async function assignTask({ personId, title, details }, { store, cfg, fet
     body: JSON.stringify({
       title: t,
       body: `${clean(details, 3000) || t}\n\nОтветственный: @${p.id} (${p.persona}, ${p.title}).\nЗадача поставлена CEO в панели «Офис».`,
-      labels: ['team-task', `role:${p.id}`]
+      // priority:high — срочно: GitHub сразу запускает облачный цикл; без неё — утренний цикл в 09:00.
+      labels: ['team-task', `role:${p.id}`, ...(urgent ? ['priority:high'] : [])]
     })
   });
   if (!r.ok) throw Error(`GitHub не создал задачу (HTTP ${r.status}).`);
-  const note = `📌 CEO поручил: ${p.persona} (${p.title}) — «${t}». Задача #${r.data.number}: ${r.data.html_url}`;
+  const note = `📌 ${urgent ? 'Срочно! ' : ''}CEO поручил: ${p.persona} (${p.title}) — «${t}». Задача #${r.data.number}: ${r.data.html_url}`;
   if (cfg.enabled) {
     await tgSend(cfg.bots.pm, cfg.chatId, note, fetcher).catch(() => {});
     store.teamAdd('pm', note);
   }
-  return { number: r.data.number, url: r.data.html_url };
+  return { number: r.data.number, url: r.data.html_url, urgent };
 }
 
 export async function closeTask(number, { cfg, fetcher = fetch }) {

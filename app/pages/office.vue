@@ -13,7 +13,14 @@ type Person = {
   inChat: boolean;
   hasBot: boolean;
   status: 'busy' | 'free';
-  tasks: { number: number; title: string; url: string; createdAt: string }[];
+  tasks: {
+    number: number;
+    title: string;
+    url: string;
+    createdAt: string;
+    urgent?: boolean;
+    inProgress?: boolean;
+  }[];
   lastSaid: { text: string; at: string } | null;
 };
 
@@ -29,7 +36,7 @@ const openId = ref<string | null>(null),
   dm = ref<{ at: string; author: string; text: string }[]>([]),
   question = ref(''),
   asking = ref(false),
-  task = reactive({ title: '', details: '' }),
+  task = reactive({ title: '', details: '', urgent: false }),
   busyAction = ref('');
 const chatBox = ref<HTMLElement | null>(null);
 
@@ -102,7 +109,7 @@ async function openPerson(id: string, to: 'chat' | 'tasks' = 'chat') {
   pane.value = to;
   dm.value = [];
   question.value = '';
-  Object.assign(task, { title: '', details: '' });
+  Object.assign(task, { title: '', details: '', urgent: false });
   try {
     dm.value = (await post({ action: 'history', person: id })).messages;
   } catch (e) {
@@ -148,10 +155,11 @@ async function assign() {
       number: r.number,
       title: task.title.trim(),
       url: r.url,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      urgent: r.urgent
     });
     open.value.status = 'busy';
-    Object.assign(task, { title: '', details: '' });
+    Object.assign(task, { title: '', details: '', urgent: false });
     setTimeout(() => load(true), 8000);
   } catch (e) {
     fail(e);
@@ -483,18 +491,40 @@ onBeforeUnmount(() => {
                 placeholder="Что важно, критерий готовности, срок"
               />
             </label>
+            <div class="prio" role="radiogroup" aria-label="Приоритет">
+              <button
+                type="button"
+                role="radio"
+                :aria-checked="task.urgent"
+                :class="{ on: task.urgent }"
+                @click="task.urgent = true"
+              >
+                <b>Срочно</b><small>агенты берут сразу</small>
+              </button>
+              <button
+                type="button"
+                role="radio"
+                :aria-checked="!task.urgent"
+                :class="{ on: !task.urgent }"
+                @click="task.urgent = false"
+              >
+                <b>Обычно</b><small>утренний цикл, будни 09:00</small>
+              </button>
+            </div>
             <button class="o-btn" :disabled="busyAction === 'assign'">
               {{ busyAction === 'assign' ? 'Ставлю…' : 'Поручить задачу' }}
             </button>
             <small class="o-muted"
-              >Задача попадёт в GitHub Issues; ежедневный цикл (будни, 09:00) берёт такие задачи
-              первыми.</small
+              >Порядок работы: сначала срочные задачи, потом обычные, потом бэклог команды.</small
             >
           </form>
           <ul class="task-list">
             <li v-for="t in open.tasks" :key="t.number">
               <a :href="t.url" target="_blank" rel="noopener">#{{ t.number }} {{ t.title }}</a>
-              <small>{{ ago(t.createdAt) }}</small>
+              <small
+                ><span v-if="t.urgent" class="tag urgent">срочно</span
+                ><span v-if="t.inProgress" class="tag">в работе</span> {{ ago(t.createdAt) }}</small
+              >
               <button
                 class="o-btn small ghost"
                 :disabled="busyAction === 'close-' + t.number"
@@ -1040,6 +1070,39 @@ h1 {
   gap: 4px;
   font-size: 13px;
   font-weight: 600;
+}
+.prio {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.prio button {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font: inherit;
+  cursor: pointer;
+  color: var(--ink);
+}
+.prio button.on {
+  border-color: var(--c, var(--accent));
+  background: #f5f7ff;
+}
+.prio b {
+  font-size: 14px;
+}
+.prio small {
+  font-size: 12px;
+  color: var(--soft);
+}
+.tag.urgent {
+  background: #fdecea;
+  color: #b42318;
+  margin-right: 4px;
 }
 .task-form .o-btn {
   justify-self: start;
