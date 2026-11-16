@@ -35,7 +35,7 @@ useHead(() => {
         legalName: company.legalName.en,
         taxID: company.inn,
         telephone: company.phone,
-        openingHours: 'Mo-Su 09:00-20:00',
+        openingHours: 'Mo-Su 00:00-23:59',
         address: {
           '@type': 'PostalAddress',
           streetAddress: company.street,
