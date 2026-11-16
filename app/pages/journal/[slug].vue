@@ -96,10 +96,10 @@ useHead(() => {
     <header class="post-head">
       <ul class="post-tags" :aria-label="t('Темы статьи')">
         <li v-if="p.category">
-          <span>#{{ p.category }}</span>
+          <span>{{ p.category }}</span>
         </li>
         <li v-if="service">
-          <NuxtLink :to="localPath(`/services/${service.slug}`)">#{{ service.title }}</NuxtLink>
+          <NuxtLink :to="localPath(`/services/${service.slug}`)">{{ service.title }}</NuxtLink>
         </li>
       </ul>
       <h1>{{ p.title }}</h1>
@@ -148,11 +148,11 @@ useHead(() => {
     <div class="post-grid">
       <div class="post-main">
         <div v-if="p.answer" class="post-answer">
-          <span class="post-label">{{ t('КОРОТКИЙ ОТВЕТ') }}</span>
+          <span class="post-label">{{ t('Короткий ответ') }}</span>
           <p>{{ p.answer }}</p>
         </div>
-        <nav v-if="p.content.length > 1" class="post-toc" :aria-label="t('В ЭТОЙ СТАТЬЕ')">
-          <span class="post-label">{{ t('В ЭТОЙ СТАТЬЕ') }}</span>
+        <nav v-if="p.content.length > 1" class="post-toc" :aria-label="t('В этой статье')">
+          <span class="post-label">{{ t('В этой статье') }}</span>
           <ul>
             <li v-for="(s, i) in p.content" :key="i">
               <a :href="`#section-${i}`">{{ s.heading }}</a>
@@ -233,27 +233,28 @@ useHead(() => {
 }
 .post-tags span,
 .post-tags a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 32px;
-  padding: 0 14px;
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--text);
+  color: var(--muted);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none;
 }
-.post-tags a:hover {
-  background: var(--accent-soft);
+.post-tags li + li::before {
+  content: '·';
+  margin-right: 8px;
+  color: var(--muted);
+}
+.post-tags a {
   color: var(--accent);
+}
+.post-tags a:hover {
+  color: var(--accent-hover);
 }
 .post-head h1 {
   margin: 0;
   font-size: clamp(36px, 3.7vw, 54px);
   line-height: 1.12;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-weight: 400;
+  letter-spacing: normal;
   color: var(--text);
   overflow-wrap: break-word;
 }
@@ -346,7 +347,7 @@ useHead(() => {
   color: var(--muted);
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
 }
 .post-answer {
   margin-bottom: 32px;
@@ -487,8 +488,6 @@ useHead(() => {
   }
   .post-tags span,
   .post-tags a {
-    min-height: 30px;
-    padding: 0 12px;
     font-size: 13px;
   }
   .post-head h1 {

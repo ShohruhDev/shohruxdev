@@ -40,7 +40,7 @@ const { serviceTitle } = useCases();
   gap: 12px;
   padding: 24px;
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: var(--radius);
   color: inherit;
 }
 .case-card:hover {
@@ -49,16 +49,16 @@ const { serviceTitle } = useCases();
 .case-card img {
   width: 100%;
   height: auto;
-  border-radius: 12px;
+  border-radius: var(--radius-sm);
 }
 .case-card strong {
   font-size: 20px;
   line-height: 1.3;
 }
 .case-meta {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   color: var(--muted);
 }
 .case-summary {

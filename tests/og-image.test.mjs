@@ -37,9 +37,11 @@ test('version changes with visible content only', () => {
 });
 
 test('renders 1200x630 PNG for Russian and Uzbek titles', async () => {
-  assert.equal(fonts.length, 6);
-  // Одинаковые имена приводят к «квадратам» вместо латиницы: satori берёт первый файл.
-  assert.equal(new Set(fonts.map(f => f.name)).size, 6);
+  // Montserrat: 3 набора символов × веса 400/600/700.
+  assert.equal(fonts.length, 9);
+  // Одинаковые имя и вес приводят к «квадратам» вместо латиницы: satori берёт первый файл.
+  assert.equal(new Set(fonts.map(f => `${f.name}/${f.weight}`)).size, 9);
+  assert.deepEqual([...new Set(fonts.map(f => f.weight))].sort(), [400, 600, 700]);
   for (const post of [
     { title: 'Что подготовить перед заказом сайта', category: 'Сайты', locale: 'ru' },
     {

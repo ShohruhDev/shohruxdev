@@ -2,6 +2,11 @@
  * Корпоративная тема (ноябрь 2026): белый фон, светло-серые секции, скруглённые карточки,
  * Montserrat (замена Proxima Nova, как у friflex.com) и один синий акцент. Подключается последней и переопределяет прежнюю тему.
  */
+/* Под публичным сайтом и страницей ошибки не должна проступать старая тёмная тема из main.css :root. */
+html:has(.app-public) {
+  background: #ffffff;
+  color-scheme: light;
+}
 .app-public {
   --bg: #ffffff;
   --surface: #f8f7f5;
@@ -56,17 +61,6 @@
 .app-public .service-row p,
 .app-public .section-label p {
   color: var(--muted);
-}
-.app-public .eyebrow {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
 }
 .app-public .accent-text {
   color: var(--accent);
@@ -261,10 +255,6 @@
   padding: 48px;
   margin-block: 48px 64px;
   border: 0;
-}
-.app-public .cta-section .eyebrow {
-  background: rgba(255, 255, 255, 0.16);
-  color: #fff;
 }
 .app-public .cta-section p {
   color: rgba(255, 255, 255, 0.82);

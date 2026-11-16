@@ -36,7 +36,7 @@ export const servicesUz = [
       ],
       [
         'Sayt qidiruvda chiqadimi?',
-        'Qidiruv robotlari o‘qiy oladigan HTML, metama’lumotlar va tuzilmani tayyorlayman. Natija kontent, raqobat va targ‘ibotga ham bog‘liq; yuqori o‘rinni kafolatlamayman.'
+        'Qidiruv robotlari o‘qiy oladigan HTML, metama’lumotlar va tuzilmani tayyorlaymiz. Natija kontent, raqobat va targ‘ibotga ham bog‘liq; yuqori o‘rinni kafolatlamaymiz.'
       ]
     ]
   },
@@ -139,7 +139,7 @@ export const stepsUz = [
   {
     n: '03',
     title: 'Loyihalaymiz va yaratamiz',
-    body: 'Avval interfeys va asosiy ssenariy, so‘ng dasturlash. Oraliq natijani ko‘rsatib, yechimlarni muhokama qilaman.'
+    body: 'Avval interfeys va asosiy ssenariy, so‘ng dasturlash. Oraliq natijani ko‘rsatib, yechimlarni muhokama qilamiz.'
   },
   {
     n: '04',

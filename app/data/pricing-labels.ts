@@ -22,7 +22,7 @@ export const optionLabels: Record<string, string> = {
 };
 export const designLabels: Record<string, string> = {
   template: 'На готовой основе',
-  custom: 'Индивидуальный',
+  custom: 'Свой дизайн',
   premium: 'Премиум с анимацией'
 };
 /** Одинаковый десятичный разделитель на сервере и в браузере. */
