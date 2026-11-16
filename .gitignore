@@ -12,3 +12,8 @@ node_modules/
 
 .claude/worktrees/
 .claude/settings.local.json
+
+# Видео для Reels: исходники и готовые ролики не храним в git (тяжёлые, личные)
+content/video/**
+!content/video/README.md
+!content/video/style.md
