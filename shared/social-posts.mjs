@@ -140,8 +140,9 @@ Nima qildik: Nuxt 3 sayti, CMS sifatida Directus, muharrir va tekshiruvchi rolla
 
 Частая фраза на первой встрече: «Нам нужно приложение». Иногда так и есть, но нередко задачу решает бот или Mini App внутри Telegram, и клиенту не нужно ничего устанавливать.
 
-Бот или Mini App: от 8 млн сум, 2–5 недель, один основной сценарий: запись, заказ или каталог.
-Приложение для iOS и Android: от 40 млн сум, 2–4 месяца.
+Telegram-бот: от 3 млн сум, 1–3 недели, один основной сценарий: запись, заявки или ответы на вопросы.
+Mini App с каталогом и оплатой внутри Telegram: от 8 млн сум, 3–6 недель.
+Приложение для iOS и Android: от 30 млн сум, 2–4 месяца.
 
 Приложение стоит рассматривать, когда клиенты регулярно возвращаются, нужны уведомления и функции телефона или сотрудникам нужен рабочий инструмент на каждый день.
 
@@ -150,8 +151,9 @@ Nima qildik: Nuxt 3 sayti, CMS sifatida Directus, muharrir va tekshiruvchi rolla
 
 Ko‘pincha vazifani bot yoki Telegram ichidagi Mini App hal qiladi, mijoz hech narsa o‘rnatmaydi.
 
-Bot yoki Mini App: 8 mln so‘mdan, 2–5 hafta, bitta asosiy ssenariy.
-iOS va Android ilova: 40 mln so‘mdan, 2–4 oy.
+Telegram-bot: 3 mln so‘mdan, 1–3 hafta, bitta asosiy ssenariy.
+Katalog va to‘lovli Mini App: 8 mln so‘mdan, 3–6 hafta.
+iOS va Android ilova: 30 mln so‘mdan, 2–4 oy.
 
 Mijozlar muntazam qaytsa, bildirishnomalar va telefon imkoniyatlari kerak bo‘lsa, ilova o‘zini oqlaydi. Ikkilansangiz, bitta ssenariydan boshlang.`
   },
@@ -193,7 +195,8 @@ Nima qildik: kreditlarni Excel’dan import qilish, E-IMZO bilan UzPost API orqa
 Корпоративный сайт до 7 страниц: 3–5 недель.
 Сайт-каталог: 4–6 недель.
 Интернет-магазин: 6–10 недель.
-Telegram-бот или Mini App: 2–5 недель.
+Telegram-бот: 1–3 недели.
+Telegram Mini App: 3–6 недель.
 Веб-сервис, CRM или мобильное приложение: 2–4 месяца.
 
 Что добавляет время: вторая языковая версия около недели, онлайн-оплата или интеграция с CRM около недели. Срочный режим: на 30% быстрее и на 30% дороже.
@@ -207,7 +210,8 @@ Lending: 1–2 hafta.
 7 sahifagacha korporativ sayt: 3–5 hafta.
 Katalog-sayt: 4–6 hafta.
 Internet-do‘kon: 6–10 hafta.
-Telegram-bot yoki Mini App: 2–5 hafta.
+Telegram-bot: 1–3 hafta.
+Telegram Mini App: 3–6 hafta.
 Veb-xizmat, CRM yoki mobil ilova: 2–4 oy.
 
 Ikkinchi til taxminan bir hafta qo‘shadi. Shoshilinch rejim 30% tezroq va 30% qimmatroq.`
@@ -293,22 +297,23 @@ https://razrabotkatashkent.uz/?utm_source=facebook&utm_medium=social&utm_campaig
     id: 'fb-2',
     publishAt: '2026-11-19T12:00:00+05:00',
     approved: true,
-    image: '/social/brand/ig-03.jpg',
+    image: '/social/brand/prices-2026-v2.jpg',
     message: `Сколько стоит разработка в Ташкенте: наши цены на 2026 год
 
 Публикуем базовые цены, чтобы бюджет можно было прикинуть до первого звонка.
 
-Лендинг: от 3 млн сум (3–6 млн), 1–2 недели.
-Корпоративный сайт до 7 страниц: от 7 млн сум (7–14 млн), 3–5 недель.
-Сайт-каталог: от 10 млн сум (10–18 млн), 4–6 недель.
-Интернет-магазин: от 15 млн сум (15–30 млн), 6–10 недель.
-Telegram-бот или Mini App: от 8 млн сум (8–20 млн), 2–5 недель.
-Мобильное приложение iOS и Android: от 40 млн сум (40–100 млн), 2–4 месяца.
+Лендинг: от 2,5 млн сум (2,5–5 млн), 1–2 недели.
+Корпоративный сайт до 7 страниц, RU + UZ: от 6 млн сум (6–12 млн), 3–5 недель.
+Сайт-каталог, RU + UZ: от 7 млн сум (7–14 млн), 4–6 недель.
+Интернет-магазин, RU + UZ: от 12 млн сум (12–25 млн), 6–10 недель.
+Telegram-бот: от 3 млн сум (3–8 млн), 1–3 недели.
+Telegram Mini App: от 8 млн сум (8–20 млн), 3–6 недель.
+Мобильное приложение iOS и Android: от 30 млн сум (30–80 млн), 2–4 месяца.
 
 Что меняет цену:
-• вторая языковая версия (RU + UZ): +20%;
+• вторая языковая версия для лендинга или бота: +20% (в корпоративном сайте, каталоге и магазине RU + UZ уже в цене);
 • дизайн на готовой основе: −20%, премиум с анимацией: +30%;
-• онлайн-оплата Payme, Click или Uzum: +2–4 млн сум;
+• онлайн-оплата Payme, Click или Uzum: +1,5–3 млн сум;
 • срочно, на 30% быстрее: +30%.
 
 Отдельно от разработки: домен .uz около 80–100 тыс. сум в год, хостинг 50–300 тыс. сум в месяц.
@@ -346,9 +351,11 @@ M19 Barbershop в центре Ташкента ведёт запись клие
 
 Частая фраза на первой встрече: «Нам нужно приложение». Иногда так и есть, но нередко задачу решает бот или Mini App внутри Telegram, и клиенту не нужно ничего устанавливать.
 
-Telegram-бот или Mini App: от 8 млн сум, 2–5 недель. Под один основной сценарий: запись, заказ или каталог.
+Telegram-бот: от 3 млн сум, 1–3 недели. Под один основной сценарий: запись, заявки или ответы на вопросы.
 
-Мобильное приложение для iOS и Android: от 40 млн сум, 2–4 месяца.
+Telegram Mini App: от 8 млн сум, 3–6 недель. Каталог, заказ и оплата внутри Telegram.
+
+Мобильное приложение для iOS и Android: от 30 млн сум, 2–4 месяца.
 
 Приложение стоит рассматривать, когда:
 • клиенты регулярно возвращаются в ваш сервис;
@@ -535,5 +542,42 @@ export const instagramStories = [
     publishAt: '2026-11-16T02:10:00+05:00',
     approved: true,
     image: '/social/stories/contacts-1-uz.jpg'
+  },
+  // Новые цены от 16.11.2026: заменяют st-prices-* в «Актуальном» (старые удалить вручную).
+  {
+    id: 'st-prices-v2-1',
+    publishAt: '2026-11-16T12:00:00+05:00',
+    approved: false,
+    image: '/social/stories/prices-v2-1.jpg'
+  },
+  {
+    id: 'st-prices-v2-2',
+    publishAt: '2026-11-16T12:02:00+05:00',
+    approved: false,
+    image: '/social/stories/prices-v2-2.jpg'
+  },
+  {
+    id: 'st-prices-v2-3',
+    publishAt: '2026-11-16T12:04:00+05:00',
+    approved: false,
+    image: '/social/stories/prices-v2-3.jpg'
+  },
+  {
+    id: 'st-prices-v2-1-uz',
+    publishAt: '2026-11-16T12:06:00+05:00',
+    approved: false,
+    image: '/social/stories/prices-v2-1-uz.jpg'
+  },
+  {
+    id: 'st-prices-v2-2-uz',
+    publishAt: '2026-11-16T12:08:00+05:00',
+    approved: false,
+    image: '/social/stories/prices-v2-2-uz.jpg'
+  },
+  {
+    id: 'st-prices-v2-3-uz',
+    publishAt: '2026-11-16T12:10:00+05:00',
+    approved: false,
+    image: '/social/stories/prices-v2-3-uz.jpg'
   }
 ];

@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { designs, extraPage, languages, options, projectTypes, urgency } from '#shared/pricing.mjs';
+import {
+  designs,
+  extraPage,
+  languages,
+  options,
+  projectTypes,
+  thirdLanguage,
+  urgency
+} from '#shared/pricing.mjs';
 import { formatMln, optionLabels, typeLabel } from '~/data/pricing-labels';
 const { t, localPath, locale } = useLanguage();
 const route = useRoute();
@@ -13,8 +21,12 @@ const pct = (k: number) => `${k > 1 ? '+' : '−'}${Math.round(Math.abs(k - 1) *
 const factors = computed(() => [
   [t('Дизайн на готовой основе'), pct(designs.template.price)],
   [t('Премиум-дизайн с анимацией'), pct(designs.premium.price)],
-  [t('Две языковые версии (RU + UZ)'), pct(languages[2].price)],
-  [t('Три языковые версии (+ EN)'), pct(languages[3].price)],
+  [t('RU + UZ для лендинга, веб-сервиса, бота и приложения'), pct(languages[2].price)],
+  [t('RU + UZ + EN для лендинга, веб-сервиса, бота и приложения'), pct(languages[3].price)],
+  [
+    t('Английская версия к корпоративному сайту, каталогу или магазину (RU + UZ уже в цене)'),
+    pct(thirdLanguage.price)
+  ],
   [t('Срочно — срок на 30% короче'), pct(urgency.price)],
   [
     t('Каждая страница сверх включённых'),

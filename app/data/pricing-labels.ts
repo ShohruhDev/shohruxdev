@@ -1,11 +1,12 @@
 // Подписи к ценам из shared/pricing.mjs. Ключи — русский текст, перевод в shared/uz.json.
 export const typeLabels: Record<string, [string, string]> = {
   landing: ['Лендинг', 'Одна страница под услугу или акцию'],
-  corporate: ['Корпоративный сайт', 'Услуги, о компании, контакты'],
-  catalog: ['Сайт-каталог', 'Товары или услуги с фильтрами'],
-  shop: ['Интернет-магазин', 'Корзина, заказ, оплата'],
+  corporate: ['Корпоративный сайт', 'Услуги, о компании, контакты. RU + UZ в цене'],
+  catalog: ['Сайт-каталог', 'Товары или услуги с фильтрами. RU + UZ в цене'],
+  shop: ['Интернет-магазин', 'Корзина, заказ, оплата. RU + UZ в цене'],
   webapp: ['Веб-сервис / CRM', 'Личный кабинет, внутренняя система'],
-  telegram: ['Telegram-бот или Mini App', 'Запись, заказ или каталог в Telegram'],
+  telegram: ['Telegram-бот', 'Запись, заявки или ответы на вопросы в Telegram'],
+  miniapp: ['Telegram Mini App', 'Каталог, заказ и оплата внутри Telegram'],
   mobile: ['Мобильное приложение', 'iOS и Android']
 };
 export const typeLabel = (id: string): [string, string] =>

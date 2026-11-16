@@ -352,5 +352,15 @@
   "11. Защита данных": "11. Ma’lumotlarni himoya qilish",
   "Сайт работает только по защищённому протоколу HTTPS. Доступ к заявкам есть только у сотрудников Оператора, которым он нужен для работы с обращениями. Оператор принимает организационные и технические меры для защиты данных от неправомерного доступа, изменения и уничтожения.": "Sayt faqat himoyalangan HTTPS protokoli orqali ishlaydi. Murojaatlarga faqat ular bilan ishlash uchun zarur bo‘lgan Operator xodimlari kira oladi. Operator ma’lumotlarni noqonuniy kirish, o‘zgartirish va yo‘q qilishdan himoya qilish uchun tashkiliy va texnik choralar ko‘radi.",
   "12. Изменение политики": "12. Siyosatni o‘zgartirish",
-  "Оператор может обновлять политику. Актуальная редакция всегда опубликована на этой странице и действует с момента публикации.": "Operator siyosatni yangilashi mumkin. Amaldagi tahrir doimo ushbu sahifada e’lon qilinadi va e’lon qilingan paytdan boshlab kuchga kiradi."
+  "Оператор может обновлять политику. Актуальная редакция всегда опубликована на этой странице и действует с момента публикации.": "Operator siyosatni yangilashi mumkin. Amaldagi tahrir doimo ushbu sahifada e’lon qilinadi va e’lon qilingan paytdan boshlab kuchga kiradi.",
+  "Telegram-бот": "Telegram-bot",
+  "Запись, заявки или ответы на вопросы в Telegram": "Telegram’da yozilish, arizalar yoki savollarga javoblar",
+  "Telegram Mini App": "Telegram Mini App",
+  "Каталог, заказ и оплата внутри Telegram": "Telegram ichida katalog, buyurtma va to‘lov",
+  "RU + UZ для лендинга, веб-сервиса, бота и приложения": "Lending, veb-servis, bot va ilova uchun RU + UZ",
+  "RU + UZ + EN для лендинга, веб-сервиса, бота и приложения": "Lending, veb-servis, bot va ilova uchun RU + UZ + EN",
+  "Английская версия к корпоративному сайту, каталогу или магазину (RU + UZ уже в цене)": "Korporativ sayt, katalog yoki do‘kon uchun inglizcha versiya (RU + UZ narxga kiritilgan)",
+  "Услуги, о компании, контакты. RU + UZ в цене": "Xizmatlar, kompaniya haqida, kontaktlar. RU + UZ narxga kiritilgan",
+  "Товары или услуги с фильтрами. RU + UZ в цене": "Filtrli tovarlar yoki xizmatlar. RU + UZ narxga kiritilgan",
+  "Корзина, заказ, оплата. RU + UZ в цене": "Savat, buyurtma, to‘lov. RU + UZ narxga kiritilgan"
 }
