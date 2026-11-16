@@ -36,3 +36,5 @@ jobs:
         run: npm run test:admin
       - name: Bilingual integration
         run: npm run test:bilingual
+      - name: Dev server smoke
+        run: npm run test:dev
