@@ -1,4 +1,11 @@
-import { askPerson, assignTask, closeTask, mergeFromPanel } from '../../lib/team-panel.mjs';
+import {
+  askPerson,
+  assignTask,
+  closeTask,
+  fireConfig,
+  fireRoutine,
+  mergeFromPanel
+} from '../../lib/team-panel.mjs';
 import { createTeamLlm, teamConfig } from '../../lib/team-chat.mjs';
 let llm: ReturnType<typeof createTeamLlm> | undefined;
 export default defineEventHandler(async event => {
@@ -15,10 +22,16 @@ export default defineEventHandler(async event => {
     if (b.action === 'assign') {
       const r = await assignTask(
         { personId: b.person, title: b.title, details: b.details, urgent: b.urgent === true },
-        { store, cfg }
+        { store, cfg, fire: fireConfig() }
       );
       resetOfficeCache();
       return r;
+    }
+    if (b.action === 'run-cycle') {
+      return await fireRoutine(
+        fireConfig(),
+        'Запуск владельцем из Офиса: возьми задачи по приоритету (срочные, затем обычные, затем бэклог).'
+      );
     }
     if (b.action === 'close-task') {
       await closeTask(Number(b.number), { cfg });

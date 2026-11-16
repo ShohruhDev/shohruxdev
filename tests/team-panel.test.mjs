@@ -9,6 +9,7 @@ import { TEAM_ROLES } from '../shared/team-roles.mjs';
 import { teamConfig } from '../server/lib/team-chat.mjs';
 import {
   ROUTINES,
+  fireRoutine,
   askPerson,
   assignTask,
   githubOverview,
@@ -150,6 +151,7 @@ test('поручить задачу: Issue с меткой роли и заме�
       store,
       cfg,
       fetcher: async (url, init) => {
+        if (url.includes('/issues?')) return json([]);
         sent.push({ url, body: JSON.parse(init.body) });
         return url.includes('api.github.com')
           ? json({ number: 12, html_url: 'u12' }, 201)
@@ -157,7 +159,7 @@ test('поручить задачу: Issue с меткой роли и заме�
       }
     }
   );
-  assert.deepEqual(r, { number: 12, url: 'u12', urgent: false });
+  assert.deepEqual(r, { number: 12, url: 'u12', urgent: false, fired: '', fireError: '' });
   assert.deepEqual(sent[0].body.labels, ['team-task', 'role:copywriter']);
   assert.equal(sent[0].body.title, 'Текст для лендинга');
   assert.match(sent[1].url, /api\.telegram\.org\/bottok-pm/);
@@ -237,4 +239,48 @@ test('миграция: старые реплики владельца (author c
     ['owner', 'qa']
   );
   old.close();
+});
+
+test('срочная задача: метка priority:high и запуск облачного цикла с номером задачи', async () => {
+  const calls = [];
+  const fetcher = async (url, init) => {
+    if (url.includes('/issues?')) return json([]);
+    calls.push({ url, init });
+    if (url.includes('/issues')) return json({ number: 50, html_url: 'u50' }, 201);
+    if (url.includes('/fire'))
+      return json({ type: 'routine_fire', claude_code_session_url: 'https://claude.ai/code/s1' });
+    return json({ ok: true });
+  };
+  const fire = { token: 'sk-ant-oat01-test-0123456789', routineId: 'trig_01ABC' };
+  const r = await assignTask(
+    { personId: 'seo', title: 'Срочно Bing', urgent: true },
+    { store, cfg, fire, fetcher }
+  );
+  assert.equal(r.fired, 'https://claude.ai/code/s1');
+  assert.deepEqual(JSON.parse(calls[0].init.body).labels, [
+    'team-task',
+    'role:seo',
+    'priority:high'
+  ]);
+  const f = calls.find(c => c.url.includes('/fire'));
+  assert.equal(f.url, 'https://api.anthropic.com/v1/claude_code/routines/trig_01ABC/fire');
+  assert.equal(f.init.headers.Authorization, 'Bearer sk-ant-oat01-test-0123456789');
+  assert.match(JSON.parse(f.init.body).text, /issue #50/);
+
+  // Без токена задача создаётся, а запуск честно сообщает причину.
+  const r2 = await assignTask(
+    { personId: 'seo', title: 'Ещё срочно', urgent: true },
+    { store, cfg, fire: { token: '', routineId: 'trig_01ABC' }, fetcher }
+  );
+  assert.equal(r2.number, 50);
+  assert.match(r2.fireError, /ROUTINE_FIRE_TOKEN/);
+});
+
+test('запуск цикла: 429 — понятное сообщение', async () => {
+  await assert.rejects(
+    fireRoutine({ token: 'sk-ant-oat01-test-0123456789', routineId: 'trig_01ABC' }, 'x', async () =>
+      json({}, 429)
+    ),
+    /Лимит запусков/
+  );
 });

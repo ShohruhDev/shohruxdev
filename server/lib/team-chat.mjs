@@ -6,6 +6,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { TEAM_CONTEXT as RULES, TEAM_ROLES, roleById } from '../../shared/team-roles.mjs';
 import { TEAM_KNOWLEDGE } from '../../shared/team-knowledge.mjs';
+import { appendToTask, findDuplicate, openTasks } from './task-dedupe.mjs';
 
 // Правила чата + база знаний команды. Одинаковы для всех запросов — кэшируются.
 const TEAM_CONTEXT = `${RULES}\n\n# База знаний команды (источник истины)\n\n${TEAM_KNOWLEDGE}`;
@@ -283,25 +284,38 @@ export async function tgSend(token, chatId, text, fetcher) {
 async function createIssue(cfg, plan, fetcher) {
   if (!cfg.githubToken) return { ok: false, reason: 'нет GITHUB_TOKEN' };
   const role = roleById(plan.task_role) || roleById('pm');
-  const r = await fetcher(`https://api.github.com/repos/${cfg.repo}/issues`, {
+  const gh = async (path, init = {}) => {
+    const r = await fetcher(`https://api.github.com/repos/${cfg.repo}${path}`, {
+      ...init,
+      headers: {
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${cfg.githubToken}`,
+        'X-GitHub-Api-Version': '2022-11-28',
+        'User-Agent': 'razrabotkatashkent-team-chat',
+        'Content-Type': 'application/json'
+      },
+      signal: AbortSignal.timeout(15000)
+    });
+    return { ok: r.ok, status: r.status, data: await r.json().catch(() => ({})) };
+  };
+  // Та же задача уже открыта — дописываем в неё, а не создаём дубль.
+  const dup = findDuplicate(await openTasks(gh), {
+    title: plan.task_title,
+    details: plan.task_details,
+    role: role.id
+  });
+  if (dup && (await appendToTask(gh, dup, `${plan.task_title}\n\n${plan.task_details}`)))
+    return { ok: true, number: dup.number, url: dup.url, existing: true };
+  const r = await gh('/issues', {
     method: 'POST',
-    headers: {
-      Accept: 'application/vnd.github+json',
-      Authorization: `Bearer ${cfg.githubToken}`,
-      'X-GitHub-Api-Version': '2022-11-28',
-      'User-Agent': 'razrabotkatashkent-team-chat',
-      'Content-Type': 'application/json'
-    },
     body: JSON.stringify({
       title: plan.task_title.slice(0, 200),
       body: `${plan.task_details}\n\nОтветственный: @${role.id} (${role.name}).\nЗадача поставлена CEO в командном чате Telegram.`,
       labels: ['team-task', `role:${role.id}`]
-    }),
-    signal: AbortSignal.timeout(15000)
+    })
   });
-  const data = await r.json().catch(() => ({}));
   return r.ok
-    ? { ok: true, number: data.number, url: data.html_url }
+    ? { ok: true, number: r.data.number, url: r.data.html_url }
     : { ok: false, reason: `GitHub HTTP ${r.status}` };
 }
 
@@ -382,9 +396,11 @@ export async function handleTeamUpdate(
     task = await createIssue(cfg, plan, fetcher);
     await say(
       'pm',
-      task.ok
-        ? `Задача заведена: #${task.number} «${plan.task_title}». Ответственный: @${plan.task_role}. Команда возьмёт её в ежедневный цикл. ${task.url}`
-        : `Задачу «${plan.task_title}» не удалось завести в GitHub (${task.reason}). Зафиксировал её в чате.`
+      task.ok && task.existing
+        ? `Такая задача уже есть: #${task.number}. Дописал подробности туда, новую не создаю. ${task.url}`
+        : task.ok
+          ? `Задача заведена: #${task.number} «${plan.task_title}». Ответственный: @${plan.task_role}. Команда возьмёт её в ежедневный цикл. ${task.url}`
+          : `Задачу «${plan.task_title}» не удалось завести в GitHub (${task.reason}). Зафиксировал её в чате.`
     );
   }
   return { status: 'answered', spoke, task };

@@ -147,8 +147,17 @@ async function assign() {
   busyAction.value = 'assign';
   try {
     const r = await post({ action: 'assign', person: open.value.id, ...task });
+    if (r.existing) {
+      say(`Такая задача уже есть: #${r.number}. Дописал подробности туда, новую не создаю.`);
+      Object.assign(task, { title: '', details: '', urgent: false });
+      return;
+    }
     say(
-      `Задача #${r.number} поставлена — ${open.value.persona} возьмёт её в ближайший рабочий цикл.`
+      r.fired
+        ? `Задача #${r.number} — срочно: облачный цикл уже запущен, ${open.value.persona} берёт её сейчас.`
+        : r.fireError
+          ? `Задача #${r.number} поставлена, но сразу запустить не вышло: ${r.fireError} Возьмут в 09:00.`
+          : `Задача #${r.number} поставлена — ${open.value.persona} возьмёт её в утренний цикл (будни, 09:00).`
     );
     // GitHub отдаёт новую задачу в списке с задержкой: показываем её сразу, перечитываем позже.
     open.value.tasks.unshift({
@@ -161,6 +170,17 @@ async function assign() {
     open.value.status = 'busy';
     Object.assign(task, { title: '', details: '', urgent: false });
     setTimeout(() => load(true), 8000);
+  } catch (e) {
+    fail(e);
+  } finally {
+    busyAction.value = '';
+  }
+}
+async function runCycle() {
+  busyAction.value = 'run-cycle';
+  try {
+    await post({ action: 'run-cycle' });
+    say('Цикл запущен: команда берёт задачи по приоритету. PR придут в Telegram.');
   } catch (e) {
     fail(e);
   } finally {
@@ -363,7 +383,17 @@ onBeforeUnmount(() => {
             </section>
 
             <section class="o-card" aria-labelledby="plan-h">
-              <div class="o-head"><h2 id="plan-h">Расписание</h2></div>
+              <div class="o-head">
+                <h2 id="plan-h">Расписание</h2>
+                <button
+                  v-if="data.fireReady"
+                  class="o-btn small"
+                  :disabled="busyAction === 'run-cycle'"
+                  @click="runCycle"
+                >
+                  {{ busyAction === 'run-cycle' ? 'Запускаю…' : 'Запустить сейчас' }}
+                </button>
+              </div>
               <ul class="routines">
                 <li v-for="r in data.routines" :key="r.id">
                   <TeamAvatar v-if="ava(r.who)" v-bind="ava(r.who)!" :size="36" />
@@ -499,7 +529,10 @@ onBeforeUnmount(() => {
                 :class="{ on: task.urgent }"
                 @click="task.urgent = true"
               >
-                <b>Срочно</b><small>агенты берут сразу</small>
+                <b>Срочно</b
+                ><small>{{
+                  data?.fireReady ? 'агенты берут сразу' : 'запуск по API не настроен — в 09:00'
+                }}</small>
               </button>
               <button
                 type="button"

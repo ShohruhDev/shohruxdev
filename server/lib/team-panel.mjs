@@ -6,6 +6,7 @@ import { TEAM_KNOWLEDGE } from '../../shared/team-knowledge.mjs';
 import { TEAM_CONTEXT as RULES } from '../../shared/team-roles.mjs';
 import { checksState, mergePr } from './pr-bot.mjs';
 import { tgSend } from './team-chat.mjs';
+import { appendToTask, findDuplicate, openTasks } from './task-dedupe.mjs';
 
 const DM_HISTORY = 20;
 const MAX_TEXT = 4000;
@@ -176,6 +177,45 @@ export async function githubOverview(cfg, fetcher = fetch) {
   };
 }
 
+// ---------- Запуск облачного цикла по API (срочные задачи и кнопка «Запустить сейчас») ----------
+
+const realTok = v => (String(v || '').trim().length >= 20 ? String(v).trim() : '');
+/** Токен API-триггера рутины (claude.ai → рутина → Trigger → API → Generate token). */
+export function fireConfig(env = process.env) {
+  return {
+    token: realTok(env.ROUTINE_FIRE_TOKEN),
+    routineId: env.ROUTINE_FIRE_ID || 'trig_01V7j4oVzHWioXERTcSh2vqw'
+  };
+}
+
+/** Запускает облачный цикл команды. text попадает в run как блок <routine-fire-payload>. */
+export async function fireRoutine(fire, text, fetcher = fetch) {
+  if (!fire.token) throw Error('Запуск по API не настроен (нет ROUTINE_FIRE_TOKEN).');
+  if (!/^trig_[A-Za-z0-9]+$/.test(fire.routineId)) throw Error('Неверный ROUTINE_FIRE_ID.');
+  const r = await fetcher(
+    `https://api.anthropic.com/v1/claude_code/routines/${fire.routineId}/fire`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${fire.token}`,
+        'anthropic-version': '2023-06-01',
+        'anthropic-beta': 'experimental-cc-routine-2026-04-01',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ text: String(text).slice(0, 4000) }),
+      signal: AbortSignal.timeout(20000)
+    }
+  );
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok)
+    throw Error(
+      r.status === 429
+        ? 'Лимит запусков на этот час исчерпан — задачу возьмёт следующий цикл.'
+        : `Запуск цикла не удался (HTTP ${r.status}).`
+    );
+  return { url: data.claude_code_session_url || '' };
+}
+
 const monthStart = now => now.toISOString().slice(0, 8) + '01';
 const dayStart = now => now.toISOString().slice(0, 10);
 
@@ -268,14 +308,19 @@ const clean = (v, max) =>
 /** Поручить задачу: Issue с метками team-task и role:<id>; ежедневный цикл берёт их первыми. */
 export async function assignTask(
   { personId, title, details, urgent = false },
-  { store, cfg, fetcher = fetch }
+  { store, cfg, fire = fireConfig({}), fetcher = fetch }
 ) {
   const p = personById(personId);
   if (!p) throw Error('Нет такого специалиста.');
   const t = clean(title, 200);
   if (t.length < 3) throw Error('Напишите задачу хотя бы в несколько слов.');
   if (!cfg.githubToken) throw Error('Не задан GITHUB_TOKEN — задачу не создать.');
-  const r = await github(cfg, fetcher)('/issues', {
+  const gh = github(cfg, fetcher);
+  // Такая же открытая задача у этого специалиста — дописываем в неё, а не создаём дубль.
+  const dup = findDuplicate(await openTasks(gh), { title: t, details, role: p.id });
+  if (dup && (await appendToTask(gh, dup, `${t}\n\n${clean(details, 3000)}`)))
+    return { number: dup.number, url: dup.url, urgent, fired: '', fireError: '', existing: true };
+  const r = await gh('/issues', {
     method: 'POST',
     body: JSON.stringify({
       title: t,
@@ -290,7 +335,23 @@ export async function assignTask(
     await tgSend(cfg.bots.pm, cfg.chatId, note, fetcher).catch(() => {});
     store.teamAdd('pm', note);
   }
-  return { number: r.data.number, url: r.data.html_url, urgent };
+  // Срочно — сразу запускаем облачный цикл на эту задачу.
+  let fired = '',
+    fireError = '';
+  if (urgent) {
+    try {
+      fired = (
+        await fireRoutine(
+          fire,
+          `Срочная задача от CEO: issue #${r.data.number} «${t}» (ответственный: ${p.id}). Возьми её первой.`,
+          fetcher
+        )
+      ).url;
+    } catch (e) {
+      fireError = e instanceof Error ? e.message : 'запуск не удался';
+    }
+  }
+  return { number: r.data.number, url: r.data.html_url, urgent, fired, fireError };
 }
 
 export async function closeTask(number, { cfg, fetcher = fetch }) {
