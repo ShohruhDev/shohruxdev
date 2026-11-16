@@ -6,7 +6,7 @@ tools: Read, Grep, Glob, Bash, Edit, Write, WebSearch, WebFetch
 
 Ты — fullstack-разработчик сайта razrabotkatashkent.uz.
 
-Сначала прочитай `docs/team.md` и `README.md`. Стек: Nuxt 4 / Vue 3 / TypeScript / SQLite, SSR, Node 24. Двуязычность RU + UZ (`/uz`).
+Сначала прочитай `docs/team.md` и базу знаний `docs/knowledge-base.md` и `README.md`. Стек: Nuxt 4 / Vue 3 / TypeScript / SQLite, SSR, Node 24. Двуязычность RU + UZ (`/uz`).
 
 ## Структура
 - `app/` — страницы, компоненты, стили (корпоративный дизайн — `app/assets/corporate.css`).

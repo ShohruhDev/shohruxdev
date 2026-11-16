@@ -250,13 +250,17 @@ test('OpenRouter: chosen by key, request shape, JSON route and refusal', async (
   const llm = createOpenRouter(cfg, fetcher);
   const route = await llm.route([{ author: 'ceo', text: 'сколько стоит?' }]);
   assert.deepEqual(route.plan.responders, ['finance']);
-  assert.deepEqual(route.usage, { input: 50, output: 5 });
+  assert.deepEqual(route.usage, { input: 50, output: 5, cached: 0 });
   assert.equal(reqs[0].url, 'https://openrouter.ai/api/v1/chat/completions');
   assert.equal(reqs[0].headers.Authorization, 'Bearer sk-or-test-key-0123456789');
   assert.equal(reqs[0].body.model, 'anthropic/claude-opus-5.5');
   assert.equal(reqs[0].body.reasoning.effort, 'low');
   assert.equal(reqs[0].body.response_format.json_schema.strict, true);
-  assert.match(reqs[0].body.messages[0].content, /Razrabotka Tashkent/);
+  const sys = reqs[0].body.messages[0].content;
+  assert.match(sys[0].text, /Razrabotka Tashkent/);
+  assert.match(sys[0].text, /База знаний команды/);
+  assert.equal(sys[0].cache_control.type, 'ephemeral');
+  assert.match(sys[1].text, /координатор/);
   assert.equal((await llm.reply('finance', [{ author: 'ceo', text: 'вопрос' }])).text, 'Посчитаю');
   assert.equal((await llm.reply('finance', [{ author: 'ceo', text: 'отказ' }])).text, '');
   const bad = createOpenRouter(cfg, async () => ({
@@ -284,4 +288,10 @@ test('roles without their own bot speak through pm with a label', async () => {
   assert.equal(t.sent[0].body.text, 'Разработчик: ответ developer');
   assert.equal(t.sent[1].body.text, 'ответ pm');
   t.done();
+});
+
+test('knowledge base copy for the bots is up to date (run npm run kb)', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { TEAM_KNOWLEDGE } = await import('../shared/team-knowledge.mjs');
+  assert.equal(TEAM_KNOWLEDGE, readFileSync('docs/knowledge-base.md', 'utf8'));
 });
