@@ -189,7 +189,7 @@ watch(
         }}</NuxtLink>
       </div>
       <div class="footer-note">
-        {{ t('Веб. Мобильные приложения.') }}<br />{{ t('Внимание к деталям.') }}
+        {{ t('Веб. Мобильные приложения.') }}<br />{{ t('Цена фиксируется в договоре.') }}
       </div>
     </footer>
     <ClientOnly><CookieNotice v-if="route.path !== '/admin'" /></ClientOnly>

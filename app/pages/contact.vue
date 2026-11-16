@@ -51,7 +51,7 @@ async function submit() {
         {{ t('Расскажите о проекте своими словами. Даже если пока есть только идея.') }}
       </p>
       <div class="contact-aside">
-        <span class="label-text">{{ t('ЧТО ДАЛЬШЕ') }}</span>
+        <span class="label-text">{{ t('Что дальше') }}</span>
         <p>
           {{ t('Уточним задачу и ограничения.') }}<br />{{ t('Обсудим возможный подход.') }}<br />{{
             t('Определим состав первой версии.')
@@ -59,19 +59,19 @@ async function submit() {
         </p>
       </div>
       <div class="contact-aside contact-phone">
-        <span class="label-text">{{ t('ПОЗВОНИТЬ') }}</span>
+        <span class="label-text">{{ t('Позвонить') }}</span>
         <p><PhoneLink place="contact" class="text-link" /></p>
         <small class="contact-hours">{{ t('Круглосуточно, без выходных') }}</small>
       </div>
       <div class="contact-aside">
-        <span class="label-text">{{ t('РЕКВИЗИТЫ') }}</span>
+        <span class="label-text">{{ t('Реквизиты') }}</span>
         <p>
           {{ locale === 'uz' ? company.legalName.uz : company.legalName.ru }}<br />{{ t('ИНН') }}
           {{ innFormatted }}<br />{{ locale === 'uz' ? company.address.uz : company.address.ru }}
         </p>
       </div>
       <div v-if="config.public.telegram" class="contact-aside">
-        <span class="label-text">{{ t('УДОБНЕЕ В МЕССЕНДЖЕРЕ?') }}</span>
+        <span class="label-text">{{ t('Удобнее в мессенджере?') }}</span>
         <p><TelegramLink place="contact" class="text-link" label="@" /></p>
       </div>
     </div>

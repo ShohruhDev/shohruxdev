@@ -43,9 +43,9 @@ const mln = (v?: number) => formatMln(v, locale.value);
 }
 .price-head {
   padding: 12px 0;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   color: var(--muted);
 }
 .price-name,
