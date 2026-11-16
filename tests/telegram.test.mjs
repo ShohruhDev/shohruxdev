@@ -116,18 +116,19 @@ test('queue is valid, approval is explicit, on the planned schedule, images exis
 
 test('price post matches shared/pricing.mjs', () => {
   const [ru, uz] = [telegramPosts[0].ru, telegramPosts[0].uz];
-  const fmt = n => String(n);
-  for (const id of ['landing', 'corporate', 'catalog', 'shop', 'telegram']) {
+  const fmtRu = n => String(n).replace('.', ',');
+  for (const id of ['landing', 'corporate', 'catalog', 'shop', 'telegram', 'miniapp']) {
     const [lo, hi] = projectTypes.find(t => t.id === id).price;
-    assert.ok(ru.includes(`от ${fmt(lo)} млн сум (${lo} – ${hi} млн)`), `RU ${id}`);
-    assert.ok(uz.includes(`${fmt(lo)} mln so‘mdan (${lo} – ${hi} mln)`), `UZ ${id}`);
+    assert.ok(ru.includes(`от ${fmtRu(lo)} млн сум (${fmtRu(lo)} – ${fmtRu(hi)} млн)`), `RU ${id}`);
+    assert.ok(uz.includes(`${lo} mln so‘mdan (${lo} – ${hi} mln)`), `UZ ${id}`);
   }
   const pct = k => Math.round((k - 1) * 100);
-  assert.ok(ru.includes(`(RU + UZ): +${pct(languages[2].price)}%`));
+  assert.ok(ru.includes(`для лендинга или бота: +${pct(languages[2].price)}%`));
   assert.ok(ru.includes(`−${-pct(designs.template.price)}%`));
   assert.ok(ru.includes(`+${pct(designs.premium.price)}%`));
   const pay = options.find(o => o.id === 'payments').price;
-  assert.ok(ru.includes(`+${pay[0]} – ${pay[1]} млн сум`));
+  assert.ok(ru.includes(`+${fmtRu(pay[0])} – ${fmtRu(pay[1])} млн сум`));
+  assert.ok(uz.includes(`+${pay[0]} – ${pay[1]} mln so‘m`));
   assert.ok(ru.includes(`на ${-pct(urgency.time)}% быстрее: +${pct(urgency.price)}%`));
 });
 

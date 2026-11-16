@@ -13,16 +13,17 @@ export const telegramPosts = [
 
 Публикуем базовые цены, чтобы бюджет можно было прикинуть до первого звонка.
 
-Лендинг: от 3 млн сум (3 – 6 млн), 1 – 2 недели.
-Корпоративный сайт до 7 страниц: от 7 млн сум (7 – 14 млн), 3 – 5 недель.
-Сайт-каталог: от 10 млн сум (10 – 18 млн), 4 – 6 недель.
-Интернет-магазин: от 15 млн сум (15 – 30 млн), 1,5 – 2,5 месяца.
-Telegram-бот или Mini App: от 8 млн сум (8 – 20 млн), 2 – 5 недель.
+Лендинг: от 2,5 млн сум (2,5 – 5 млн), 1 – 2 недели.
+Корпоративный сайт до 7 страниц, RU + UZ: от 6 млн сум (6 – 12 млн), 3 – 5 недель.
+Сайт-каталог, RU + UZ: от 7 млн сум (7 – 14 млн), 4 – 6 недель.
+Интернет-магазин, RU + UZ: от 12 млн сум (12 – 25 млн), 1,5 – 2,5 месяца.
+Telegram-бот: от 3 млн сум (3 – 8 млн), 1 – 3 недели.
+Telegram Mini App: от 8 млн сум (8 – 20 млн), 3 – 6 недель.
 
 Что меняет цену:
-• вторая языковая версия (RU + UZ): +20%;
+• вторая языковая версия для лендинга или бота: +20% (в корпоративном сайте, каталоге и магазине RU + UZ уже в цене);
 • дизайн на готовой основе: −20%, премиум с анимацией: +30%;
-• онлайн-оплата Payme, Click или Uzum: +2 – 4 млн сум;
+• онлайн-оплата Payme, Click или Uzum: +1,5 – 3 млн сум;
 • срочно, на 30% быстрее: +30%.
 
 Отдельно от разработки: домен .uz около 80–100 тыс. сум в год, хостинг 50–300 тыс. сум в месяц.
@@ -35,16 +36,17 @@ https://razrabotkatashkent.uz/prices?utm_source=telegram&utm_medium=social&utm_c
 
 Birinchi qo‘ng‘iroqdan oldin budjetni chamalab olishingiz uchun asosiy narxlarni e’lon qilamiz.
 
-Lending: 3 mln so‘mdan (3 – 6 mln), 1 – 2 hafta.
-7 sahifagacha korporativ sayt: 7 mln so‘mdan (7 – 14 mln), 3 – 5 hafta.
-Katalog-sayt: 10 mln so‘mdan (10 – 18 mln), 4 – 6 hafta.
-Internet-do‘kon: 15 mln so‘mdan (15 – 30 mln), 1.5 – 2.5 oy.
-Telegram-bot yoki Mini App: 8 mln so‘mdan (8 – 20 mln), 2 – 5 hafta.
+Lending: 2.5 mln so‘mdan (2.5 – 5 mln), 1 – 2 hafta.
+7 sahifagacha korporativ sayt, RU + UZ: 6 mln so‘mdan (6 – 12 mln), 3 – 5 hafta.
+Katalog-sayt, RU + UZ: 7 mln so‘mdan (7 – 14 mln), 4 – 6 hafta.
+Internet-do‘kon, RU + UZ: 12 mln so‘mdan (12 – 25 mln), 1.5 – 2.5 oy.
+Telegram-bot: 3 mln so‘mdan (3 – 8 mln), 1 – 3 hafta.
+Telegram Mini App: 8 mln so‘mdan (8 – 20 mln), 3 – 6 hafta.
 
 Narxga nima ta’sir qiladi:
-• ikkinchi til (RU + UZ): +20%;
+• lending yoki bot uchun ikkinchi til: +20% (korporativ sayt, katalog va do‘konda RU + UZ narxga kiritilgan);
 • tayyor asosdagi dizayn: −20%, animatsiyali premium dizayn: +30%;
-• Payme, Click yoki Uzum orqali onlayn to‘lov: +2 – 4 mln so‘m;
+• Payme, Click yoki Uzum orqali onlayn to‘lov: +1.5 – 3 mln so‘m;
 • shoshilinch, 30% tezroq: +30%.
 
 Dasturlashdan tashqari: .uz domeni yiliga taxminan 80–100 ming so‘m, xosting oyiga 50–300 ming so‘m.
@@ -106,7 +108,8 @@ https://razrabotkatashkent.uz/uz/cases/total-asset?utm_source=telegram&utm_mediu
 Корпоративный сайт до 7 страниц: 3 – 5 недель.
 Сайт-каталог: 4 – 6 недель.
 Интернет-магазин: 1,5 – 2,5 месяца.
-Telegram-бот или Mini App: 2 – 5 недель.
+Telegram-бот: 1 – 3 недели.
+Telegram Mini App: 3 – 6 недель.
 Веб-сервис, CRM или мобильное приложение: 2 – 4 месяца.
 
 Что добавляет время:
@@ -128,7 +131,8 @@ Lending: 1 – 2 hafta.
 7 sahifagacha korporativ sayt: 3 – 5 hafta.
 Katalog-sayt: 4 – 6 hafta.
 Internet-do‘kon: 1.5 – 2.5 oy.
-Telegram-bot yoki Mini App: 2 – 5 hafta.
+Telegram-bot: 1 – 3 hafta.
+Telegram Mini App: 3 – 6 hafta.
 Veb-xizmat, CRM yoki mobil ilova: 2 – 4 oy.
 
 Muddatni nima uzaytiradi:
@@ -187,9 +191,11 @@ https://razrabotkatashkent.uz/uz/cases/m19?utm_source=telegram&utm_medium=social
 
 Частая фраза на первой встрече: «Нам нужно приложение». Иногда так и есть, но нередко задачу решает бот или Mini App внутри Telegram, и клиенту не нужно ничего устанавливать.
 
-Telegram-бот или Mini App: от 8 млн сум (8 – 20 млн), 2 – 5 недель. Под один основной сценарий: запись, заказ или каталог.
+Telegram-бот: от 3 млн сум (3 – 8 млн), 1 – 3 недели. Под один основной сценарий: запись, заявки или ответы на вопросы.
 
-Мобильное приложение для iOS и Android: от 40 млн сум (40 – 100 млн), 2 – 4 месяца.
+Telegram Mini App: от 8 млн сум (8 – 20 млн), 3 – 6 недель. Каталог, заказ и оплата внутри Telegram.
+
+Мобильное приложение для iOS и Android: от 30 млн сум (30 – 80 млн), 2 – 4 месяца.
 
 Приложение стоит рассматривать, когда:
 • клиенты регулярно возвращаются в ваш сервис;
@@ -204,9 +210,11 @@ https://razrabotkatashkent.uz/?utm_source=telegram&utm_medium=social&utm_campaig
 
 Ko‘p eshitiladigan gap: «Bizga ilova kerak». Ba’zan shunday, lekin ko‘pincha vazifani bot yoki Telegram ichidagi Mini App hal qiladi, mijoz hech narsa o‘rnatmaydi.
 
-Telegram-bot yoki Mini App: 8 mln so‘mdan (8 – 20 mln), 2 – 5 hafta. Bitta asosiy ssenariy uchun: yozilish, buyurtma yoki katalog.
+Telegram-bot: 3 mln so‘mdan (3 – 8 mln), 1 – 3 hafta. Bitta asosiy ssenariy uchun: yozilish, arizalar yoki savollarga javoblar.
 
-iOS va Android uchun mobil ilova: 40 mln so‘mdan (40 – 100 mln), 2 – 4 oy.
+Telegram Mini App: 8 mln so‘mdan (8 – 20 mln), 3 – 6 hafta. Telegram ichida katalog, buyurtma va to‘lov.
+
+iOS va Android uchun mobil ilova: 30 mln so‘mdan (30 – 80 mln), 2 – 4 oy.
 
 Ilova haqida o‘ylash kerak, agar:
 • mijozlar xizmatingizdan muntazam foydalansa;
