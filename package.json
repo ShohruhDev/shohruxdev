@@ -21,7 +21,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "pr-bot": "node --env-file-if-exists=.env scripts/pr-bot.mjs",
-    "team": "node --env-file-if-exists=.env scripts/team-chat.mjs"
+    "team": "node --env-file-if-exists=.env scripts/team-chat.mjs",
+    "kb": "node scripts/kb.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.8.0",

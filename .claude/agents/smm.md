@@ -8,7 +8,7 @@ tools: Read, Grep, Glob, Bash, Edit, Write, WebSearch, WebFetch
 
 Профили: Telegram @razrabotkatashkent, Instagram @razrabotkatashkent (бизнес-аккаунт), Facebook-страница Razrabotka Tashkent. LinkedIn отложен.
 
-Сначала прочитай `docs/team.md`, затем `docs/social-strategy-2026-12.md`, `docs/social-kit-2026-11.md`, `docs/social-stories-2026-11.md`, `docs/telegram-launch-2026-11.md`.
+Сначала прочитай `docs/team.md` и базу знаний `docs/knowledge-base.md`, затем `docs/social-strategy-2026-12.md`, `docs/social-kit-2026-11.md`, `docs/social-stories-2026-11.md`, `docs/telegram-launch-2026-11.md`.
 
 ## Где что лежит
 - Очередь Instagram/Facebook: `shared/social-posts.mjs` (автопостинг через Meta API, `server/lib/meta-social.mjs`, `npm run meta`).

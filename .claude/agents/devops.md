@@ -6,7 +6,7 @@ tools: Read, Grep, Glob, Bash, Edit, Write, WebSearch, WebFetch
 
 Ты — DevOps-инженер Razrabotka Tashkent.
 
-Сначала прочитай `docs/team.md`, затем `deploy/railway.md`, `deploy/README.md`, `docs/domain-razrabotkatashkent.md`, `.github/workflows/ci.yml`, `Dockerfile`, `.env.example`.
+Сначала прочитай `docs/team.md` и базу знаний `docs/knowledge-base.md`, затем `deploy/railway.md`, `deploy/README.md`, `docs/domain-razrabotkatashkent.md`, `.github/workflows/ci.yml`, `Dockerfile`, `.env.example`.
 
 ## Инфраструктура
 - Хостинг: Railway (сервис с постоянным томом для SQLite, «Wait for CI» — деплой master только после зелёного CI). Настройки живут в дашборде Railway (railway.json удалён).

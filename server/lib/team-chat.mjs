@@ -4,7 +4,11 @@
 // Входящие сообщения принимает бот pm (webhook /api/team/webhook, privacy mode выключен).
 // Модель: через OpenRouter (OPENROUTER_API_KEY) или напрямую через Anthropic API (ANTHROPIC_API_KEY).
 import Anthropic from '@anthropic-ai/sdk';
-import { TEAM_CONTEXT, TEAM_ROLES, roleById } from '../../shared/team-roles.mjs';
+import { TEAM_CONTEXT as RULES, TEAM_ROLES, roleById } from '../../shared/team-roles.mjs';
+import { TEAM_KNOWLEDGE } from '../../shared/team-knowledge.mjs';
+
+// Правила чата + база знаний команды. Одинаковы для всех запросов — кэшируются.
+const TEAM_CONTEXT = `${RULES}\n\n# База знаний команды (источник истины)\n\n${TEAM_KNOWLEDGE}`;
 
 const HISTORY = 30;
 const TG_LIMIT = 4000;
@@ -42,6 +46,14 @@ export function teamStore(db) {
     CREATE TABLE IF NOT EXISTS team_updates(update_id INTEGER PRIMARY KEY, at TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS team_usage(day TEXT PRIMARY KEY, owner_messages INTEGER NOT NULL DEFAULT 0,
       llm_calls INTEGER NOT NULL DEFAULT 0, input_tokens INTEGER NOT NULL DEFAULT 0, output_tokens INTEGER NOT NULL DEFAULT 0);`);
+  // Миграция: учёт токенов из кэша (добавлено позже).
+  if (
+    !db
+      .prepare('PRAGMA table_info(team_usage)')
+      .all()
+      .some(c => c.name === 'cached_tokens')
+  )
+    db.exec('ALTER TABLE team_usage ADD COLUMN cached_tokens INTEGER NOT NULL DEFAULT 0');
   return {
     /** true, если обновление новое (Telegram может прислать его повторно). */
     teamFirstSeen(updateId) {
@@ -71,16 +83,18 @@ export function teamStore(db) {
           owner_messages: 0,
           llm_calls: 0,
           input_tokens: 0,
-          output_tokens: 0
+          output_tokens: 0,
+          cached_tokens: 0
         }
       );
     },
-    teamCount(day, { owner = 0, calls = 0, input = 0, output = 0 }) {
+    teamCount(day, { owner = 0, calls = 0, input = 0, output = 0, cached = 0 }) {
       db.prepare(
-        `INSERT INTO team_usage VALUES(?,?,?,?,?) ON CONFLICT(day) DO UPDATE SET
+        `INSERT INTO team_usage(day,owner_messages,llm_calls,input_tokens,output_tokens,cached_tokens) VALUES(?,?,?,?,?,?) ON CONFLICT(day) DO UPDATE SET
           owner_messages=owner_messages+excluded.owner_messages, llm_calls=llm_calls+excluded.llm_calls,
-          input_tokens=input_tokens+excluded.input_tokens, output_tokens=output_tokens+excluded.output_tokens`
-      ).run(day, owner, calls, input, output);
+          input_tokens=input_tokens+excluded.input_tokens, output_tokens=output_tokens+excluded.output_tokens,
+          cached_tokens=cached_tokens+excluded.cached_tokens`
+      ).run(day, owner, calls, input, output, cached);
     }
   };
 }
@@ -131,7 +145,12 @@ const replyPrompt = (role, history) =>
 
 /** Модель через OpenRouter (OpenAI-совместимый Chat Completions). */
 export function createOpenRouter(cfg, fetcher = fetch) {
-  async function call(system, user, extra = {}) {
+  async function call(rolePart, user, extra = {}) {
+    // Общий контекст отдельным блоком с cache_control: повторные чтения из кэша дешевле.
+    const system = [
+      { type: 'text', text: TEAM_CONTEXT, cache_control: { type: 'ephemeral' } },
+      { type: 'text', text: rolePart }
+    ];
     const r = await fetcher('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -169,19 +188,23 @@ export function createOpenRouter(cfg, fetcher = fetch) {
         : String(choice?.message?.content || '').trim();
     return {
       text,
-      usage: { input: data.usage?.prompt_tokens || 0, output: data.usage?.completion_tokens || 0 }
+      usage: {
+        input: data.usage?.prompt_tokens || 0,
+        output: data.usage?.completion_tokens || 0,
+        cached: data.usage?.prompt_tokens_details?.cached_tokens || 0
+      }
     };
   }
   return {
     async route(history) {
-      const r = await call(`${TEAM_CONTEXT}\n\n${ROUTER_PROMPT}`, transcript(history), {
+      const r = await call(ROUTER_PROMPT, transcript(history), {
         schema: ROUTER_SCHEMA
       });
       return { plan: parsePlan(r.text), usage: r.usage };
     },
     async reply(roleId, history) {
       const role = roleById(roleId);
-      return call(`${TEAM_CONTEXT}\n\n${roleSystem(role)}`, replyPrompt(role, history));
+      return call(roleSystem(role), replyPrompt(role, history));
     }
   };
 }
@@ -209,7 +232,14 @@ export function createClaude(cfg, client = new Anthropic({ apiKey: cfg.apiKey })
       .trim();
     return {
       text: r.stop_reason === 'refusal' ? '' : text,
-      usage: { input: r.usage.input_tokens || 0, output: r.usage.output_tokens || 0 }
+      usage: {
+        input:
+          (r.usage.input_tokens || 0) +
+          (r.usage.cache_read_input_tokens || 0) +
+          (r.usage.cache_creation_input_tokens || 0),
+        output: r.usage.output_tokens || 0,
+        cached: r.usage.cache_read_input_tokens || 0
+      }
     };
   }
   const shared = { type: 'text', text: TEAM_CONTEXT, cache_control: { type: 'ephemeral' } };
@@ -299,7 +329,7 @@ export async function handleTeamUpdate(
     await tgSend(
       cfg.bots.pm,
       cfg.chatId,
-      `Сегодня: ${u.owner_messages} из ${cfg.dailyLimit} сообщений CEO, ${u.llm_calls} запросов к Claude, токенов: ${u.input_tokens} на входе, ${u.output_tokens} на выходе. Модель: ${cfg.model}, effort: ${cfg.effort}.`,
+      `Сегодня: ${u.owner_messages} из ${cfg.dailyLimit} сообщений CEO, ${u.llm_calls} запросов к Claude, токенов: ${u.input_tokens} на входе (из кэша ${u.cached_tokens}), ${u.output_tokens} на выходе. Модель: ${cfg.model}, effort: ${cfg.effort}.`,
       fetcher
     );
     return { status: 'status' };

@@ -6,7 +6,7 @@ tools: Read, Grep, Glob, Bash, Edit, Write, WebSearch, WebFetch
 
 Ты — SEO-специалист Razrabotka Tashkent. Сайт: https://razrabotkatashkent.uz (Nuxt 4 SSR, RU + UZ на `/uz`).
 
-Сначала прочитай `docs/team.md`, затем `docs/seo-audit-2026-11.md`, `docs/strategy.md` (раздел SEO), `docs/traffic-and-editorial.md`, `docs/business-listings.md`.
+Сначала прочитай `docs/team.md` и базу знаний `docs/knowledge-base.md`, затем `docs/seo-audit-2026-11.md`, `docs/strategy.md` (раздел SEO), `docs/traffic-and-editorial.md`, `docs/business-listings.md`.
 
 ## Где что в коде
 - `server/routes/sitemap.xml.get.ts`, `server/routes/robots.txt.get.ts`, `server/routes/feed.xml.get.ts`
