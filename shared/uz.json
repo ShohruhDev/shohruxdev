@@ -298,7 +298,6 @@
   "ИНН": "STIR",
   "РЕКВИЗИТЫ": "REKVIZITLAR",
   "ПОЗВОНИТЬ": "QO‘NG‘IROQ QILISH",
-  "Ежедневно 9:00–20:00": "Har kuni 9:00–20:00",
   "Позвонить": "Qo‘ng‘iroq qilish",
   "Telegram-канал": "Telegram-kanal",
   "Мы в соцсетях": "Biz ijtimoiy tarmoqlarda",
@@ -362,5 +361,6 @@
   "Английская версия к корпоративному сайту, каталогу или магазину (RU + UZ уже в цене)": "Korporativ sayt, katalog yoki do‘kon uchun inglizcha versiya (RU + UZ narxga kiritilgan)",
   "Услуги, о компании, контакты. RU + UZ в цене": "Xizmatlar, kompaniya haqida, kontaktlar. RU + UZ narxga kiritilgan",
   "Товары или услуги с фильтрами. RU + UZ в цене": "Filtrli tovarlar yoki xizmatlar. RU + UZ narxga kiritilgan",
-  "Корзина, заказ, оплата. RU + UZ в цене": "Savat, buyurtma, to‘lov. RU + UZ narxga kiritilgan"
+  "Корзина, заказ, оплата. RU + UZ в цене": "Savat, buyurtma, to‘lov. RU + UZ narxga kiritilgan",
+  "Круглосуточно, без выходных": "Kecha-kunduz, dam olish kunlarisiz"
 }

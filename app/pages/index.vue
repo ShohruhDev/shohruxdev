@@ -121,7 +121,7 @@ const serviceFrom = (code: string) =>
           </p>
         </article>
         <article class="bento-card bento-accent" data-reveal>
-          <h3>{{ t('Ежедневно 9:00–20:00') }}</h3>
+          <h3>{{ t('Круглосуточно, без выходных') }}</h3>
           <p><PhoneLink place="home-bento" class="bento-phone" /></p>
           <TelegramLink place="home-bento" class="bento-link" />
         </article>

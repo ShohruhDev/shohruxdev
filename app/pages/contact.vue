@@ -61,7 +61,7 @@ async function submit() {
       <div class="contact-aside contact-phone">
         <span class="label-text">{{ t('ПОЗВОНИТЬ') }}</span>
         <p><PhoneLink place="contact" class="text-link" /></p>
-        <small class="contact-hours">{{ t('Ежедневно 9:00–20:00') }}</small>
+        <small class="contact-hours">{{ t('Круглосуточно, без выходных') }}</small>
       </div>
       <div class="contact-aside">
         <span class="label-text">{{ t('РЕКВИЗИТЫ') }}</span>
