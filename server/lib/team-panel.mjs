@@ -48,6 +48,14 @@ export function panelStore(db) {
   db.exec(`CREATE TABLE IF NOT EXISTS team_dm(id INTEGER PRIMARY KEY, at TEXT NOT NULL, person TEXT NOT NULL,
     author TEXT NOT NULL, text TEXT NOT NULL);
     CREATE INDEX IF NOT EXISTS team_dm_person ON team_dm(person, id);`);
+  // Миграция: владелец раньше записывался как author 'ceo' — так же, как персонаж Азиз (id 'ceo').
+  // Теперь владелец — 'owner'. В переписке с Азизом реплики чередуются: владелец, Азиз, владелец…
+  if (!db.prepare("SELECT 1 FROM team_dm WHERE author='owner' LIMIT 1").get()) {
+    db.exec("UPDATE team_dm SET author='owner' WHERE author='ceo' AND person<>'ceo'");
+    const rows = db.prepare("SELECT id FROM team_dm WHERE person='ceo' ORDER BY id").all();
+    const set = db.prepare('UPDATE team_dm SET author=? WHERE id=?');
+    rows.forEach((r, i) => set.run(i % 2 ? 'ceo' : 'owner', r.id));
+  }
   return {
     dmAdd(person, author, text) {
       db.prepare('INSERT INTO team_dm(at,person,author,text) VALUES(?,?,?,?)').run(
@@ -64,7 +72,7 @@ export function panelStore(db) {
         .reverse();
     },
     dmCountSince(iso) {
-      return db.prepare("SELECT COUNT(*) n FROM team_dm WHERE author='ceo' AND at>=?").get(iso).n;
+      return db.prepare("SELECT COUNT(*) n FROM team_dm WHERE author='owner' AND at>=?").get(iso).n;
     },
     teamRecent(limit = 30) {
       return db
@@ -303,9 +311,10 @@ export async function askPerson(
   if (store.dmCountSince(dayStart(now)) >= dailyLimit)
     throw Error(`Лимит на сегодня — ${dailyLimit} вопросов в панели. Продолжим завтра.`);
   const history = store.dmHistory(p.id);
-  store.dmAdd(p.id, 'ceo', q);
-  const transcript = [...history, { author: 'ceo', text: q }]
-    .map(m => `[${m.author === 'ceo' ? 'CEO' : p.persona}]: ${m.text}`)
+  // Владелец в личном чате — 'owner'; author 'ceo' — это персонаж Азиз.
+  store.dmAdd(p.id, 'owner', q);
+  const transcript = [...history, { author: 'owner', text: q }]
+    .map(m => `[${m.author === 'owner' ? 'CEO (владелец)' : p.persona}]: ${m.text}`)
     .join('\n');
   const r = await llm.chat(personSystem(p), `${transcript}\n\nОтветь CEO от имени ${p.persona}.`);
   store.teamCount(dayStart(now), {

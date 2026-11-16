@@ -37,6 +37,27 @@ const statusLabel: Record<string, string> = {
   skipped: 'Пропущена'
 };
 const digits = (phone: string) => phone.replace(/\D/g, '');
+// Telegram по номеру: t.me/+998… открывает чат, если человек разрешил находить себя по номеру.
+const tgPhone = (phone: string) => {
+  const d = digits(phone || '');
+  const full = d.length === 9 ? '998' + d : d;
+  return /^998\d{9}$/.test(full) ? `https://t.me/+${full}` : '';
+};
+// Каналы связи по приоритету: Telegram (с сайта, по номеру), почта, Instagram; WhatsApp — запасной.
+function channels(p: any) {
+  const c = p.audit?.contacts || {};
+  const tgSite: string = c.telegram?.[0] || '';
+  return {
+    tgSite,
+    tgPhone: tgPhone(p.phone),
+    email: (c.email?.[0] || '') as string,
+    instagram: (c.instagram?.[0] || '') as string,
+    facebook: (c.facebook?.[0] || '') as string
+  };
+}
+const mailto = (p: any, email: string) =>
+  `mailto:${email}?subject=${encodeURIComponent(`Предложение для ${p.name} — Razrabotka Tashkent`)}&body=${encodeURIComponent(drafts[p.id] || '')}`;
+const handle = (url: string) => url.replace(/^https?:\/\/(www\.)?/, '');
 
 async function load() {
   loading.value = true;
@@ -169,7 +190,7 @@ defineExpose({ load });
         <form v-if="showAdd" class="add-form" @submit.prevent="addCompany">
           <input v-model="add.name" placeholder="Название" maxlength="200" required />
           <input v-model="add.website" placeholder="Сайт (если есть)" maxlength="300" />
-          <input v-model="add.phone" placeholder="Телефон / WhatsApp" maxlength="40" />
+          <input v-model="add.phone" placeholder="Телефон" maxlength="40" />
           <select v-model="add.segment" aria-label="Отрасль">
             <option value="">Отрасль</option>
             <option v-for="s in data.segments" :key="s.id" :value="s.id">{{ s.query }}</option>
@@ -223,6 +244,25 @@ defineExpose({ load });
             <a v-if="p.website" :href="p.website" target="_blank" rel="noopener">сайт ↗</a>
             <a v-if="p.mapsUrl" :href="p.mapsUrl" target="_blank" rel="noopener">на карте ↗</a>
             <span v-if="p.phone">{{ p.phone }}</span>
+            <span v-if="channels(p).tgSite">{{ handle(channels(p).tgSite) }}</span>
+            <span v-if="channels(p).email">{{ channels(p).email }}</span>
+            <a
+              v-if="channels(p).facebook"
+              :href="channels(p).facebook"
+              target="_blank"
+              rel="noopener"
+              >Facebook ↗</a
+            >
+            <span
+              v-if="
+                !channels(p).tgSite &&
+                !channels(p).tgPhone &&
+                !channels(p).email &&
+                !channels(p).instagram
+              "
+              class="no-contact"
+              >Нет Telegram и почты — только звонок</span
+            >
           </div>
           <div class="draft">
             <TeamAvatar
@@ -238,21 +278,38 @@ defineExpose({ load });
           </div>
           <div class="actions">
             <a
-              v-if="p.phone"
+              v-if="channels(p).tgSite"
               class="o-btn small"
-              :href="`https://wa.me/${digits(p.phone)}?text=${encodeURIComponent(drafts[p.id] || '')}`"
-              target="_blank"
-              rel="noopener"
-              >WhatsApp</a
-            >
-            <a
-              v-if="p.audit?.telegram"
-              class="o-btn small ghost"
-              :href="p.audit.telegram"
+              :href="channels(p).tgSite"
               target="_blank"
               rel="noopener"
               @click="copy(p)"
               >Telegram</a
+            >
+            <a
+              v-if="channels(p).tgPhone"
+              :class="['o-btn small', { ghost: channels(p).tgSite }]"
+              :href="channels(p).tgPhone"
+              target="_blank"
+              rel="noopener"
+              title="Откроет чат, если номер есть в Telegram и человек разрешил находить себя по номеру"
+              @click="copy(p)"
+              >Telegram по номеру</a
+            >
+            <a
+              v-if="channels(p).email"
+              :class="['o-btn small', { ghost: channels(p).tgSite || channels(p).tgPhone }]"
+              :href="mailto(p, channels(p).email)"
+              >Письмо</a
+            >
+            <a
+              v-if="channels(p).instagram"
+              class="o-btn small ghost"
+              :href="channels(p).instagram"
+              target="_blank"
+              rel="noopener"
+              @click="copy(p)"
+              >Instagram</a
             >
             <a v-if="p.phone" class="o-btn small ghost" :href="`tel:${p.phone.replace(/\s/g, '')}`"
               >Позвонить</a
@@ -272,6 +329,14 @@ defineExpose({ load });
             >
               {{ busy === 'redraft-' + p.id ? 'Пишу…' : 'Переписать' }}
             </button>
+            <a
+              v-if="p.phone"
+              class="o-btn small ghost"
+              :href="`https://wa.me/${digits(p.phone)}?text=${encodeURIComponent(drafts[p.id] || '')}`"
+              target="_blank"
+              rel="noopener"
+              >WhatsApp</a
+            >
           </div>
           <div class="actions">
             <button class="o-btn small done" :disabled="busy === 'sent-' + p.id" @click="sent(p)">
@@ -451,6 +516,9 @@ select {
 }
 .links a {
   color: var(--accent);
+}
+.no-contact {
+  color: #93600b;
 }
 .draft {
   display: flex;

@@ -182,16 +182,51 @@ test('спросить специалиста: история, персона, �
   assert.match(prompts[0].system, /База знаний команды/);
   assert.deepEqual(
     store.dmHistory('legal').map(m => m.author),
-    ['ceo', 'legal']
+    ['owner', 'legal']
   );
   await askPerson({ personId: 'legal', text: 'А сроки?' }, { store, cfg, llm, now, dailyLimit: 2 });
   assert.match(
     prompts[1].user,
-    /\[CEO\]: Нужен NDA\?\n\[Гульнора\]: Сделаю к пятнице\.\n\[CEO\]: А сроки\?/
+    /\[CEO \(владелец\)\]: Нужен NDA\?\n\[Гульнора\]: Сделаю к пятнице\.\n\[CEO \(владелец\)\]: А сроки\?/
   );
   await assert.rejects(
     askPerson({ personId: 'legal', text: 'Ещё' }, { store, cfg, llm, now, dailyLimit: 2 }),
     /Лимит/
   );
   assert.ok(store.usageSince('2026-11-16').calls >= 2);
+});
+
+test('Азиз (id ceo) и владелец в личном чате не путаются', async () => {
+  const llm = {
+    chat: async () => ({ text: 'План готов.', usage: { input: 1, output: 1, cached: 0 } })
+  };
+  await askPerson({ personId: 'ceo', text: 'Дай план' }, { store, cfg, llm, dailyLimit: 100 });
+  assert.deepEqual(
+    store.dmHistory('ceo').map(m => m.author),
+    ['owner', 'ceo']
+  );
+});
+
+test('миграция: старые реплики владельца (author ceo) переписываются в owner', async () => {
+  const { DatabaseSync } = await import('node:sqlite');
+  const file = join(dir, 'old.sqlite');
+  const db = new DatabaseSync(file);
+  db.exec(`CREATE TABLE team_dm(id INTEGER PRIMARY KEY, at TEXT NOT NULL, person TEXT NOT NULL,
+    author TEXT NOT NULL, text TEXT NOT NULL)`);
+  const add = db.prepare('INSERT INTO team_dm(at,person,author,text) VALUES(?,?,?,?)');
+  add.run('t1', 'ceo', 'ceo', 'вопрос владельца');
+  add.run('t2', 'ceo', 'ceo', 'ответ Азиза');
+  add.run('t3', 'qa', 'ceo', 'вопрос Саиду');
+  add.run('t4', 'qa', 'qa', 'ответ Саида');
+  db.close();
+  const old = openStore(file);
+  assert.deepEqual(
+    old.dmHistory('ceo').map(m => m.author),
+    ['owner', 'ceo']
+  );
+  assert.deepEqual(
+    old.dmHistory('qa').map(m => m.author),
+    ['owner', 'qa']
+  );
+  old.close();
 });
