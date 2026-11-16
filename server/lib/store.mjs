@@ -6,6 +6,7 @@ import { validateDraft } from './core.mjs';
 import { editorialStore } from './editorial.mjs';
 import { telegramStore } from './telegram.mjs';
 import { metaStore } from './meta-social.mjs';
+import { teamStore } from './team-chat.mjs';
 
 export function openStore(path, { onPublish } = {}) {
   mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
@@ -23,6 +24,7 @@ export function openStore(path, { onPublish } = {}) {
     ...editorialStore(db, log),
     ...telegramStore(db, log),
     ...metaStore(db, log),
+    ...teamStore(db),
     close: () => db.close(),
     saveLead(p) {
       const id = randomUUID();
