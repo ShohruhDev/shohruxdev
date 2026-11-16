@@ -436,10 +436,20 @@ onBeforeUnmount(() => {
             <div
               v-for="(m, i) in dm"
               :key="i"
-              class="msg"
+              class="msg-row"
               :class="m.author === 'owner' ? 'me' : 'them'"
             >
-              {{ m.text }}
+              <div v-if="i === 0 || dm[i - 1]!.author !== m.author" class="msg-who">
+                <TeamAvatar
+                  v-if="m.author !== 'owner'"
+                  :look="open.look"
+                  :color="open.color"
+                  :size="22"
+                />
+                <span>{{ m.author === 'owner' ? 'Вы' : open.persona }}</span>
+                <time>{{ fmt(m.at, { hour: '2-digit', minute: '2-digit' }) }}</time>
+              </div>
+              <div class="msg" :class="m.author === 'owner' ? 'me' : 'them'">{{ m.text }}</div>
             </div>
             <div v-if="asking" class="msg them typing" aria-live="polite">
               {{ open.persona }} печатает<span>.</span><span>.</span><span>.</span>
@@ -951,6 +961,29 @@ h1 {
   flex-direction: column;
   gap: 8px;
 }
+.msg-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.msg-row.me {
+  align-items: flex-end;
+}
+.msg-row.them {
+  align-items: flex-start;
+}
+.msg-who {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--soft);
+}
+.msg-who time {
+  font-weight: 400;
+}
 .msg {
   max-width: 85%;
   padding: 10px 13px;
@@ -961,15 +994,16 @@ h1 {
   overflow-wrap: anywhere;
 }
 .msg.me {
-  align-self: flex-end;
   background: var(--accent);
   color: #fff;
   border-bottom-right-radius: 4px;
 }
 .msg.them {
-  align-self: flex-start;
   background: #f1f2f4;
   border-bottom-left-radius: 4px;
+}
+.msg.typing {
+  align-self: flex-start;
 }
 .typing span {
   animation: blink 1.2s infinite;
