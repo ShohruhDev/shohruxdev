@@ -211,7 +211,8 @@ async function addTopic() {
         <p>Из полезного ответа — в разговор о проекте.</p>
       </div>
       <div class="editorial-actions">
-        <NuxtLink to="/journal" class="text-link">Открыть журнал ↗</NuxtLink
+        <NuxtLink to="/office" class="text-link">Офис команды ↗</NuxtLink
+        ><NuxtLink to="/journal" class="text-link">Открыть журнал ↗</NuxtLink
         ><button
           v-if="session?.authenticated"
           class="quiet-button"

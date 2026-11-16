@@ -17,7 +17,7 @@ export default defineNuxtConfig({
       });
       pages.push(
         ...pages
-          .filter(p => p.path !== '/admin')
+          .filter(p => !['/admin', '/office'].includes(p.path))
           .map(p => ({ ...clone(p), path: '/uz' + (p.path === '/' ? '' : p.path) }))
       );
     }

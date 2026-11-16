@@ -205,6 +205,10 @@ export function createOpenRouter(cfg, fetcher = fetch) {
     async reply(roleId, history) {
       const role = roleById(roleId);
       return call(roleSystem(role), replyPrompt(role, history));
+    },
+    /** Свободный запрос с ролью (личный чат в панели «Офис»). */
+    chat(system, user) {
+      return call(system, user);
     }
   };
 }
@@ -253,11 +257,14 @@ export function createClaude(cfg, client = new Anthropic({ apiKey: cfg.apiKey })
     async reply(roleId, history) {
       const role = roleById(roleId);
       return call([shared, { type: 'text', text: roleSystem(role) }], replyPrompt(role, history));
+    },
+    chat(system, user) {
+      return call([shared, { type: 'text', text: system }], user);
     }
   };
 }
 
-async function tgSend(token, chatId, text, fetcher) {
+export async function tgSend(token, chatId, text, fetcher) {
   for (let i = 0; i < text.length; i += TG_LIMIT) {
     const r = await fetcher(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: 'POST',
