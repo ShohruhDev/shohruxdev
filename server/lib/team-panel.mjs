@@ -190,7 +190,15 @@ export function officeOverview({ store, gh, cfg, now = new Date() }) {
       hasBot: Boolean(cfg.bots?.[p.id]),
       status: tasks.length ? 'busy' : 'free',
       tasks,
-      lastSaid: said ? { text: said.text.slice(0, 280), at: said.at } : null
+      lastSaid: said
+        ? {
+            text: said.text
+              .replace(/https?:\/\/\S+/g, '')
+              .trim()
+              .slice(0, 280),
+            at: said.at
+          }
+        : null
     };
   });
   const leads = store.leads();
