@@ -46,9 +46,13 @@ function setup({ plan = { responders: ['marketer'], has_task: false }, replies =
       return { text: replies[roleId] ?? `ответ ${roleId}`, usage: { input: 20, output: 7 } };
     }
   };
+  const openIssues = [];
   const fetcher = async (url, init) => {
+    // GET списка открытых задач (проверка дублей) — без тела.
+    if (url.includes('/issues?')) return { ok: true, status: 200, json: async () => openIssues };
     const body = JSON.parse(init.body);
     sent.push({ url, body });
+    if (url.includes('/comments')) return { ok: true, status: 201, json: async () => ({ id: 1 }) };
     if (url.includes('api.github.com'))
       return {
         ok: true,
@@ -58,10 +62,20 @@ function setup({ plan = { responders: ['marketer'], has_task: false }, replies =
     return { ok: true, json: async () => ({ ok: true }) };
   };
   const done = () => {
+    void openIssues;
     store.close();
     rmSync(dir, { recursive: true, force: true });
   };
-  return { store, cfg, llm, fetcher, calls, sent, done };
+  return {
+    openIssues,
+    store,
+    cfg,
+    llm,
+    fetcher,
+    calls,
+    sent,
+    done
+  };
 }
 
 test('config is enabled only with key, chat, owner, secret and pm bot', () => {
@@ -169,6 +183,36 @@ test('task becomes a GitHub issue and pm confirms it', async () => {
   assert.equal(gh.url, 'https://api.github.com/repos/o/r/issues');
   assert.deepEqual(gh.body.labels, ['team-task', 'role:developer']);
   assert.match(t.sent.at(-1).body.text, /#42/);
+  t.done();
+});
+
+test('same task again — comment on the open issue, no duplicate', async () => {
+  const t = setup({
+    plan: {
+      responders: ['pm'],
+      has_task: true,
+      task_title: 'Лендинг для новогодней акции',
+      task_role: 'developer',
+      task_details: 'Добавить блок с таймером'
+    }
+  });
+  t.openIssues.push({
+    number: 7,
+    title: 'Лендинг для акции',
+    html_url: 'https://gh/7',
+    labels: [{ name: 'team-task' }, { name: 'role:developer' }]
+  });
+  const r = await handleTeamUpdate(update('ещё к лендингу: таймер'), {
+    store: t.store,
+    cfg: t.cfg,
+    llm: t.llm,
+    fetcher: t.fetcher
+  });
+  assert.equal(r.task.number, 7);
+  assert.equal(r.task.existing, true);
+  assert.ok(t.sent.some(s => s.url.endsWith('/issues/7/comments')));
+  assert.ok(!t.sent.some(s => s.url.endsWith('/repos/o/r/issues')), 'новая задача не создана');
+  assert.match(t.sent.at(-1).body.text, /уже есть: #7/);
   t.done();
 });
 
