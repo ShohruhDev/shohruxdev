@@ -265,6 +265,10 @@ test('OpenRouter: chosen by key, request shape, JSON route and refusal', async (
     json: async () => ({ error: { message: 'Insufficient credits' } })
   }));
   await assert.rejects(bad.reply('pm', []), /402: Insufficient credits/);
+  const plain = createOpenRouter({ ...cfg, model: 'openai/gpt-4o', effort: 'none' }, fetcher);
+  await plain.reply('pm', [{ author: 'ceo', text: 'вопрос' }]);
+  assert.equal(reqs.at(-1).body.model, 'openai/gpt-4o');
+  assert.equal(reqs.at(-1).body.reasoning, undefined);
 });
 
 test('roles without their own bot speak through pm with a label', async () => {

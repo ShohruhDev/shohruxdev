@@ -17,7 +17,7 @@
 - Роли зовут друг друга через `@id` в тексте. Не больше `TEAM_MAX_BOT_TURNS` (по умолчанию 4) реплик ботов на одно сообщение CEO.
 - Обратиться к роли напрямую: `@seo что по индексации?`. Статус и расход за день: `/status`.
 - Если CEO ставит задачу («задача: …», «делаем»), координатор заводит GitHub Issue с меткой `team-task`; ежедневный облачный цикл команды берёт такие задачи в работу и открывает PR.
-- Лимит: `TEAM_DAILY_MESSAGES` сообщений CEO в день (по умолчанию 50). Модель: через OpenRouter (`OPENROUTER_API_KEY`, по умолчанию `anthropic/claude-opus-5.5`) или напрямую через Anthropic API (`ANTHROPIC_API_KEY`, `claude-opus-5-5`); сменить — `TEAM_MODEL`, уровень усилий — `TEAM_EFFORT` (по умолчанию `low`).
+- Лимит: `TEAM_DAILY_MESSAGES` сообщений CEO в день (по умолчанию 50). Модель: через OpenRouter (`OPENROUTER_API_KEY`, по умолчанию `anthropic/claude-opus-5.5`) или напрямую через Anthropic API (`ANTHROPIC_API_KEY`, `claude-opus-5-5`); сменить — `TEAM_MODEL`, уровень усилий — `TEAM_EFFORT` (по умолчанию `low`; для моделей без reasoning, например `openai/gpt-4o`, — `none`).
 - Если у роли ещё нет своего бота, она пишет через бота PM с подписью роли.
 - Правила команды те же, что в `docs/team.md`: реальные факты, публикации и траты — только после «да» CEO.
 

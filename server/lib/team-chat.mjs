@@ -143,7 +143,8 @@ export function createOpenRouter(cfg, fetcher = fetch) {
       body: JSON.stringify({
         model: cfg.model,
         max_tokens: 16000,
-        reasoning: { effort: cfg.effort },
+        // Для моделей без reasoning (например openai/gpt-4o) задайте TEAM_EFFORT=none.
+        ...(cfg.effort && cfg.effort !== 'none' ? { reasoning: { effort: cfg.effort } } : {}),
         messages: [
           { role: 'system', content: system },
           { role: 'user', content: user }
