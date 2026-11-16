@@ -35,7 +35,7 @@ const serviceFrom = (code: string) =>
         <p class="lede">
           {{
             u(
-              'Сайты, веб-сервисы, Telegram-боты и приложения под ключ. Работаем по договору: цена фиксируется до старта, вы общаетесь напрямую с разработчиком.',
+              'Сайты, веб-сервисы, Telegram-боты и приложения. Работаем по договору: цена фиксируется до старта, вы общаетесь напрямую с разработчиком.',
               'Saytlar, veb-xizmatlar, Telegram-botlar va ilovalar. Shartnoma asosida ishlaymiz: narx ish boshlanishidan oldin belgilanadi, siz dasturchi bilan bevosita muloqot qilasiz.'
             )
           }}
