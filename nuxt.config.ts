@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 // Счётчики и Telegram задаются при запуске: NUXT_PUBLIC_METRIKA_ID, NUXT_PUBLIC_GA_ID, NUXT_PUBLIC_TELEGRAM.
 const siteUrl = process.env.SITE_URL || 'http://127.0.0.1:3000';
 const indexable = process.env.SITE_INDEXABLE === 'true';
@@ -54,7 +55,16 @@ export default defineNuxtConfig({
       ]
     }
   },
-  nitro: { preset: 'node-server', externals: { external: ['node:sqlite'] } },
+  nitro: {
+    preset: 'node-server',
+    // shared/ лежит вне srcDir (server/), поэтому в dev Nitro оставлял его внешним и
+    // переписывал относительные импорты (../../shared/*.mjs) в неверный путь → 500 на всех страницах.
+    // Явно встраиваем shared/ в бандл, как это и так происходит в production-сборке.
+    externals: {
+      external: ['node:sqlite'],
+      inline: [fileURLToPath(new URL('./shared/', import.meta.url))]
+    }
+  },
   routeRules: {
     '/images/**': {
       headers: { 'Cache-Control': 'public, max-age=2592000, stale-while-revalidate=86400' }
