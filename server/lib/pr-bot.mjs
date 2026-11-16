@@ -2,7 +2,8 @@
 // GitHub → POST /api/github/webhook (подпись GITHUB_WEBHOOK_SECRET).
 // Telegram → POST /api/telegram/webhook (заголовок-секрет TELEGRAM_WEBHOOK_SECRET),
 // принимаются только сообщения из TELEGRAM_CHAT_ID. Мёрж — через GITHUB_TOKEN
-// (fine-grained: Contents RW, Pull requests RW, Checks/Commit statuses read).
+// (fine-grained: Contents RW, Pull requests RW, Actions read). Статус CI берётся из запусков
+// GitHub Actions: право Checks fine-grained токенам недоступно.
 import { createHmac, timingSafeEqual } from 'node:crypto';
 
 const esc = s =>
@@ -155,9 +156,9 @@ export async function mergePr(number, { env = process.env, fetcher = fetch } = {
   if (pr.data.state !== 'open') return `PR #${number} закрыт.`;
   if (pr.data.draft) return `PR #${number} — черновик, не мёржу.`;
   if (pr.data.mergeable === false) return `PR #${number}: конфликт с master, нужно решить вручную.`;
-  const runs = await gh(`/commits/${pr.data.head.sha}/check-runs?per_page=100`);
+  const runs = await gh(`/actions/runs?head_sha=${pr.data.head.sha}&per_page=100`);
   if (!runs.ok) return `PR #${number}: не удалось получить статус CI (HTTP ${runs.status}).`;
-  const state = checksState(runs.data.check_runs || []);
+  const state = checksState(runs.data.workflow_runs || []);
   if (state === 'pending')
     return `PR #${number}: CI ещё идёт. Ответьте «давай» ещё раз через пару минут.`;
   if (state === 'failure')

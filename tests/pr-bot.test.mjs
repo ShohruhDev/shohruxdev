@@ -130,20 +130,20 @@ test('merge only with green CI', async () => {
   let f = fake({
     '/pulls/7/merge': { merged: true },
     '/pulls/7': open,
-    '/check-runs': { check_runs: [{ status: 'completed', conclusion: 'success' }] }
+    '/actions/runs': { workflow_runs: [{ status: 'completed', conclusion: 'success' }] }
   });
   assert.match(await mergePr(7, { env, fetcher: f.fn }), /смёржен/);
   const put = f.calls.find(c => c.method === 'PUT');
   assert.equal(put.body.merge_method, 'merge');
   assert.equal(put.body.sha, 'abc');
 
-  f = fake({ '/pulls/7': open, '/check-runs': { check_runs: [{ status: 'queued' }] } });
+  f = fake({ '/pulls/7': open, '/actions/runs': { workflow_runs: [{ status: 'queued' }] } });
   assert.match(await mergePr(7, { env, fetcher: f.fn }), /CI ещё идёт/);
   assert.ok(!f.calls.some(c => c.method === 'PUT'));
 
   f = fake({
     '/pulls/7': open,
-    '/check-runs': { check_runs: [{ status: 'completed', conclusion: 'failure' }] }
+    '/actions/runs': { workflow_runs: [{ status: 'completed', conclusion: 'failure' }] }
   });
   assert.match(await mergePr(7, { env, fetcher: f.fn }), /CI упал/);
 
@@ -158,7 +158,7 @@ test('Telegram: only owner chat; button and «давай» reply merge', async (
   const routes = {
     '/pulls/7/merge': { merged: true },
     '/pulls/7': open,
-    '/check-runs': { check_runs: [{ status: 'completed', conclusion: 'success' }] }
+    '/actions/runs': { workflow_runs: [{ status: 'completed', conclusion: 'success' }] }
   };
 
   let f = fake(routes);
