@@ -16,7 +16,10 @@ import {
   privateAddress,
   queryAt,
   searchPlaces,
-  setProspectStatus
+  setProspectStatus,
+  extractContacts,
+  telegramByPhone,
+  auditProspect
 } from '../server/lib/lead-hunt.mjs';
 
 const dir = mkdtempSync(join(tmpdir(), 'hunt-'));
@@ -256,4 +259,33 @@ test('после 4 касаний без ответа — отказ', async () 
   });
   assert.equal(r.lost, 1);
   assert.equal(store.prospect('m:x').status, 'lost');
+});
+
+test('контакты с сайта: Telegram, почта, Instagram без мусора', () => {
+  const c = extractContacts(
+    `<a href="https://t.me/dentplus_uz">tg</a> <a href="https://t.me/share/url?u=x">s</a>
+     <a href="mailto:Info@Dent.uz">почта</a> logo@2x.png noreply@example.com
+     <a href="https://www.instagram.com/dent.plus/">ig</a> instagram.com/p/abc
+     <a href="https://facebook.com/sharer/sharer.php">x</a> <a href="tel:+998 90 111-22-33">тел</a>`
+  );
+  assert.deepEqual(c.telegram, ['https://t.me/dentplus_uz']);
+  assert.deepEqual(c.email, ['info@dent.uz']);
+  assert.deepEqual(c.instagram, ['https://instagram.com/dent.plus']);
+  assert.deepEqual(c.facebook, []);
+  assert.deepEqual(c.phones, ['+998901112233']);
+});
+
+test('Telegram по номеру: только узбекские номера', () => {
+  assert.equal(telegramByPhone('+998 90 111 22 33'), 'https://t.me/+998901112233');
+  assert.equal(telegramByPhone('90 111 22 33'), 'https://t.me/+998901112233');
+  assert.equal(telegramByPhone('+7 999 123 45 67'), '');
+  assert.equal(telegramByPhone(''), '');
+});
+
+test('сайт — это Telegram-канал или Instagram: контакт берётся из ссылки', async () => {
+  const tg = await auditProspect({ website: 'https://t.me/barber_ustara' });
+  assert.equal(tg.kind, 'social');
+  assert.deepEqual(tg.contacts.telegram, ['https://t.me/barber_ustara']);
+  const ig = await auditProspect({ website: 'https://instagram.com/ustara.uz' });
+  assert.deepEqual(ig.contacts.instagram, ['https://instagram.com/ustara.uz']);
 });

@@ -117,7 +117,7 @@ async function ask() {
   const text = question.value.trim();
   if (!text || !open.value || asking.value) return;
   const id = open.value.id;
-  dm.value.push({ at: new Date().toISOString(), author: 'ceo', text });
+  dm.value.push({ at: new Date().toISOString(), author: 'owner', text });
   question.value = '';
   asking.value = true;
   scrollChat();
@@ -437,7 +437,7 @@ onBeforeUnmount(() => {
               v-for="(m, i) in dm"
               :key="i"
               class="msg"
-              :class="m.author === 'ceo' ? 'me' : 'them'"
+              :class="m.author === 'owner' ? 'me' : 'them'"
             >
               {{ m.text }}
             </div>

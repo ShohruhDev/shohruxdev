@@ -318,6 +318,50 @@ export async function fetchSite(raw, { fetcher = fetch, lookup = dnsLookup } = {
 const SOCIAL_ONLY =
   /(^|\.)(instagram\.com|facebook\.com|t\.me|telegram\.me|taplink\.cc|linktr\.ee)$/i;
 
+const uniq = (list, max = 3) => [...new Set(list)].slice(0, max);
+const TG_SKIP = /^(share|joinchat|addstickers|proxy|s|iv|c)$/i;
+const IG_SKIP = /^(p|reel|reels|explore|stories|accounts|tv)$/i;
+
+/** Контакты со страницы: Telegram, почта, Instagram, Facebook, телефоны. */
+export function extractContacts(html = '', pageUrl = '') {
+  const src = `${pageUrl} ${html}`;
+  const telegram = uniq(
+    [...src.matchAll(/(?:https?:\/\/)?(?:t\.me|telegram\.me)\/([A-Za-z][A-Za-z0-9_]{3,31})\b/gi)]
+      .map(m => m[1])
+      .filter(u => !TG_SKIP.test(u))
+      .map(u => `https://t.me/${u}`)
+  );
+  const email = uniq(
+    [...src.matchAll(/[A-Z0-9._%+-]+@[A-Z0-9-]+(?:\.[A-Z0-9-]+)*\.[A-Z]{2,}/gi)]
+      .map(m => m[0].toLowerCase())
+      .filter(e => !/\.(png|jpe?g|svg|webp|gif)$/.test(e))
+      .filter(e => !/(example\.|sentry|wixpress|domain\.com|email\.com)/.test(e))
+  );
+  const instagram = uniq(
+    [...src.matchAll(/instagram\.com\/([A-Za-z0-9_.]{2,30})/gi)]
+      .map(m => m[1].replace(/\.$/, ''))
+      .filter(u => !IG_SKIP.test(u))
+      .map(u => `https://instagram.com/${u}`)
+  );
+  const facebook = uniq(
+    [...src.matchAll(/facebook\.com\/([A-Za-z0-9_.-]{3,60})/gi)]
+      .map(m => m[1])
+      .filter(u => !/^(sharer|share|tr|plugins|dialog)/i.test(u))
+      .map(u => `https://facebook.com/${u}`)
+  );
+  const phones = uniq(
+    [...html.matchAll(/href=["']tel:([+\d\s()-]{9,20})/gi)].map(m => m[1].replace(/[^\d+]/g, ''))
+  );
+  return { telegram, email, instagram, facebook, phones };
+}
+
+/** Ссылка на чат Telegram по номеру (работает, если человек разрешил находить себя по номеру). */
+export function telegramByPhone(phone = '') {
+  const d = String(phone).replace(/\D/g, '');
+  const full = d.length === 9 ? '998' + d : d;
+  return /^998\d{9}$/.test(full) ? `https://t.me/+${full}` : '';
+}
+
 /** Что не так с сайтом. Чем выше score, тем полезнее наше предложение. */
 export function auditSite(site, now = new Date()) {
   if (!site) return { issues: ['Нет сайта'], score: 90, kind: 'none' };
@@ -326,10 +370,17 @@ export function auditSite(site, now = new Date()) {
       issues: ['Вместо сайта — только соцсеть или Taplink'],
       score: 80,
       kind: 'social',
-      url: site.url
+      url: site.url,
+      contacts: extractContacts(site.html || '', site.url)
     };
   if (!site.ok)
-    return { issues: [`Сайт: ${site.error}`], score: 75, kind: 'broken', url: site.url };
+    return {
+      issues: [`Сайт: ${site.error}`],
+      score: 75,
+      kind: 'broken',
+      url: site.url,
+      contacts: extractContacts('', '')
+    };
   const html = site.html;
   const text = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, ' ');
   const issues = [];
@@ -351,7 +402,8 @@ export function auditSite(site, now = new Date()) {
     issues.push(`Сайт не обновлялся с ${year} года`);
     score = Math.max(score, 50);
   }
-  const telegram = (html.match(/https?:\/\/t\.me\/[A-Za-z0-9_]{4,}/i) || [])[0] || '';
+  const contacts = extractContacts(html);
+  const telegram = contacts.telegram[0] || '';
   const form = /<form[\s>]/i.test(html) || /запис|booking|bron|yozil/i.test(text);
   if (!form) {
     issues.push('Нет онлайн-записи или формы заявки');
@@ -362,7 +414,7 @@ export function auditSite(site, now = new Date()) {
     score = Math.max(score, 30);
   }
   const title = (html.match(/<title[^>]*>([^<]{0,120})/i) || [])[1]?.trim() || '';
-  return { issues, score, kind: 'site', url: site.url, title, year, viewport, telegram };
+  return { issues, score, kind: 'site', url: site.url, title, year, viewport, telegram, contacts };
 }
 
 export async function auditProspect(p, deps = {}) {
@@ -373,7 +425,11 @@ export async function auditProspect(p, deps = {}) {
   } catch {
     return auditSite(null);
   }
-  if (SOCIAL_ONLY.test(host)) return auditSite({ socialOnly: true, url: p.website });
+  if (SOCIAL_ONLY.test(host)) {
+    // Taplink и Linktree — страницы со ссылками: оттуда берём Telegram, почту, Instagram.
+    const page = /taplink\.cc|linktr\.ee/i.test(host) ? await fetchSite(p.website, deps) : null;
+    return auditSite({ socialOnly: true, url: p.website, html: page?.ok ? page.html : '' });
+  }
   return auditSite(await fetchSite(p.website, deps), deps.now);
 }
 
@@ -392,7 +448,7 @@ export function draftPrompt(p, touch, lang = 'ru') {
     .filter(h => h.kind === 'sent')
     .map(h => `Касание ${h.touch}: ${h.text}`)
     .join('\n');
-  return `Напиши сообщение компании от Razrabotka Tashkent для отправки в WhatsApp или Telegram.
+  return `Напиши сообщение компании от Razrabotka Tashkent для отправки в Telegram или на почту.
 
 Компания: ${p.name}${p.address ? `, ${p.address}` : ''}
 Отрасль: ${seg?.query || 'другое'}
@@ -489,6 +545,30 @@ export async function huntTick(deps) {
       out.drafted++;
     } catch (e) {
       out.errors.push(`${p.name}: ${e instanceof Error ? e.message : 'ошибка'}`);
+    }
+  }
+
+  // 2б. Контакты (Telegram, почта, Instagram) для компаний, проверенных до появления этой функции.
+  for (const p of store
+    .prospects(['ready', 'sent', 'replied', 'meeting'])
+    .filter(p => p.website && p.audit && !p.audit.contacts)
+    .slice(0, 10)) {
+    try {
+      const fresh = await auditProspect(p, { fetcher, lookup, now });
+      store.prospectUpdate(p.id, {
+        audit: {
+          ...p.audit,
+          contacts: fresh.contacts || {
+            telegram: [],
+            email: [],
+            instagram: [],
+            facebook: [],
+            phones: []
+          }
+        }
+      });
+    } catch {
+      /* попробуем в следующий раз */
     }
   }
 
