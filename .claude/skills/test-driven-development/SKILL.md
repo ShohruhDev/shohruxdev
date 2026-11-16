@@ -1,6 +1,16 @@
 ---
 name: test-driven-development
-description: Use when implementing any feature or bugfix, before writing implementation code
+description: "Разработка через тесты: новая функция, исправление бага, рефакторинг. Use when implementing any feature or bugfix, before writing implementation code"
+---
+
+## Применение в Razrabotka Tashkent (читать первым)
+
+Скилл из открытой библиотеки (источник — `SOURCE.md`). Отвечай по-русски, UZ-тексты — латиницей. Факты, цены, кейсы и решения владельца — из `docs/knowledge-base.md`, `shared/*.mjs`, `BRAND.md`; они главнее примеров ниже. Ссылки на скиллы, которых нет в `.claude/skills/`, пропускай.
+
+- Тесты: `node:test` + `assert/strict` в `tests/*.test.mjs`, запуск `node --test tests/<файл>.test.mjs`; интеграционные — `npm run test:integration | test:admin | test:bilingual`.
+- Чистую логику выноси в `server/lib/*.mjs` / `shared/*.mjs` — её тестируем без Nuxt.
+- Перед PR: `npm run format:check`, `npm test`, `npm run typecheck`, `npm run build`.
+
 ---
 
 # Test-Driven Development (TDD)

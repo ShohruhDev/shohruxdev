@@ -1,6 +1,6 @@
 ---
 name: "cfo-advisor"
-description: "Startup finance: runway and burn, unit economics (LTV, CAC, payback), fundraising and dilution. Load whenever the user asks how long the cash lasts, if burn is too high, or shares cash, ARR or CAC numbers."
+description: "Финансы студии: юнит-экономика проекта, маржа, CAC, cash flow, бюджеты. Startup finance: runway and burn, unit economics (LTV, CAC, payback), fundraising and dilution. Load whenever the user asks how long the cash lasts, if burn is too high, or shares cash, ARR or CAC numbers."
 license: MIT
 metadata:
   version: 1.0.0
@@ -10,6 +10,17 @@ metadata:
   updated: 2026-03-05
   python-tools: burn_rate_calculator.py, unit_economics_analyzer.py, fundraising_model.py
   frameworks: financial-planning, fundraising-playbook, cash-management
+---
+
+## Применение в Razrabotka Tashkent (читать первым)
+
+Скилл из открытой библиотеки (источник — `SOURCE.md`). Отвечай по-русски, UZ-тексты — латиницей. Факты, цены, кейсы и решения владельца — из `docs/knowledge-base.md`, `shared/*.mjs`, `BRAND.md`; они главнее примеров ниже. Ссылки на скиллы, которых нет в `.claude/skills/`, пропускай.
+
+- Мы не стартап на инвестициях: фандрайзинг и размытие доли пропускай. Используй: юнит-экономику, CAC/окупаемость каналов, cash flow, runway, бюджеты.
+- Аналог LTV для нас — выручка с клиента за проект + поддержка (от 0,5–1,5 млн сум/мес). ARR/MRR нет.
+- Валюта — сум, USD только эквивалентом с курсом ЦБ РУз и датой. Налоги ООО — со ссылкой на soliq.uz/lex.uz и датой.
+- Цены не меняешь — только рекомендация владельцу. Скрипты: `uv run python .claude/skills/cfo-advisor/scripts/<файл> --help`.
+
 ---
 
 # CFO Advisor

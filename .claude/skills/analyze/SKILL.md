@@ -1,7 +1,18 @@
 ---
 name: analyze
-description: Answer data questions -- from quick lookups to full analyses. Use when looking up a single metric, investigating what's driving a trend or drop, comparing segments over time, or preparing a formal data report for stakeholders.
+description: "Отчёты и анализ данных: трафик, заявки, воронка, каналы, метрики. Answer data questions -- from quick lookups to full analyses. Use when looking up a single metric, investigating what's driving a trend or drop, comparing segments over time, or preparing a formal data report for stakeholders."
 argument-hint: "<question>"
+---
+
+## Применение в Razrabotka Tashkent (читать первым)
+
+Скилл из открытой библиотеки (источник — `SOURCE.md`). Отвечай по-русски, UZ-тексты — латиницей. Факты, цены, кейсы и решения владельца — из `docs/knowledge-base.md`, `shared/*.mjs`, `BRAND.md`; они главнее примеров ниже. Ссылки на скиллы, которых нет в `.claude/skills/`, пропускай.
+
+- Источники: Яндекс Метрика, GA4, GSC, Яндекс Вебмастер, заявки в SQLite (`server/lib/store.mjs`; production — через владельца), соцсети.
+- Воронка: визит → заявка → созвон → КП → договор. Визиты ≠ заявки, клик в Telegram ≠ заказ.
+- Малые числа: на < 30 событиях — наблюдение без процентов. Персональные данные — только агрегатами.
+- Отчёт — в `docs/reports/`, в конце 1–3 рекомендации с ролью-исполнителем.
+
 ---
 
 # /analyze - Answer Data Questions

@@ -1,7 +1,17 @@
 ---
 name: design-critique
-description: Get structured design feedback on usability, hierarchy, and consistency. Trigger with "review this design", "critique this mockup", "what do you think of this screen?", or when sharing a Figma link or screenshot for feedback at any stage from exploration to final polish.
+description: "Разбор дизайна, макета, страницы или экрана сайта; UX-ревью. Get structured design feedback on usability, hierarchy, and consistency. Trigger with 'review this design', 'critique this mockup', 'what do you think of this screen?', or when sharing a Figma link or screenshot for feedback at any stage from exploration to final polish."
 argument-hint: "<Figma URL, screenshot, or description>"
+---
+
+## Применение в Razrabotka Tashkent (читать первым)
+
+Скилл из открытой библиотеки (источник — `SOURCE.md`). Отвечай по-русски, UZ-тексты — латиницей. Факты, цены, кейсы и решения владельца — из `docs/knowledge-base.md`, `shared/*.mjs`, `BRAND.md`; они главнее примеров ниже. Ссылки на скиллы, которых нет в `.claude/skills/`, пропускай.
+
+- Критерий хорошего дизайна у нас — путь посетителя к **заявке** и соответствие `DESIGN.md`: белый фон, акцент #2457f5, Montserrat, карточки 24px, кнопки 8px, без бейджей над заголовками и новых цветов.
+- Проверяй на десктопе и 375px, RU и UZ; доступность WCAG AA.
+- Figma у нас нет — смотри живые страницы (preview из `.claude/launch.json`) или скриншоты.
+
 ---
 
 # /design-critique

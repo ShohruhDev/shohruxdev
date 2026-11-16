@@ -1,8 +1,19 @@
 ---
 name: social
-description: "When the user wants organic social content for LinkedIn, X, Instagram, TikTok, or Facebook, or asks what to post, which format to favor, or from which account: posts, threads, carousels, short-form video scripts, calendars, build-in-public posts from commits, listening. No AI tells like 'it's not X, it's Y' or broetry. For content strategy, see content-strategy. For paid ads, see ad-creative. For press, see public-relations."
+description: "Посты, карусели, Reels, stories и контент-план для Instagram, Facebook и Telegram. When the user wants organic social content for LinkedIn, X, Instagram, TikTok, or Facebook, or asks what to post, which format to favor, or from which account: posts, threads, carousels, short-form video scripts, calendars, build-in-public posts from commits, listening. No AI tells like 'it's not X, it's Y' or broetry. For content strategy, see content-strategy. For paid ads, see ad-creative. For press, see public-relations."
 metadata:
   version: 2.5.2
+---
+
+## Применение в Razrabotka Tashkent (читать первым)
+
+Скилл из открытой библиотеки (источник — `SOURCE.md`). Отвечай по-русски, UZ-тексты — латиницей. Факты, цены, кейсы и решения владельца — из `docs/knowledge-base.md`, `shared/*.mjs`, `BRAND.md`; они главнее примеров ниже. Ссылки на скиллы, которых нет в `.claude/skills/`, пропускай.
+
+- Наши площадки: **Telegram-канал, Instagram, Facebook** (LinkedIn отложен владельцем; X и TikTok не ведём). Разделы про LinkedIn/X применяй только как общие принципы.
+- Очереди: `shared/social-posts.mjs` (IG/FB), `shared/telegram-posts.mjs`; публикуется только `approved: true` от владельца — флаг не ставишь.
+- Reels — скилл `reels-montage`; темы — `trend-scan`; текст — через `humanizer`. Визуал — `DESIGN.md` (лента 1080×1350, stories 1080×1920).
+- Ссылки — только с UTM (`docs/knowledge-base.md`, раздел 6). RU + UZ.
+
 ---
 
 # Social Content

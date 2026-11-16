@@ -1,8 +1,19 @@
 ---
 name: sales-enablement
-description: "When the user wants sales collateral, or asks what to give a champion or rep, or how to answer an objection or make the case: decks, one-pagers, objection handling, demo scripts, talk tracks, battle cards, proposals, win-loss. For public comparison pages, see competitors. For buyer research, see customer-research. For website copy, see copywriting. For cold emails, see cold-email. For the offer, see offers."
+description: "КП, скрипт созвона, ответы на возражения, follow-up, разбор потерянных сделок. When the user wants sales collateral, or asks what to give a champion or rep, or how to answer an objection or make the case: decks, one-pagers, objection handling, demo scripts, talk tracks, battle cards, proposals, win-loss. For public comparison pages, see competitors. For buyer research, see customer-research. For website copy, see copywriting. For cold emails, see cold-email. For the offer, see offers."
 metadata:
   version: 2.4.3
+---
+
+## Применение в Razrabotka Tashkent (читать первым)
+
+Скилл из открытой библиотеки (источник — `SOURCE.md`). Отвечай по-русски, UZ-тексты — латиницей. Факты, цены, кейсы и решения владельца — из `docs/knowledge-base.md`, `shared/*.mjs`, `BRAND.md`; они главнее примеров ниже. Ссылки на скиллы, которых нет в `.claude/skills/`, пропускай.
+
+- Продажа у нас: заявка → созвон с разработчиком → КП → договор; без SDR, демо продукта и battle cards для отдела продаж.
+- КП: задача клиента → решение → первая версия и что не входит → этапы с показами → срок → вилка из `shared/pricing.mjs` → один следующий шаг. Кейсы — только `shared/cases.mjs`.
+- Возражения и готовые ответы — `.claude/product-marketing.md` и раздел 12 `docs/knowledge-base.md`. Скидок нет.
+- Клиентам не пишешь сам — черновики RU/UZ, отправляет владелец.
+
 ---
 
 # Sales Enablement

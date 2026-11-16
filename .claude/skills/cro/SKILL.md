@@ -1,8 +1,18 @@
 ---
 name: cro
-description: "When the user wants more conversions from a page or form, or asks why a page isn't converting, what to change first, or whether to add or remove a field or element: landing and pricing pages, lead forms, or a URL shared for feedback. For signup flows, see signup. For activation, see onboarding. For popups, see popups. For running the test, see ab-testing."
+description: "Конверсия страниц сайта в заявку: главная, услуги, цены, калькулятор, форма. When the user wants more conversions from a page or form, or asks why a page isn't converting, what to change first, or whether to add or remove a field or element: landing and pricing pages, lead forms, or a URL shared for feedback. For signup flows, see signup. For activation, see onboarding. For popups, see popups. For running the test, see ab-testing."
 metadata:
   version: 2.0.6
+---
+
+## Применение в Razrabotka Tashkent (читать первым)
+
+Скилл из открытой библиотеки (источник — `SOURCE.md`). Отвечай по-русски, UZ-тексты — латиницей. Факты, цены, кейсы и решения владельца — из `docs/knowledge-base.md`, `shared/*.mjs`, `BRAND.md`; они главнее примеров ниже. Ссылки на скиллы, которых нет в `.claude/skills/`, пропускай.
+
+- Конверсия = сохранённая **заявка** (форма, Telegram, телефон). Ключевые страницы: `/`, `/services/*`, `/prices`, `/calculator`, `/cases`, `/contact`, статьи журнала.
+- Доказательства — только реальные (кейсы, процесс, договор, фиксированная цена); без счётчиков, «№1», выдуманных отзывов, срочности-давления.
+- Тексты правок — RU и UZ, через `copywriter`; визуал — по `DESIGN.md`. A/B — при достаточном трафике, иначе последовательные изменения с замером.
+
 ---
 
 # Conversion Rate Optimization (CRO)

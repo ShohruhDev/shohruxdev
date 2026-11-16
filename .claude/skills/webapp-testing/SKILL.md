@@ -1,7 +1,19 @@
 ---
 name: webapp-testing
-description: Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.
+description: "QA сайта в браузере: проверка страниц, формы заявки, RU/UZ, скриншоты, консоль. Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs."
 license: Complete terms in LICENSE.txt
+---
+
+## Применение в Razrabotka Tashkent (читать первым)
+
+Скилл из открытой библиотеки (источник — `SOURCE.md`). Отвечай по-русски, UZ-тексты — латиницей. Факты, цены, кейсы и решения владельца — из `docs/knowledge-base.md`, `shared/*.mjs`, `BRAND.md`; они главнее примеров ниже. Ссылки на скиллы, которых нет в `.claude/skills/`, пропускай.
+
+- **Playwright запускается через uv** (Python у нас без глобальных пакетов): `uv run --with playwright python script.py`. Браузер: `uv run --with playwright python -m playwright install chromium` (локально уже установлен). В облачной среде, если uv нет: `pip install playwright && python -m playwright install --with-deps chromium`.
+- Сервер — **продакшен-сборка** (dev-режим сейчас отдаёт 500: Nitro не находит `/shared/team-roles.mjs`). Сначала `npm run build`, затем через `scripts/with_server.py` с отдельной тестовой базой:
+  `CONTENT_DB=/tmp/qa.sqlite HOST=127.0.0.1 PORT=3005 uv run --with playwright python .claude/skills/webapp-testing/scripts/with_server.py --server "node .output/server/index.mjs" --port 3005 -- uv run --with playwright python check.py`
+- Проверено 2026-11-16: `/`, `/uz`, `/prices`, `/calculator`, `/contact`, `/uz/contact` — 200, верный `lang`, hreflang, без кириллицы на UZ, 0 ошибок консоли, без горизонтальной прокрутки на 375px.
+- Что проверять — `.claude/agents/qa.md`: форма, калькулятор, RU↔UZ, SEO-теги, 375/768/десктоп. Production — только чтение, без тестовых заявок.
+
 ---
 
 # Web Application Testing

@@ -1,7 +1,17 @@
 ---
 name: review-contract
-description: Review a contract against your organization's negotiation playbook — flag deviations, generate redlines, provide business impact analysis. Use when reviewing vendor or customer agreements, when you need clause-by-clause analysis against standard positions, or when preparing a negotiation strategy with prioritized redlines and fallback positions.
+description: "Проверка договора, NDA, акта; риски и формулировки на замену. Review a contract against your organization's negotiation playbook — flag deviations, generate redlines, provide business impact analysis. Use when reviewing vendor or customer agreements, when you need clause-by-clause analysis against standard positions, or when preparing a negotiation strategy with prioritized redlines and fallback positions."
 argument-hint: "<contract file or text>"
+---
+
+## Применение в Razrabotka Tashkent (читать первым)
+
+Скилл из открытой библиотеки (источник — `SOURCE.md`). Отвечай по-русски, UZ-тексты — латиницей. Факты, цены, кейсы и решения владельца — из `docs/knowledge-base.md`, `shared/*.mjs`, `BRAND.md`; они главнее примеров ниже. Ссылки на скиллы, которых нет в `.claude/skills/`, пропускай.
+
+- Право — Республика Узбекистан (lex.uz, со ссылкой и датой), а не US/EU. Реквизиты — `shared/brand.mjs`.
+- Наш «playbook» (стандартные позиции): цена фиксируется до старта; условия оплаты — под проект в договоре; гарантия 1 месяц на наши ошибки; код и доступы — клиенту после полной оплаты; изменения объёма — письменно с пересчётом; ответственность ограничена суммой договора.
+- Персональные данные — ЗРУ-547 (ст. 27¹, локализация). Подписание и отправку делает владелец; важное — с практикующим юристом.
+
 ---
 
 # /review-contract -- Contract Review Against Playbook

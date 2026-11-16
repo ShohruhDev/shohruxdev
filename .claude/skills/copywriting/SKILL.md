@@ -1,8 +1,19 @@
 ---
 name: copywriting
-description: "When the user wants to write or rewrite page copy (homepage, landing, pricing, feature), or asks which headline, promise, or message to lead with. Diagnoses the input first (blank brief, real voice, or point edit) and changes only what it calls for. Claims must be supportable; a declined claim names the evidence that would unlock it. No AI tells like 'it's not X, it's Y' or 'no X, no Y, no Z'. For editing, see copy-editing. For emails, see emails. For the offer, see offers."
+description: "Тексты страниц сайта, заголовки, офферы, статьи журнала на русском и узбекском. When the user wants to write or rewrite page copy (homepage, landing, pricing, feature), or asks which headline, promise, or message to lead with. Diagnoses the input first (blank brief, real voice, or point edit) and changes only what it calls for. Claims must be supportable; a declined claim names the evidence that would unlock it. No AI tells like 'it's not X, it's Y' or 'no X, no Y, no Z'. For editing, see copy-editing. For emails, see emails. For the offer, see offers."
 metadata:
   version: 2.3.5
+---
+
+## Применение в Razrabotka Tashkent (читать первым)
+
+Скилл из открытой библиотеки (источник — `SOURCE.md`). Отвечай по-русски, UZ-тексты — латиницей. Факты, цены, кейсы и решения владельца — из `docs/knowledge-base.md`, `shared/*.mjs`, `BRAND.md`; они главнее примеров ниже. Ссылки на скиллы, которых нет в `.claude/skills/`, пропускай.
+
+- Голос — `BRAND.md`; после текста — скилл `humanizer` (наш RU/UZ-чек-лист).
+- Пиши на русском; UZ — естественный узбекский на латинице (o‘/g‘ с ‘), не дословный перевод.
+- Утверждения — только с опорой на факты из `docs/knowledge-base.md`, `shared/pricing.mjs`, `shared/cases.mjs`.
+- Без «под ключ», «индивидуальный подход», «команда профессионалов», «топ», эмодзи и восклицаний. Один следующий шаг в конце.
+
 ---
 
 # Copywriting

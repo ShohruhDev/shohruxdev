@@ -1,6 +1,6 @@
 ---
 name: "ceo-advisor"
-description: "Advice for a CEO or founder on running the company: board and investor trouble, raise or cut, strategy bets, org and culture. Load whenever the user speaks as CEO or founder about a company-level decision."
+description: "Стратегия и приоритеты CEO, решения уровня компании, план недели/месяца. Advice for a CEO or founder on running the company: board and investor trouble, raise or cut, strategy bets, org and culture. Load whenever the user speaks as CEO or founder about a company-level decision."
 license: MIT
 metadata:
   version: 2.0.0
@@ -10,6 +10,17 @@ metadata:
   updated: 2026-03-05
   python-tools: strategy_analyzer.py, financial_scenario_analyzer.py
   frameworks: executive-decisions, board-governance, leadership-culture
+---
+
+## Применение в Razrabotka Tashkent (читать первым)
+
+Скилл из открытой библиотеки (источник — `SOURCE.md`). Отвечай по-русски, UZ-тексты — латиницей. Факты, цены, кейсы и решения владельца — из `docs/knowledge-base.md`, `shared/*.mjs`, `BRAND.md`; они главнее примеров ниже. Ссылки на скиллы, которых нет в `.claude/skills/`, пропускай.
+
+- Мы — студия из владельца и команды ИИ-агентов, без совета директоров и инвесторов: разделы про board, фандрайзинг и размытие доли пропускай.
+- Бери отсюда: стратегические ставки, рамки решений (`references/executive_decision_framework.md`), сценарии, приоритеты.
+- Формат плана и правила — в `.claude/agents/ceo.md` (максимум 3 приоритета, решения владельцу — не больше 3). Данные — `docs/reports/`, `docs/backlog.md`.
+- Скрипты `scripts/*.py` — офлайн-калькуляторы: `uv run python .claude/skills/ceo-advisor/scripts/<файл> --help`.
+
 ---
 
 # CEO Advisor

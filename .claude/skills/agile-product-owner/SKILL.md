@@ -1,6 +1,6 @@
 ---
 name: "agile-product-owner"
-description: "Use for backlog work: writing user stories and acceptance criteria, splitting epics, estimating or prioritizing for a sprint. Generates stories with user_story_generator.py."
+description: "ТЗ, user stories, критерии приёмки, MVP, оценка задач клиента. Use for backlog work: writing user stories and acceptance criteria, splitting epics, estimating or prioritizing for a sprint. Generates stories with user_story_generator.py."
 metadata:
   not_for: Kanban-only workflows, waterfall project planning, general task management, non-Scrum agile frameworks (SAFe, LeSS) without adaptation
   triggers:
@@ -19,6 +19,17 @@ metadata:
     - user story template
     - sprint capacity
     - velocity tracking
+---
+
+## Применение в Razrabotka Tashkent (читать первым)
+
+Скилл из открытой библиотеки (источник — `SOURCE.md`). Отвечай по-русски, UZ-тексты — латиницей. Факты, цены, кейсы и решения владельца — из `docs/knowledge-base.md`, `shared/*.mjs`, `BRAND.md`; они главнее примеров ниже. Ссылки на скиллы, которых нет в `.claude/skills/`, пропускай.
+
+- Применяй к ТЗ клиентских проектов и к задачам нашего бэклога (`docs/backlog.md`, issues `team-task`).
+- Спринты и story points — опционально: у нас проектная работа, оценка в часах/неделях с привязкой к вилкам `shared/pricing.mjs` и `docs/calculator-pricing.md`.
+- Интеграции Узбекистана в критериях приёмки: Payme/Click/Uzum (callback, статусы, возврат), Telegram, 1С, amoCRM/Bitrix24; RU+UZ.
+- Генератор: `uv run python .claude/skills/agile-product-owner/scripts/user_story_generator.py --help`.
+
 ---
 
 # Agile Product Owner

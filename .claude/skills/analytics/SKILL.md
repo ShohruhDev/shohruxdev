@@ -1,8 +1,19 @@
 ---
 name: analytics
-description: "When the user wants to set up or audit analytics, or asks whether a metric or number is calculated right, what to track, or how to name events: tracking plans, GA4, GTM, Mixpanel, PostHog, UTMs. Rate metrics divide matching closed windows, never full-period spend by partial-period results. For conversions in ad platforms, see conversion-tracking. For attribution or platforms that over-claim, see attribution. For tests, see ab-testing."
+description: "План трекинга, события и цели Метрики и GA4, UTM, проверка цифр. When the user wants to set up or audit analytics, or asks whether a metric or number is calculated right, what to track, or how to name events: tracking plans, GA4, GTM, Mixpanel, PostHog, UTMs. Rate metrics divide matching closed windows, never full-period spend by partial-period results. For conversions in ad platforms, see conversion-tracking. For attribution or platforms that over-claim, see attribution. For tests, see ab-testing."
 metadata:
   version: 2.2.5
+---
+
+## Применение в Razrabotka Tashkent (читать первым)
+
+Скилл из открытой библиотеки (источник — `SOURCE.md`). Отвечай по-русски, UZ-тексты — латиницей. Факты, цены, кейсы и решения владельца — из `docs/knowledge-base.md`, `shared/*.mjs`, `BRAND.md`; они главнее примеров ниже. Ссылки на скиллы, которых нет в `.claude/skills/`, пропускай.
+
+- У нас **Яндекс Метрика + GA4** (без GTM, Mixpanel, PostHog); счётчики грузятся на клиенте — проверять браузером, не curl.
+- Главная конверсия — сохранённая заявка (`server/api/leads.post.ts`), а не клик по кнопке. Плюс клики Telegram/телефон, калькулятор, переход статья → услуга.
+- UTM-схема — `docs/utm-map-2026-11.md` и раздел 6 `docs/knowledge-base.md`; в заявке хранятся source/medium/campaign.
+- Изменения кода — через PR с тестами; без персональных данных в параметрах событий.
+
 ---
 
 # Analytics Tracking

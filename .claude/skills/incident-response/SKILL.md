@@ -1,7 +1,17 @@
 ---
 name: incident-response
-description: Run an incident response workflow — triage, communicate, and write postmortem. Trigger with "we have an incident", "production is down", an alert that needs severity assessment, a status update mid-incident, or when writing a blameless postmortem after resolution.
+description: "Сбой сайта, ошибка деплоя, 5xx, DNS, база — триаж, откат, постмортем. Run an incident response workflow — triage, communicate, and write postmortem. Trigger with 'we have an incident', 'production is down', an alert that needs severity assessment, a status update mid-incident, or when writing a blameless postmortem after resolution."
 argument-hint: "<incident description or alert>"
+---
+
+## Применение в Razrabotka Tashkent (читать первым)
+
+Скилл из открытой библиотеки (источник — `SOURCE.md`). Отвечай по-русски, UZ-тексты — латиницей. Факты, цены, кейсы и решения владельца — из `docs/knowledge-base.md`, `shared/*.mjs`, `BRAND.md`; они главнее примеров ниже. Ссылки на скиллы, которых нет в `.claude/skills/`, пропускай.
+
+- Инфраструктура: Railway (том SQLite, «Wait for CI»), DNS у Eskiz (корень — A на IP Railway edge, www — CNAME; добавление TXT заменяет набор). Подробно — `deploy/railway.md`, `.claude/agents/devops.md`.
+- Любые изменения Railway/DNS — только после «да» владельца, с планом отката. Секреты не выводить.
+- Коммуникация — владельцу в Telegram/чат; Slack/статус-страниц у нас нет. Постмортем — `docs/reports/incident-YYYY-MM-DD.md`.
+
 ---
 
 # /incident-response

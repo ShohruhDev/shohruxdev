@@ -1,8 +1,19 @@
 ---
 name: seo-audit
-description: "When the user wants to audit or diagnose SEO, or asks why traffic dropped, a page won't rank, or whether a setup like canonicals, hreflang, or redirects is right: technical SEO, indexing, Google updates, on-page and titles, Core Web Vitals, local SEO. Start here when someone just says their SEO is bad. For pages at scale, see programmatic-seo. For structured data, see schema. For AI search, see ai-seo."
+description: "SEO-аудит сайта: индексация, canonical, hreflang, мета, скорость, локальное SEO. When the user wants to audit or diagnose SEO, or asks why traffic dropped, a page won't rank, or whether a setup like canonicals, hreflang, or redirects is right: technical SEO, indexing, Google updates, on-page and titles, Core Web Vitals, local SEO. Start here when someone just says their SEO is bad. For pages at scale, see programmatic-seo. For structured data, see schema. For AI search, see ai-seo."
 metadata:
   version: 2.2.5
+---
+
+## Применение в Razrabotka Tashkent (читать первым)
+
+Скилл из открытой библиотеки (источник — `SOURCE.md`). Отвечай по-русски, UZ-тексты — латиницей. Факты, цены, кейсы и решения владельца — из `docs/knowledge-base.md`, `shared/*.mjs`, `BRAND.md`; они главнее примеров ниже. Ссылки на скиллы, которых нет в `.claude/skills/`, пропускай.
+
+- Поиск в Узбекистане: Google ≈77%, Яндекс 18–24% — проверяй оба (GSC и Яндекс Вебмастер), включая регион «Ташкент».
+- Код: `server/routes/sitemap.xml.get.ts`, `robots.txt.get.ts`, `feed.xml.get.ts`, `server/middleware/00.canonical-host.ts`, `shared/locale.mjs` (hreflang ru/uz), IndexNow.
+- Локальное SEO: Google Business, Яндекс Бизнес, 2GIS — NAP из `shared/brand.mjs` (`docs/business-listings.md`).
+- Решения владельца не пересматривать: без редиректа со shohruxdev.uz, без страницы автора, без страниц под города, без llms.txt как продвижения. Позиции не обещать.
+
 ---
 
 # SEO Audit
