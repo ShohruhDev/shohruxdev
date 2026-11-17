@@ -16,7 +16,9 @@ export default defineEventHandler(async event => {
   try {
     if (b.action === 'ask') {
       llm ||= createTeamLlm(cfg);
-      return await askPerson({ personId: b.person, text: b.text }, { store, cfg, llm });
+      const r = await askPerson({ personId: b.person, text: b.text }, { store, cfg, llm });
+      if (r.task) resetOfficeCache();
+      return r;
     }
     if (b.action === 'history') return { messages: store.dmHistory(String(b.person || '')) };
     if (b.action === 'assign') {
