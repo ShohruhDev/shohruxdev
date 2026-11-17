@@ -284,3 +284,107 @@ test('запуск цикла: 429 — понятное сообщение', asy
     /Лимит запусков/
   );
 });
+
+function ghFetcher(sent, existing = []) {
+  return async (url, init = {}) => {
+    if (url.includes('/issues?')) return json(existing);
+    sent.push({ url, body: init.body ? JSON.parse(init.body) : null });
+    return url.includes('api.github.com')
+      ? json({ number: 31, html_url: 'https://github.com/o/r/issues/31' }, 201)
+      : json({ ok: true });
+  };
+}
+
+test('личный чат: «задача: …» заводит Issue с role: и отвечает ссылкой', async () => {
+  const sent = [];
+  const prompts = [];
+  const llm = {
+    chat: async (system, user) => {
+      prompts.push(user);
+      return { text: 'Не должен вызываться', usage: { input: 1, output: 1, cached: 0 } };
+    }
+  };
+  const r = await askPerson(
+    { personId: 'seo', text: 'задача: Проверить sitemap\nСверить UZ-страницы с hreflang' },
+    { store, cfg, llm, fetcher: ghFetcher(sent), dailyLimit: 100 }
+  );
+  const issue = sent.find(s => s.url.endsWith('/issues'));
+  assert.equal(issue.body.title, 'Проверить sitemap');
+  assert.deepEqual(issue.body.labels, ['team-task', 'role:seo']);
+  assert.match(issue.body.body, /hreflang/);
+  assert.match(r.answer, /#31/);
+  assert.match(r.answer, /https:\/\/github\.com\/o\/r\/issues\/31/);
+  assert.doesNotMatch(r.answer, /принял/i);
+  assert.equal(r.task.number, 31);
+  assert.equal(prompts.length, 0);
+  assert.equal(store.dmHistory('seo').at(-1).text, r.answer);
+});
+
+test('личный чат: «делаем» берёт заголовок и детали из обсуждения', async () => {
+  const sent = [];
+  const llm = {
+    chat: async (system, user) =>
+      user.includes('JSON')
+        ? {
+            text: '{"title":"Посты про калькулятор","details":"3 поста, RU и UZ. Готово: черновики в бэклоге."}',
+            usage: { input: 1, output: 1, cached: 0 }
+          }
+        : {
+            text: 'Предлагаю три поста про калькулятор.',
+            usage: { input: 1, output: 1, cached: 0 }
+          }
+  };
+  const deps = { store, cfg, llm, fetcher: ghFetcher(sent), dailyLimit: 100 };
+  await askPerson({ personId: 'smm', text: 'Что с постами?' }, deps);
+  const r = await askPerson({ personId: 'smm', text: 'Давайте, делаем' }, deps);
+  const issue = sent.find(s => s.url.endsWith('/issues'));
+  assert.equal(issue.body.title, 'Посты про калькулятор');
+  assert.deepEqual(issue.body.labels, ['team-task', 'role:smm']);
+  assert.match(issue.body.body, /черновики/);
+  assert.match(r.answer, /#31/);
+});
+
+test('личный чат: вопрос со словом «делаем» без задачи не создаёт Issue', async () => {
+  const sent = [];
+  const llm = {
+    chat: async () => ({ text: 'Сегодня сайт.', usage: { input: 1, output: 1, cached: 0 } })
+  };
+  const r = await askPerson(
+    { personId: 'qa', text: 'Что мы сегодня делаем?' },
+    { store, cfg, llm, fetcher: ghFetcher(sent), dailyLimit: 100 }
+  );
+  assert.equal(r.answer, 'Сегодня сайт.');
+  assert.equal(sent.length, 0);
+});
+
+test('личный чат: дубль открытой задачи дописывается, а не создаётся заново', async () => {
+  const sent = [];
+  const open = [
+    {
+      number: 9,
+      title: 'Проверить sitemap',
+      html_url: 'u9',
+      body: '',
+      labels: [{ name: 'role:seo' }]
+    }
+  ];
+  const llm = { chat: async () => ({ text: 'x', usage: { input: 1, output: 1, cached: 0 } }) };
+  const r = await askPerson(
+    { personId: 'seo', text: 'задача: Проверить sitemap' },
+    { store, cfg, llm, fetcher: ghFetcher(sent, open), dailyLimit: 100 }
+  );
+  assert.ok(!sent.some(s => s.url.endsWith('/issues') && s.body?.labels));
+  assert.match(r.answer, /#9/);
+  assert.match(r.answer, /уже/i);
+});
+
+test('личный чат: без GITHUB_TOKEN бот честно говорит, что задачу не завести', async () => {
+  const llm = { chat: async () => ({ text: 'x', usage: { input: 1, output: 1, cached: 0 } }) };
+  const r = await askPerson(
+    { personId: 'seo', text: 'задача: Проверить sitemap' },
+    { store, cfg: { ...cfg, githubToken: '' }, llm, fetcher: ghFetcher([]), dailyLimit: 100 }
+  );
+  assert.match(r.answer, /не удалось/i);
+  assert.match(r.answer, /GITHUB_TOKEN/);
+  assert.equal(r.task, undefined);
+});

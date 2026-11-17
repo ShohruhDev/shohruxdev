@@ -365,12 +365,58 @@ export async function closeTask(number, { cfg, fetcher = fetch }) {
 }
 
 const personSystem = p =>
-  `${RULES}\n\n# База знаний команды (источник истины)\n\n${TEAM_KNOWLEDGE}\n\n# Твоя роль\n\nТебя зовут ${p.persona}, ты — ${p.title} в команде Razrabotka Tashkent. ${p.prompt}\nСейчас ты в личном чате с CEO в панели «Офис» (не в общем Telegram-чате): отвечай ему напрямую, по-русски, коротко и по делу. Если вопрос не твой — скажи, кого из коллег спросить.\nИз этого чата ты ничего не запускаешь: не создаёшь задачи, не пишешь коллегам и не видишь их работу в реальном времени. Не говори, что кто-то уже что-то делает, если CEO этого не поручил. Если предлагаешь задачи — дай короткий список «кто — что — критерий готовности» и напомни, что CEO ставит их кнопкой «Поручить задачу» во вкладке «Задачи» нужного специалиста.`;
+  `${RULES}\n\n# База знаний команды (источник истины)\n\n${TEAM_KNOWLEDGE}\n\n# Твоя роль\n\nТебя зовут ${p.persona}, ты — ${p.title} в команде Razrabotka Tashkent. ${p.prompt}\nСейчас ты в личном чате с CEO в панели «Офис» (не в общем Telegram-чате): отвечай ему напрямую, по-русски, коротко и по делу. Если вопрос не твой — скажи, кого из коллег спросить.\nИз этого чата ты сам ничего не запускаешь и не пишешь коллегам; задачу в GitHub заводит система, когда CEO пишет «делаем» или «задача: …». Не обещай, что завёл задачу сам, и не видишь работу коллег в реальном времени. Не говори, что кто-то уже что-то делает, если CEO этого не поручил. Если предлагаешь задачи — дай короткий список «кто — что — критерий готовности» и напомни: чтобы завести задачу, CEO пишет «делаем» или «задача: …» (или кнопка «Поручить задачу» во вкладке «Задачи»).`;
 
-/** Личный вопрос специалисту. Ответ — от модели командного чата. */
+const L = '[^\\p{L}]';
+// «задача: …» в начале сообщения или «делаем» (не вопрос) — то же, что в Telegram-чате (has_task).
+const TASK_PREFIX = /^\s*задач[аи]\s*:\s*([\s\S]+)$/iu;
+const DO_IT = new RegExp(`(^|${L})(делаем|делайте|сделайте)(${L}|$)`, 'iu');
+
+/** Триггер задачи в сообщении владельца: {kind:'explicit', text} | {kind:'approve'} | null. */
+export function taskTrigger(text) {
+  const m = String(text).match(TASK_PREFIX);
+  if (m) return { kind: 'explicit', text: m[1].trim() };
+  if (DO_IT.test(text) && !/\?\s*$/.test(String(text).trim())) return { kind: 'approve' };
+  return null;
+}
+
+const TASK_PROMPT = `Владелец одобрил работу в личном чате. Выдели из обсуждения задачу. Ответь только JSON: {"title":"короткий заголовок до 100 символов","details":"что сделать и критерий готовности, на основе всего обсуждения"}.`;
+
+function parseTask(text) {
+  try {
+    const o = JSON.parse(String(text).match(/\{[\s\S]*\}/)?.[0] || '');
+    if (typeof o.title === 'string' && o.title.trim()) return o;
+  } catch {}
+  return null;
+}
+
+/** Заголовок и детали для задачи из личного чата (доп. запрос к модели только для «делаем»). */
+async function draftTask(trigger, { p, transcript, llm, store, day }) {
+  if (trigger.kind === 'explicit') {
+    const [first, ...rest] = trigger.text.split('\n');
+    return {
+      title: first.trim(),
+      details: [rest.join('\n').trim(), `Обсуждение:\n${transcript}`].filter(Boolean).join('\n\n')
+    };
+  }
+  const r = await llm.chat(personSystem(p), `${transcript}\n\n${TASK_PROMPT}`);
+  store.teamCount(day, {
+    calls: 1,
+    input: r.usage.input,
+    output: r.usage.output,
+    cached: r.usage.cached
+  });
+  const t = parseTask(r.text);
+  if (t) return { title: t.title, details: String(t.details || '') };
+  const last =
+    [...transcript.split('\n')].reverse().find(l => l.startsWith(`[${p.persona}]`)) || '';
+  return { title: last.replace(/^\[[^\]]*\]:\s*/, '').slice(0, 100), details: transcript };
+}
+
+/** Личный вопрос специалисту. Ответ — от модели командного чата. «делаем» / «задача: …» заводят Issue. */
 export async function askPerson(
   { personId, text },
-  { store, cfg, llm, now = new Date(), dailyLimit = 60 }
+  { store, cfg, llm, now = new Date(), dailyLimit = 60, fetcher = fetch }
 ) {
   const p = personById(personId);
   if (!p) throw Error('Нет такого специалиста.');
@@ -385,6 +431,25 @@ export async function askPerson(
   const transcript = [...history, { author: 'owner', text: q }]
     .map(m => `[${m.author === 'owner' ? 'CEO (владелец)' : p.persona}]: ${m.text}`)
     .join('\n');
+  const trigger = taskTrigger(q);
+  if (trigger) {
+    const draft = await draftTask(trigger, { p, transcript, llm, store, day: dayStart(now) });
+    let answer, task;
+    try {
+      const title = clean(draft.title, 200);
+      task = await assignTask(
+        { personId: p.id, title, details: draft.details },
+        { store, cfg, fetcher }
+      );
+      answer = task.existing
+        ? `Такая задача уже есть: #${task.number}. Дописал подробности туда, новую не создаю. ${task.url}`
+        : `Задача заведена: #${task.number} «${title}». Ответственный: ${p.persona} (@${p.id}). ${task.url}`;
+    } catch (e) {
+      answer = `Задачу не удалось завести в GitHub (${e instanceof Error ? e.message : 'ошибка'}). Она осталась только в этом чате.`;
+    }
+    store.dmAdd(p.id, p.id, answer);
+    return task ? { answer, task } : { answer };
+  }
   const r = await llm.chat(personSystem(p), `${transcript}\n\nОтветь CEO от имени ${p.persona}.`);
   store.teamCount(dayStart(now), {
     calls: 1,
