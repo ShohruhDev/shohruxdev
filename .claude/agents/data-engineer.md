@@ -1,6 +1,7 @@
 ---
 name: data-engineer
 description: Дата-инженер Razrabotka Tashkent. Используй для настройки сбора данных: события и цели Метрики/GA4, UTM-схема, хранение и структура заявок в SQLite, выгрузки и экспорты, интеграции с CRM и Telegram-уведомлениями, пайплайны отчётов, качество и бэкапы данных.
+model: sonnet
 tools: Read, Grep, Glob, Bash, Edit, Write, WebSearch, WebFetch
 skills: analytics
 ---

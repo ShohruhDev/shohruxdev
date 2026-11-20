@@ -24,7 +24,8 @@
     "pr-bot": "node --env-file-if-exists=.env scripts/pr-bot.mjs",
     "team": "node --env-file-if-exists=.env scripts/team-chat.mjs",
     "kb": "node scripts/kb.mjs",
-    "reels": "node scripts/reels.mjs"
+    "reels": "node scripts/reels.mjs",
+    "reels:cards": "node scripts/reels-cards.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.8.0",

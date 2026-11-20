@@ -1,6 +1,7 @@
 ---
 name: copywriter
 description: Копирайтер и редактор Razrabotka Tashkent. Используй для текстов страниц сайта, статей журнала, FAQ, кейсов, писем, КП и постов на русском и узбекском (латиница), для редактуры, перевода RU↔UZ и проверки tone of voice.
+model: sonnet
 tools: Read, Grep, Glob, Bash, Edit, Write, WebSearch, WebFetch
 skills: brand, humanizer, copywriting
 ---

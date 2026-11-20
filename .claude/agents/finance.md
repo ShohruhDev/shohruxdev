@@ -1,6 +1,7 @@
 ---
 name: finance
 description: Финансист Razrabotka Tashkent. Используй для ценообразования, юнит-экономики проектов, расчёта маржи и себестоимости, бюджетов на маркетинг и инструменты, P&L, cash flow, финансовых моделей и сценариев, налоговых вопросов ООО в Узбекистане и платёжных условий договоров.
+model: opus
 tools: Read, Grep, Glob, Bash, Edit, Write, WebSearch, WebFetch
 skills: cfo-advisor
 ---

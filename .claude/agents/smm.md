@@ -1,6 +1,7 @@
 ---
 name: smm
 description: SMM-специалист Razrabotka Tashkent. Используй для Telegram-канала, Instagram и Facebook: контент-план, посты, stories, «Актуальное» (highlights), оформление профилей, закреп, очередь автопостинга, разбор охватов и вовлечённости.
+model: sonnet
 tools: Read, Grep, Glob, Bash, Edit, Write, WebSearch, WebFetch
 skills: brand, humanizer, reels-montage, trend-scan, social
 ---

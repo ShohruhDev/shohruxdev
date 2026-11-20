@@ -1,0 +1,56 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "dev-cookie",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "3001"
+      ],
+      "port": 3001,
+      "env": {
+        "GA_MEASUREMENT_ID": "G-LOCALTEST"
+      }
+    },
+    {
+      "name": "build-preview",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        ".output/server/index.mjs"
+      ],
+      "port": 3005,
+      "env": {
+        "PORT": "3005",
+        "HOST": "127.0.0.1",
+        "CONTENT_DB": "/private/tmp/claude-501/preview.sqlite"
+      }
+    },
+    {
+      "name": "office-preview",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        ".output/server/index.mjs"
+      ],
+      "port": 3006,
+      "env": {
+        "PORT": "3006",
+        "HOST": "127.0.0.1",
+        "ADMIN_LOCAL_PREVIEW": "true",
+        "CONTENT_DB": "/private/tmp/claude-501/office-preview.sqlite"
+      }
+    }
+  ]
+}

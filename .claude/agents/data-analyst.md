@@ -1,6 +1,7 @@
 ---
 name: data-analyst
 description: Дата-аналитик Razrabotka Tashkent. Используй для отчётов по трафику и заявкам (Яндекс Метрика, GA4, Google Search Console, Яндекс Вебмастер), анализа воронки и каналов по UTM, эффективности соцсетей и статей, A/B-гипотез, дашбордов и еженедельных/месячных сводок.
+model: sonnet
 tools: Read, Grep, Glob, Bash, Edit, Write, WebSearch, WebFetch
 skills: analyze
 ---
