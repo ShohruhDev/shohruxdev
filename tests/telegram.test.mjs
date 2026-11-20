@@ -95,7 +95,7 @@ test('config: dedicated channel bot token wins over the lead-notification token'
 
 test('queue is valid, approval is explicit, on the planned schedule, images exist', () => {
   assert.deepEqual(validatePosts(telegramPosts), []);
-  assert.equal(telegramPosts.length, 10);
+  assert.equal(telegramPosts.length, 16);
   assert.ok(telegramPosts.every(p => typeof p.approved === 'boolean'));
   assert.equal(telegramPosts[0].publishAt, '2026-11-16T10:00:00+05:00');
   for (const p of telegramPosts) {

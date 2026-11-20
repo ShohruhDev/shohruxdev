@@ -413,5 +413,224 @@ Nima qilindi:
 
 Batafsil:
 https://razrabotkatashkent.uz/uz/cases/leadvex?utm_source=telegram&utm_medium=social&utm_campaign=channel`
+  },
+  // Декабрьские посты (docs/social-strategy-2026-12.md, раздел 6.6). Ждут одобрения владельца.
+  {
+    id: 'hidden-costs',
+    publishAt: '2026-12-09T10:00:00+05:00',
+    approved: false,
+    ru: `Сколько стоит сайт после запуска: расходы, которых нет в смете
+
+Смета на разработку отвечает на вопрос «сколько стоит сделать». Но у сайта, бота и приложения есть регулярные расходы. Лучше заложить их в бюджет сразу, чтобы через год не было сюрпризов.
+
+• Домен .uz: около 80–100 тыс. сум в год.
+• Хостинг: 50–300 тыс. сум в месяц.
+• Поддержка и доработки: от 0,5–1,5 млн сум в месяц, состав и цену фиксируем в договоре под проект. Можно и без поддержки, тогда заранее договоритесь о ставке на срочные работы.
+• Контент: тексты, фото, вычитка узбекской версии. Если тексты пишем мы, это +0,15 – 0,3 млн сум за страницу.
+• Онлайн-оплата: договор с Payme, Click или Uzum заключает ваша компания или ИП. Заявку лучше подать заранее, параллельно с разработкой.
+• Мобильное приложение: аккаунты разработчика в магазинах приложений мы оформляем на заказчика.
+
+Домен, хостинг и аккаунты можно оформить на вашу компанию, как договоримся в проекте. Сервер мы настраиваем на ваш аккаунт.
+
+Все цены и регулярные расходы:
+https://razrabotkatashkent.uz/prices?utm_source=telegram&utm_medium=social&utm_campaign=channel&utm_content=hidden-costs`,
+    uz: `Ishga tushirgandan keyin sayt qancha turadi: smetada yo‘q xarajatlar
+
+Dasturlash smetasi «yaratish qancha turadi» degan savolga javob beradi. Lekin sayt, bot va ilovaning doimiy xarajatlari ham bor. Bir yildan keyin kutilmagan xarajatlar chiqmasligi uchun ularni budjetga darhol kiritgan ma’qul.
+
+• .uz domeni: yiliga taxminan 80–100 ming so‘m.
+• Xosting: oyiga 50–300 ming so‘m.
+• Qo‘llab-quvvatlash va takomillashtirish: oyiga 0.5–1.5 mln so‘mdan, tarkibi va narxi loyihaga qarab shartnomada qayd etiladi. Usiz ham bo‘ladi, lekin shoshilinch ishlar narxini oldindan kelishib oling.
+• Kontent: matnlar, rasmlar, o‘zbekcha versiyani tahrirlash. Matnlarni biz yozsak, sahifasiga +0.15 – 0.3 mln so‘m.
+• Onlayn to‘lov: Payme, Click yoki Uzum bilan shartnomani kompaniyangiz yoki YaTT tuzadi. Arizani oldindan, dasturlash bilan parallel topshirgan ma’qul.
+• Mobil ilova: ilova do‘konlaridagi dasturchi akkauntlarini biz buyurtmachi nomiga ochamiz.
+
+Domen, xosting va akkauntlarni kompaniyangiz nomiga rasmiylashtirish mumkin, loyihada kelishib olamiz. Serverni sizning akkauntingizda sozlaymiz.
+
+Barcha narxlar va doimiy xarajatlar:
+https://razrabotkatashkent.uz/uz/prices?utm_source=telegram&utm_medium=social&utm_campaign=channel&utm_content=hidden-costs`
+  },
+  {
+    id: 'bilingual-site',
+    publishAt: '2026-12-11T10:00:00+05:00',
+    approved: false,
+    ru: `Сайт на русском и узбекском: что продумать до разработки
+
+В Узбекистане клиенты пишут и на русском, и на узбекском. Но перевод меню ещё не делает сайт двуязычным. Что стоит решить до начала работ.
+
+1. Переводите весь путь, а не только меню: карточку услуги, кнопку, поле формы, ошибку, подтверждение отправки. Частая проблема: услуга описана по-узбекски, а после нажатия на кнопку открывается русская форма.
+2. Отдельные адреса для версий, например /uz/..., а не кнопка, которая подменяет текст на одной странице. Так поисковики видят обе версии.
+3. Переключатель должен вести на ту же страницу. Человек, читающий об услуге, не должен искать её заново с главной.
+4. Общий словарь: названия услуг, кнопок и терминов одинаковы на всех страницах. Названия брендов не переводятся.
+5. Живой узбекский. Автоперевод годится как черновик, публиковать стоит после проверки человеком, который уверенно пишет по-узбекски. Отдельно проверьте латиницу: o‘ и g‘ часто набирают неправильно.
+6. Обновляйте версии парой. Поменяли условия на русском, сразу поправьте узбекскую страницу.
+
+По бюджету. В корпоративном сайте, каталоге и магазине RU + UZ уже в цене, английский добавляет +15%. В лендинге, боте и Mini App вторая версия: +20% и +1 неделя, три языка: +35% и +1,5 недели.
+
+Посчитать свой вариант и посмотреть все надбавки:
+https://razrabotkatashkent.uz/prices?utm_source=telegram&utm_medium=social&utm_campaign=channel&utm_content=bilingual-site`,
+    uz: `Ruscha va o‘zbekcha sayt: dasturlashdan oldin nimalarni o‘ylash kerak
+
+O‘zbekistonda mijozlar rus tilida ham, o‘zbek tilida ham yozadi. Lekin menyuni tarjima qilish saytni ikki tilli qilmaydi. Ish boshlanishidan oldin nimalarni hal qilish kerak.
+
+1. Faqat menyuni emas, butun yo‘lni tarjima qiling: xizmat kartochkasi, tugma, shakl maydoni, xato, yuborish tasdig‘i. Ko‘p uchraydigan muammo: xizmat o‘zbekcha yozilgan, tugmani bosgandan keyin esa ruscha shakl ochiladi.
+2. Har bir versiya uchun alohida manzil, masalan /uz/..., bitta sahifada matnni almashtiradigan tugma emas. Shunda qidiruv tizimlari ikkala versiyani ko‘radi.
+3. Til almashtirgich o‘sha sahifaning o‘ziga olib borsin. Xizmat haqida o‘qiyotgan odam uni bosh sahifadan qayta qidirmasligi kerak.
+4. Umumiy lug‘at: xizmatlar, tugmalar va atamalar nomi barcha sahifalarda bir xil. Brend nomlari tarjima qilinmaydi.
+5. Jonli o‘zbek tili. Avtomatik tarjima faqat qoralama, nashrdan oldin o‘zbek tilida ishonchli yozadigan odam tekshirsin. Lotin yozuvida o‘ va g‘ harflarini alohida tekshiring.
+6. Versiyalarni juft yangilang. Ruscha shartlar o‘zgarsa, o‘zbekcha sahifani ham darhol to‘g‘rilang.
+
+Budjet bo‘yicha. Korporativ sayt, katalog va do‘konda RU + UZ narxga kiritilgan, ingliz tili +15% qo‘shadi. Lending, bot va Mini App’da ikkinchi til: +20% va +1 hafta, uchta til: +35% va +1.5 hafta.
+
+O‘z variantingizni hisoblang va barcha qo‘shimchalarni ko‘ring:
+https://razrabotkatashkent.uz/uz/prices?utm_source=telegram&utm_medium=social&utm_campaign=channel&utm_content=bilingual-site`
+  },
+  {
+    id: 'integrations',
+    publishAt: '2026-12-14T10:00:00+05:00',
+    approved: false,
+    ru: `Что сильнее всего меняет цену проекта: интеграции
+
+Базовая цена из прайса редко бывает итоговой. Сильнее всего проект дорожает, когда сайт или бот нужно связать с другими системами. Наши цены на 2026 год:
+
+• онлайн-оплата Payme, Click или Uzum: +1,5 – 3 млн сум, около недели;
+• онлайн-запись со слотами и мастерами: +3 – 6 млн сум, 1 – 2 недели;
+• передача заявок в CRM (amoCRM, Bitrix24): +2 – 5 млн сум, около недели;
+• обмен товарами и остатками с 1С (каталог, магазин, веб-сервис): +3,5 – 8 млн сум, 2 – 3 недели;
+• личный кабинет клиента (корпоративный сайт, каталог, магазин): +6 – 15 млн сум, 2 – 3 недели.
+
+Как это складывается. Корпоративный сайт на 10 страниц, RU + UZ, заявки в CRM: 9 – 19 млн сум, 4 – 8 недель. Интернет-магазин RU + UZ с онлайн-оплатой и CRM: 15,5 – 33 млн сум, 8 – 12 недель. Если добавить обмен с 1С: 19 – 41 млн сум, 10 – 15 недель.
+
+Два совета:
+1. Если вы уже работаете в CRM или системе записи, подключайтесь к ней, а не заказывайте новую. Для барбершопа M19 мы встроили Altegio, где он уже вёл запись.
+2. Заявку в платёжную систему подавайте заранее, параллельно с разработкой. Договор заключается на вашу компанию или ИП.
+
+Это ориентир. Точную сумму называем после короткого бесплатного обсуждения и фиксируем в договоре.
+
+Все цены и интеграции:
+https://razrabotkatashkent.uz/prices?utm_source=telegram&utm_medium=social&utm_campaign=channel&utm_content=integrations`,
+    uz: `Loyiha narxini eng ko‘p nima o‘zgartiradi: integratsiyalar
+
+Narxlar ro‘yxatidagi asosiy narx kamdan-kam yakuniy bo‘ladi. Sayt yoki botni boshqa tizimlar bilan bog‘lash kerak bo‘lganda loyiha eng ko‘p qimmatlashadi. 2026-yilgi narxlarimiz:
+
+• Payme, Click yoki Uzum orqali onlayn to‘lov: +1.5 – 3 mln so‘m, taxminan bir hafta;
+• slotlar va ustalar bilan onlayn yozilish: +3 – 6 mln so‘m, 1 – 2 hafta;
+• murojaatlarni CRM’ga uzatish (amoCRM, Bitrix24): +2 – 5 mln so‘m, taxminan bir hafta;
+• 1C bilan tovarlar va qoldiqlar almashinuvi (katalog, do‘kon, veb-xizmat): +3.5 – 8 mln so‘m, 2 – 3 hafta;
+• mijozning shaxsiy kabineti (korporativ sayt, katalog, do‘kon): +6 – 15 mln so‘m, 2 – 3 hafta.
+
+Amalda qanday yig‘iladi. 10 sahifali korporativ sayt, RU + UZ, murojaatlar CRM’ga: 9 – 19 mln so‘m, 4 – 8 hafta. Onlayn to‘lov va CRM bilan RU + UZ internet-do‘kon: 15.5 – 33 mln so‘m, 8 – 12 hafta. 1C bilan almashinuv qo‘shilsa: 19 – 41 mln so‘m, 10 – 15 hafta.
+
+Ikki maslahat:
+1. Agar CRM yoki yozilish tizimida allaqachon ishlayotgan bo‘lsangiz, yangisini buyurtma qilmasdan, unga ulaning. M19 barbershopi uchun yozuv yuritiladigan Altegio’ni saytga o‘rnatdik.
+2. To‘lov tizimiga arizani oldindan, dasturlash bilan parallel topshiring. Shartnoma kompaniyangiz yoki YaTT nomiga tuziladi.
+
+Bu taxminiy mo‘ljal. Aniq narxni qisqa bepul muhokamadan so‘ng aytamiz va shartnomada qayd etamiz.
+
+Barcha narxlar va integratsiyalar:
+https://razrabotkatashkent.uz/uz/prices?utm_source=telegram&utm_medium=social&utm_campaign=channel&utm_content=integrations`
+  },
+  {
+    id: 'who-answers',
+    publishAt: '2026-12-16T10:00:00+05:00',
+    approved: false,
+    ru: `Кто отвечает на ваши сообщения
+
+Меня зовут Шохрух Бурхонов, я разработчик Razrabotka Tashkent. Когда вы пишете в Telegram @shohrux_0626 или звоните по номеру +998 90 515 55 65, отвечаю я сам, без менеджеров-посредников.
+
+Как устроена работа:
+• обсуждаем задачу, техническое задание не обязательно;
+• называю стоимость и срок, цену фиксируем в договоре до начала разработки;
+• показываю промежуточный результат по ходу проекта;
+• после запуска передаю доступы и документацию.
+
+Работаем официально, по договору. Сайты делаем на русском и узбекском. Предварительная оценка бесплатная.
+
+Опишите задачу, и мы предложим состав первой версии:
+https://razrabotkatashkent.uz/contact?utm_source=telegram&utm_medium=social&utm_campaign=channel&utm_content=who-answers`,
+    uz: `Xabarlaringizga kim javob beradi
+
+Mening ismim Shohrux Burxonov, Razrabotka Tashkent dasturchisiman. Telegram’da @shohrux_0626 ga yozsangiz yoki +998 90 515 55 65 raqamiga qo‘ng‘iroq qilsangiz, vositachi menejerlarsiz o‘zim javob beraman.
+
+Ish qanday tashkil etilgan:
+• vazifani muhokama qilamiz, texnik topshiriq shart emas;
+• narx va muddatni aytaman, narxni dasturlashdan oldin shartnomada qayd etamiz;
+• loyiha davomida oraliq natijani ko‘rsataman;
+• ishga tushirgandan keyin kirish huquqlari va hujjatlarni topshiraman.
+
+Rasmiy ishlaymiz, shartnoma asosida. Saytlarni rus va o‘zbek tillarida yaratamiz. Dastlabki baholash bepul.
+
+Vazifangizni yozing, birinchi versiya tarkibini taklif qilamiz:
+https://razrabotkatashkent.uz/uz/contact?utm_source=telegram&utm_medium=social&utm_campaign=channel&utm_content=who-answers`
+  },
+  {
+    id: 'project-lessons',
+    publishAt: '2026-12-18T10:00:00+05:00',
+    approved: false,
+    ru: `Четыре вывода из наших проектов 2026 года
+
+Это реальные проекты из раздела кейсов. Цены клиентов мы не раскрываем, но выводы пригодятся, когда вы будете планировать свой бюджет и срок.
+
+1. Закладывайте время на согласование текстов. Корпоративный сайт Total Asset Silk Road занял около двух месяцев, с 13 мая по 15 июля 2026 года: компания сама редактирует контент в Directus, правки шли несколькими раундами. Итоговые тексты сверили с реестром правок клиента из 37 пунктов.
+
+2. Интеграция с системой, которой вы уже пользуетесь, часто удобнее новой. Барбершоп M19 вёл запись в Altegio, поэтому мы встроили виджет Altegio в сайт, а не писали свою запись.
+
+3. Большой проект можно разделить между командами, если заранее договориться об API. Для портала O‘zbekiston Bolalar Tashkiloti мы сделали публичную часть на трёх языках, а бэкенд и админ-панель разрабатывал другой подрядчик.
+
+4. Веб-сервис не покупают один раз, его развивают этапами. CRM для судебной работы по кредитам мы делаем с 6 июля 2026 года, на ноябрь в проекте 332 автотеста бэкенда и 77 тестов фронтенда.
+
+Если у вас похожая задача, опишите её, оценка бесплатная:
+https://razrabotkatashkent.uz/contact?utm_source=telegram&utm_medium=social&utm_campaign=channel&utm_content=project-lessons`,
+    uz: `2026-yilgi loyihalarimizdan to‘rtta xulosa
+
+Bular keyslar bo‘limidagi haqiqiy loyihalar. Mijozlar narxini oshkor qilmaymiz, lekin xulosalar budjet va muddatni rejalashtirishda foydali bo‘ladi.
+
+1. Matnlarni kelishish uchun vaqt ajrating. Total Asset Silk Road korporativ sayti taxminan ikki oy, 2026-yil 13-maydan 15-iyulgacha davom etdi: kompaniya kontentni Directus’da o‘zi tahrirlaydi, tahrirlar bir necha raundda o‘tdi. Yakuniy matnlarni mijozning 37 banddan iborat tahrirlar ro‘yxati bilan solishtirdik.
+
+2. Allaqachon foydalanayotgan tizimingiz bilan integratsiya ko‘pincha yangisidan qulayroq. M19 barbershopi yozuvni Altegio’da yuritardi, shuning uchun o‘z yozilish tizimimizni yozmasdan, Altegio vidjetini saytga o‘rnatdik.
+
+3. API haqida oldindan kelishilsa, katta loyihani jamoalar o‘rtasida bo‘lish mumkin. O‘zbekiston Bolalar Tashkiloti portali uchun uch tilli ommaviy qismni biz yaratdik, backend va admin panelni boshqa pudratchi ishlab chiqdi.
+
+4. Veb-xizmat bir marta sotib olinmaydi, u bosqichma-bosqich rivojlantiriladi. Kreditlar bo‘yicha sud ishlari uchun CRM’ni 2026-yil 6-iyuldan beri yaratyapmiz, noyabr holatiga loyihada 332 ta backend va 77 ta frontend avtotesti bor.
+
+Sizda ham shunga o‘xshash vazifa bo‘lsa, yozing, baholash bepul:
+https://razrabotkatashkent.uz/uz/contact?utm_source=telegram&utm_medium=social&utm_campaign=channel&utm_content=project-lessons`
+  },
+  {
+    id: 'seo-before-launch',
+    publishAt: '2026-12-21T10:00:00+05:00',
+    approved: false,
+    ru: `SEO до запуска сайта: что проверить и каких обещаний не покупать
+
+SEO начинается не с ключевых слов, а с вопросов будущего клиента. Что подготовить до запуска.
+
+1. Страница под каждую услугу. На странице один главный вопрос клиента и понятный следующий шаг: заявка, звонок, калькулятор. Не пытайтесь уместить все услуги в один текст.
+2. Содержание, которому можно доверять: конкретный состав работ, ограничения, актуальные контакты. Без вымышленных отзывов, клиентов и цифр.
+3. Обе языковые версии целиком: описания услуг, формы, ошибки и подтверждения на русском и узбекском, с отдельными адресами.
+4. Техническая готовность. Важные страницы открываются, ссылки и форма работают, забытых заглушек нет. Служебные и тестовые адреса закрыты от поиска.
+5. Кто и когда открывает сайт для поиска. Это отдельное решение владельца сайта, а не галочка, которую разработчик снимает по умолчанию.
+
+Каких обещаний не покупать: первое место в Google к определённой дате и гарантированное попадание в ответы ИИ. Такое пообещать нельзя, и мы не обещаем.
+
+Мы закладываем HTML, который читают поисковые роботы, метаданные и структуру страниц. Позиции зависят ещё и от контента, конкуренции и продвижения.
+
+Состав работ и цены по SEO-настройке (+2 – 4 млн сум, около недели) есть в прайсе:
+https://razrabotkatashkent.uz/prices?utm_source=telegram&utm_medium=social&utm_campaign=channel&utm_content=seo-before-launch`,
+    uz: `Saytni ishga tushirishdan oldin SEO: nimani tekshirish va qanday va’dalarga pul to‘lamaslik kerak
+
+SEO kalit so‘zlardan emas, bo‘lajak mijozning savollaridan boshlanadi. Ishga tushirishdan oldin nimalarni tayyorlash kerak.
+
+1. Har bir xizmat uchun sahifa. Har bir sahifada mijozning bitta asosiy savoli va tushunarli keyingi qadam: murojaat, qo‘ng‘iroq, kalkulyator. Barcha xizmatlarni bitta matnga sig‘dirmang.
+2. Ishonsa bo‘ladigan kontent: aniq ishlar tarkibi, cheklovlar, dolzarb kontaktlar. To‘qib chiqarilgan sharhlar, mijozlar va raqamlarsiz.
+3. Ikkala til to‘liq: xizmatlar tavsifi, shakllar, xato va tasdiqlar rus va o‘zbek tillarida, alohida manzillar bilan.
+4. Texnik tayyorgarlik. Muhim sahifalar ochiladi, havolalar va shakl ishlaydi, unutilgan vaqtinchalik sahifalar yo‘q. Xizmat va sinov manzillari qidiruvdan yopiq.
+5. Saytni qidiruv uchun kim va qachon ochadi. Bu dasturchi o‘z-o‘zidan olib tashlaydigan belgi emas, sayt egasining alohida qarori.
+
+Qanday va’dalarga pul to‘lamaslik kerak: belgilangan sanagacha Google’da birinchi o‘rin va sun’iy intellekt javoblariga kafolatli tushish. Buni va’da qilib bo‘lmaydi, biz ham va’da qilmaymiz.
+
+Biz qidiruv robotlari o‘qiydigan HTML, metama’lumotlar va sahifalar tuzilmasini tayyorlaymiz. O‘rinlar kontent, raqobat va reklamaga ham bog‘liq.
+
+SEO sozlash tarkibi va narxi (+2 – 4 mln so‘m, taxminan bir hafta) narxlar sahifasida:
+https://razrabotkatashkent.uz/uz/prices?utm_source=telegram&utm_medium=social&utm_campaign=channel&utm_content=seo-before-launch`
   }
 ];
