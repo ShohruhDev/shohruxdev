@@ -20,3 +20,4 @@ content/video/**
 # сценарии роликов из карточек — текст, храним
 !content/video/cards/
 !content/video/cards/*.json
+.claude/launch.json

@@ -98,11 +98,7 @@ function header(tag) {
         }),
         h('div', { display: 'flex', flexDirection: 'column', marginLeft: 20 }, [
           h('span', { fontSize: 32, fontWeight: 700, color: C.text }, 'Razrabotka'),
-          h(
-            'span',
-            { fontSize: 18, fontWeight: 600, color: C.muted, letterSpacing: 4 },
-            'TASHKENT'
-          )
+          h('span', { fontSize: 18, fontWeight: 600, color: C.muted, letterSpacing: 4 }, 'TASHKENT')
         ])
       ]),
       tag
@@ -339,7 +335,9 @@ export async function main(argv = process.argv.slice(2)) {
     '+faststart',
     out
   ]);
-  console.log(`Готово: ${out}\nДлительность: ${length.toFixed(1)}s, кадров-состояний: ${states.length}`);
+  console.log(
+    `Готово: ${out}\nДлительность: ${length.toFixed(1)}s, кадров-состояний: ${states.length}`
+  );
   return { out, states };
 }
 
