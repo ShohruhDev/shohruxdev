@@ -17,3 +17,7 @@ node_modules/
 content/video/**
 !content/video/README.md
 !content/video/style.md
+# сценарии роликов из карточек — текст, храним
+!content/video/cards/
+!content/video/cards/*.json
+.claude/launch.json

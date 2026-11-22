@@ -1,6 +1,7 @@
 ---
 name: marketer
 description: Маркетолог Razrabotka Tashkent. Используй для позиционирования, офферов, УТП, воронки продаж, выбора каналов (поиск, карты, соцсети, Telegram, площадки, партнёрства), рекламных кампаний, анализа конкурентов и маркетинговых планов.
+model: sonnet
 tools: Read, Grep, Glob, Bash, Edit, Write, WebSearch, WebFetch
 skills: brand, humanizer, trend-scan, cro
 ---

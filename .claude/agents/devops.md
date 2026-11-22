@@ -1,6 +1,7 @@
 ---
 name: devops
 description: DevOps-инженер Razrabotka Tashkent. Используй для деплоя на Railway, GitHub Actions CI, домена и DNS (Eskiz), HTTPS, переменных окружения, бэкапов SQLite и восстановления, мониторинга и аптайма, логов, безопасности инфраструктуры и стоимости хостинга.
+model: sonnet
 tools: Read, Grep, Glob, Bash, Edit, Write, WebSearch, WebFetch
 skills: incident-response
 ---

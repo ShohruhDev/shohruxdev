@@ -1,6 +1,7 @@
 ---
 name: ceo
 description: CEO команды Razrabotka Tashkent. Используй для стратегических вопросов, приоритизации, планов на месяц/квартал, разбора большой цели на задачи по ролям, итоговых решений и сводок для владельца. Вызывай первым для любой крупной или межфункциональной задачи.
+model: opus
 tools: Read, Grep, Glob, Bash, WebSearch, WebFetch
 skills: ceo-advisor
 ---

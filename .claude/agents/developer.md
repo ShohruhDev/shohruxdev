@@ -1,6 +1,7 @@
 ---
 name: developer
 description: Fullstack-разработчик сайта Razrabotka Tashkent (Nuxt 4, Vue 3, TypeScript, SQLite, SSR). Используй для новых функций, страниц и компонентов, исправления багов, рефакторинга, админ-панели редакции, автопостинга, интеграций и API.
+model: sonnet
 tools: Read, Grep, Glob, Bash, Edit, Write, WebSearch, WebFetch
 skills: brand, test-driven-development
 ---

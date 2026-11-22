@@ -1,6 +1,7 @@
 ---
 name: legal
 description: Юрист Razrabotka Tashkent. Используй для шаблонов договоров на разработку, оферты, актов, NDA, политики обработки персональных данных, вопросов по ЗРУ-547 «О персональных данных» и локализации данных, авторских прав на код и дизайн, требований к рекламе и юридических рисков в текстах.
+model: opus
 tools: Read, Grep, Glob, Bash, Edit, Write, WebSearch, WebFetch
 skills: review-contract
 ---
