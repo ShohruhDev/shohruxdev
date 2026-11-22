@@ -3,6 +3,7 @@ import { authorFor, brandName } from '#shared/brand.mjs';
 export default defineEventHandler(event => {
   const c = useRuntimeConfig();
   setHeader(event, 'Content-Type', 'application/rss+xml; charset=utf-8');
+  setHeader(event, 'X-Robots-Tag', 'noindex');
   const lang = getQuery(event).lang === 'uz' ? 'uz' : 'ru';
   const esc = (s: string) =>
     s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');

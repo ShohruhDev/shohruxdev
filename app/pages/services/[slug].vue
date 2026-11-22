@@ -85,7 +85,7 @@ useHead(() => {
       <p class="lede">
         <strong>{{ s.tagline }}</strong> {{ s.intro }}
       </p>
-      <NuxtLink :to="{ path: localPath('/contact'), query: { service: s.code } }" class="button"
+      <NuxtLink :to="{ path: localPath('/contact'), query: { service: s.code } }" class="button" rel="nofollow"
         >{{ t('Обсудить задачу') }} <AppIcon
       /></NuxtLink>
     </section>
