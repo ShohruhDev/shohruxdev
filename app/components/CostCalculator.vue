@@ -138,6 +138,7 @@ watch(
         <NuxtLink
           class="button"
           :to="contactLink"
+          rel="nofollow"
           @click="goal('calculator_cta', 'calculator_cta', { type: state.type })"
           >{{ t('Получить точную оценку') }} <AppIcon
         /></NuxtLink>

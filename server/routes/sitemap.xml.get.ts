@@ -23,23 +23,29 @@ export default defineEventHandler(event => {
         modified: p.updatedAt > p.publishedAt ? p.updatedAt : p.publishedAt
       }))
   );
-  paths.push(
-    ...paths
-      .filter(
-        p =>
-          !p.path.startsWith('/journal/') ||
-          storage().post(p.path.split('/').pop())?.translations?.uz
-      )
-      .map(p => ({ ...p, path: '/uz' + (p.path === '/' ? '' : p.path) }))
-  );
+  const uzPath = (path: string) => '/uz' + (path === '/' ? '' : path);
+  const hasUz = (path: string) =>
+    !path.startsWith('/journal/') || !!storage().post(path.split('/').pop())?.translations?.uz;
   const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+  const abs = (path: string) => esc(new URL(path, c.public.siteUrl).href);
+  const entries = paths.flatMap(p => {
+    if (!hasUz(p.path)) return [{ ...p, alternates: '' }];
+    const alternates =
+      `<xhtml:link rel="alternate" hreflang="ru" href="${abs(p.path)}"/>` +
+      `<xhtml:link rel="alternate" hreflang="uz" href="${abs(uzPath(p.path))}"/>` +
+      `<xhtml:link rel="alternate" hreflang="x-default" href="${abs(p.path)}"/>`;
+    return [
+      { ...p, alternates },
+      { ...p, path: uzPath(p.path), alternates }
+    ];
+  });
   return (
-    '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' +
+    '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">' +
     (c.public.indexable
-      ? paths
+      ? entries
           .map(
             p =>
-              `<url><loc>${esc(new URL(p.path, c.public.siteUrl).href)}</loc>${p.modified ? `<lastmod>${esc(p.modified)}</lastmod>` : ''}</url>`
+              `<url><loc>${abs(p.path)}</loc>${p.modified ? `<lastmod>${esc(p.modified)}</lastmod>` : ''}${p.alternates}</url>`
           )
           .join('')
       : '') +
